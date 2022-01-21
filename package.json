@@ -1,0 +1,14 @@
+{
+  "name": "goodfood-api",
+  "version": "1.0.0",
+  "description": "Good food api",
+  "main": "app.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.2"
+  }
+}
