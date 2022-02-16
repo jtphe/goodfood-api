@@ -1,7 +1,11 @@
 const express = require('express')
 const app = express()
 const port = 3000
-
+const express = require('express')
+const morgan = require('morgan')
+const jwt = require('jsonwebtoken')
+const cors = require('cors')
+const dotenv  = require('dotenv')
 app.use(function (req, res, next) {
   // Website you wish to allow to connect
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
