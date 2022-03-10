@@ -1,7 +1,6 @@
 const express = require('express')
 const app = express()
 const port = 3000
-const express = require('express')
 const morgan = require('morgan')
 const jwt = require('jsonwebtoken')
 const cors = require('cors')
