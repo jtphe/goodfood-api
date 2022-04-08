@@ -11,16 +11,5 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TestController
 {
-    /**
-     * @Rest\Get(/test)
-     * @param ManagerRegistry $doctrine
-     * @return Response
-     */
-    public function test(ManagerRegistry $doctrine): Response
-    {
-        $em = $doctrine->getManager();
 
-        $users = $doctrine->getRepository(User::class)->findAll();
-
-    }
 }
