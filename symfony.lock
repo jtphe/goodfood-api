@@ -1,18 +1,4 @@
 {
-    "api-platform/core": {
-        "version": "2.6",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "2.5",
-            "ref": "05b57782a78c21a664a42055dc11cf1954ca36bb"
-        },
-        "files": [
-            "./config/packages/api_platform.yaml",
-            "./config/routes/api_platform.yaml",
-            "./src/Entity/.gitignore"
-        ]
-    },
     "doctrine/annotations": {
         "version": "1.13",
         "recipe": {
@@ -88,11 +74,20 @@
     "doctrine/sql-formatter": {
         "version": "1.1.2"
     },
-    "fig/link-util": {
-        "version": "1.2.0"
-    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.7"
+    },
+    "friendsofsymfony/rest-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "2.2",
+            "ref": "fa845143b7e0a4c70aedd1a88c549e6d977e9ae5"
+        },
+        "files": [
+            "./config/packages/fos_rest.yaml"
+        ]
     },
     "laminas/laminas-code": {
         "version": "4.5.1"
@@ -153,9 +148,6 @@
     },
     "psr/event-dispatcher": {
         "version": "1.0.0"
-    },
-    "psr/link": {
-        "version": "2.0.1"
     },
     "psr/log": {
         "version": "3.0.0"
@@ -373,9 +365,6 @@
     "symfony/var-exporter": {
         "version": "v6.0.6"
     },
-    "symfony/web-link": {
-        "version": "v6.0.3"
-    },
     "symfony/yaml": {
         "version": "v6.0.3"
     },
@@ -384,6 +373,9 @@
     },
     "webmozart/assert": {
         "version": "1.10.0"
+    },
+    "willdurand/jsonp-callback-validator": {
+        "version": "v2.0.0"
     },
     "willdurand/negotiation": {
         "version": "3.1.0"
