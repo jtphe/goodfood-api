@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\OrderRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
@@ -50,6 +52,18 @@ class Order
     #[ORM\ManyToOne(targetEntity: restaurant::class, inversedBy: 'orders')]
     #[ORM\JoinColumn(nullable: false)]
     private $restaurant;
+
+    #[ORM\ManyToMany(targetEntity: Product::class)]
+    private $OrderProduct;
+
+    public function __construct()
+    {
+        $this->OrderProduct = new ArrayCollection();
+    }
+
+
+
+
 
     public function getId(): ?int
     {
@@ -187,4 +201,8 @@ class Order
 
         return $this;
     }
+
+
+
+  
 }
