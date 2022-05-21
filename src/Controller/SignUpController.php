@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class SignUpController extends AbstractController
 {   
         /**
-     * @Route(name="signUpAsUser", path="/api/signUpAsUser", methods={"POST"})
+     * @Route(name="signUpAsUser", path="/signUpAsUser", methods={"POST"})
      * @param Request $request
      * @throws Exception
      * @return JsonResponse
