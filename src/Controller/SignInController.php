@@ -44,11 +44,11 @@ class SignInController extends AbstractController
             if($findUser!=null and $findUser->getPassword() === $password){
 
 
-
                 return new JsonResponse(
                     ["token" => $JWTManager->create($findUser),
-                    'user' => $findUser->getRoles()],
+                    'user' => "connexion réussie"],
                     Response::HTTP_ACCEPTED);
+
             }
 
             return new JsonResponse(['message' => "Mauvais identifiants"], Response::HTTP_UNAUTHORIZED);
