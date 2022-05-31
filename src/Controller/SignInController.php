@@ -8,6 +8,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -26,7 +27,7 @@ class SignInController extends AbstractController
      * @return JsonResponse
      */
     public function SignInAsUser(Request $request, Security $security, ManagerRegistry $doctrine,
-                                 JWTTokenManagerInterface $JWTManager)
+                                 JWTTokenManagerInterface $JWTManager, UserPasswordHasherInterface $passwordHasher)
     {
         $user = $security->getUser();
 
@@ -41,13 +42,19 @@ class SignInController extends AbstractController
             $findUser=$em->getRepository(User::class)->findOneBy(["email" => $email]);
 
 
-            if($findUser!=null and $findUser->getPassword() === $password){
+            if($findUser!=null and $findUser->getPassword() === $passwordHasher->hashPassword($findUser,$password)){
 
+                $token = $JWTManager->create($findUser);
 
-                return new JsonResponse(
-                    ["token" => $JWTManager->create($findUser),
-                    'user' => "connexion réussie"],
+                $response = new JsonResponse(
+                    ["token" => $token,
+                        'user' => "connexion réussie"],
                     Response::HTTP_ACCEPTED);
+
+                $response->headers->add(["token"=>$token]);
+
+
+                return $response;
 
             }
 
