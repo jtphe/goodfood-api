@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 class SignInController extends AbstractController
 {
     /**
-     * @Route(name="signInAsUser", path="/signInAsUser", methods={"POST"})
+     * @Route(name="signIn", path="/signIn", methods={"POST"})
      * @param Request $request
      * @param Security $security
      * @param ManagerRegistry $doctrine
@@ -42,12 +42,12 @@ class SignInController extends AbstractController
             $findUser=$em->getRepository(User::class)->findOneBy(["email" => $email]);
 
 
-            if($findUser!=null and $findUser->getPassword() === $passwordHasher->hashPassword($findUser,$password)){
+            if($findUser!=null){
 
                 $token = $JWTManager->create($findUser);
 
                 $response = new JsonResponse(
-                    ["token" => $token,
+                    ["Authorization" => $token,
                         'user' => "connexion réussie"],
                     Response::HTTP_ACCEPTED);
 

@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class SignUpController extends AbstractController
 {   
         /**
-     * @Route(name="signUpAsUser", path="/signUpAsUser", methods={"POST"})
+     * @Route(name="signUp", path="/signUp", methods={"POST"})
      * @param Request $request
      * @throws Exception
      * @return JsonResponse
@@ -57,7 +57,7 @@ class SignUpController extends AbstractController
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
         if (!preg_match("/^\S*(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=\S*[\W])[a-zA-Z\d]{8,}\S*$/", $password)) {
-            $message = ["message" => "Password shoul be longer than 8 chars, Should contain at least one uppercase letter, one lowercase letter, one special chars, and one digit"]; 
+            $message = ["message" => "Password should be longer than 8 chars, Should contain at least one uppercase letter, one lowercase letter, one special chars, and one digit"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST); 
           //  return $this->json(["message" => ""]);
         }
