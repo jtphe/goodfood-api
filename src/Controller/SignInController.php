@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 class SignInController extends AbstractController
 {
     /**
-     * @Route(name="signIn", path="/signIn", methods={"POST"})
+     * @Route(name="signin", path="/signin", methods={"POST"})
      * @param Request $request
      * @param Security $security
      * @param ManagerRegistry $doctrine
@@ -30,6 +30,8 @@ class SignInController extends AbstractController
                                  JWTTokenManagerInterface $JWTManager, UserPasswordHasherInterface $passwordHasher)
     {
         $user = $security->getUser();
+
+
 
         if($user===null){
             $data = json_decode($request->getContent(), true);

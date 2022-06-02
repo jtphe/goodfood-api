@@ -118,8 +118,6 @@ class UserController extends AbstractController
             ->html('<p>See Twig integration for better HTML integration!</p>');
 
         $mailer->send($email);
-
-        //
     }
 
 

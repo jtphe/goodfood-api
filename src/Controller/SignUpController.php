@@ -15,45 +15,49 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class SignUpController extends AbstractController
 {   
         /**
-     * @Route(name="signUp", path="/signUp", methods={"POST"})
+     * @Route(name="signup", path="/signup", methods={"POST"})
      * @param Request $request
      * @throws Exception
      * @return JsonResponse
-     *
      */
-    public function signUpAsUser(Request $request, UserPasswordHasherInterface $passwordHasher, ManagerRegistry $doctrine ) {
+    public function signupAsUser(Request $request, UserPasswordHasherInterface $passwordHasher, ManagerRegistry $doctrine ) {
         
         try {
         $userData = json_decode($request->getContent(), true); 
         $user = New User();
-        $mail = $userData['mail']; 
+
+        $email = $userData['email'];
         $password = $userData['password']; 
 
-        $hashedPassword = $passwordHasher->hashPassword($user, $userData['password']); 
-        $lastName = $userData['lastname']; 
-        $firstName = $userData['firstname']; 
-        $retypedPassword = $userData['retypedpassword']; 
+        $hashedPassword = $passwordHasher->hashPassword($user, $userData['password']);
 
-        $adress = $userData['adress']; 
-        $city = $userData['city']; 
-        $zipCode = $userData['zipCode']; 
-
-        $user->setEmail($mail); 
-        $user->setPassword($hashedPassword); 
+        /* Données dorénavant nullables en BDD
+        $lastName = $userData['lastname'];
+        $firstName = $userData['firstname'];
+        $address = $userData['address'];
+        $city = $userData['city'];
+        $postalCode = $userData['postalCode'];
         $user->setFirstName($firstName);
-        $user->setLastName($lastName); 
+        $user->setLastName($lastName);
         $user->setCity($city);
-        $user->setPostalCode($zipCode);
-        $user->setAddress($adress); 
+        $user->setPostalCode($postalCode);
+        $user->setAddress($address);
+        */
+        $confirmedPassword = $userData['confirmedPassword'];
+
+
+
+        $user->setEmail($email);
+        $user->setPassword($hashedPassword);
         
 
         
         $em = $doctrine->getManager(); 
 
-        $findedUser = $em->getRepository(User::class)->findOneBy(["email" => $mail ]); 
+        $findedUser = $em->getRepository(User::class)->findOneBy(["email" => $email ]);
 
         if (isset($findedUser)) {
-            $message = ["message" => "An account with this mail is already recorded"]; 
+            $message = ["message" => "An account with this email is already recorded"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
         if (!preg_match("/^\S*(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=\S*[\W])[a-zA-Z\d]{8,}\S*$/", $password)) {
@@ -61,21 +65,21 @@ class SignUpController extends AbstractController
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST); 
           //  return $this->json(["message" => ""]);
         }
-        if ($password !== $retypedPassword) {
+        if ($password !== $confirmedPassword) {
 
-         $message = ["message" => "Password are not equal pleayse try again"];
+         $message = ["message" => "Les mots de passes ne sont pas exacts"];
          return new JsonResponse($message, Response::HTTP_BAD_REQUEST);  
         }
 
-        if (!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
-            $message = ["message" =>"Invalid email format"];
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $message = ["message" =>"Format invalide de l'email"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);  
           }
 
         
         $em->persist($user); 
         $em->flush(); 
-        $message = ["message" => "User Account created"]; 
+        $message = ["message" => "Compte crée"];
         return new JsonResponse($message, Response::HTTP_CREATED);
         } catch (PDOException $e) {
 
