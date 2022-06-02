@@ -87,6 +87,7 @@ class SignUpController extends AbstractController
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);  
           }
 
+        $user->setRoles(["ROLE_CLIENT"]);
         
         $em->persist($user); 
         $em->flush();

@@ -289,7 +289,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
             'postalcode'=> $this->postalCode,
             'restaurant' => $this->restaurant,
             'city'=> $this->city,
-            'roles' => $this->roles
+            'roles' => $this->roles[0]
         );
     }
 }
