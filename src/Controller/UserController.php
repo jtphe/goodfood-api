@@ -4,6 +4,7 @@ namespace App\Controller;
 
 
 use App\Entity\User;
+use App\Service\AccessControl;
 use Doctrine\Persistence\ManagerRegistry;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
@@ -20,24 +21,20 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
+
+
     /**
-     * @Route(name="getUser", path="/getUser", methods={"GET"})
+     * @Route(name="getUser", path="/getuser", methods={"GET"})
      * @param Request $request
      * @param JWTTokenManagerInterface $JWTManager
      * @return JsonResponse
      * @throws JWTDecodeFailureException
      */
-    public function Profile( Request $request, JWTTokenManagerInterface $JWTManager, ManagerRegistry $doctrine )
+    public function Profile( Request $request, AccessControl $accessControl)
     {
 
-        $token = $request->headers->get("authorization");
-        $token = $JWTManager->parse($token);
-        $email = $token["email"];
-        $em= $doctrine->getManager();
+        $user=$accessControl->verifyToken($request);
 
-        $user=$em->getRepository(User::class)->findOneBy(["email" => $email]);
-
-        $user = json_encode($user);
 
         if($user)
         {
@@ -48,21 +45,19 @@ class UserController extends AbstractController
             return $response;
         }
 
-        return new JsonResponse(["token" => $token], Response::HTTP_OK);
+        return new JsonResponse(["message" => "l'utilisateur n'est pas trouvé"], Response::HTTP_NO_CONTENT);
     }
 
     /**
-     * @Route(name="changePassword", path="/changePassword", methods={"PUT"})
+     * @Route(name="changePassword", path="/changepassword", methods={"PUT"})
      */
-    public function changePassword(Request $request, JWTTokenManagerInterface $JWTManager,
-                                   ManagerRegistry $doctrine, UserPasswordHasherInterface $passwordHasher  )
+    public function changePassword(Request $request,
+                                   ManagerRegistry $doctrine, UserPasswordHasherInterface $passwordHasher,
+                                    AccessControl $accessControl)
     {
-        $token = $request->headers->get("authorization");
-        $token = $JWTManager->parse($token);
-        $email = $token["email"];
-        $em= $doctrine->getManager();
+        $accessControl->verifyToken($request);
 
-        $user=$em->getRepository(User::class)->findOneBy(["email" => $email]);
+        $user=$doctrine->getRepository(User::class)->findOneBy(["email" => $email]);
 
 
         $password = $user->getPassword();

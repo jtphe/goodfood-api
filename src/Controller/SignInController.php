@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Service\AccessControl;
 use Doctrine\Persistence\ManagerRegistry;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SignInController extends AbstractController
 {
+
     /**
      * @Route(name="signin", path="/signin", methods={"POST"})
      * @param Request $request
@@ -30,7 +32,6 @@ class SignInController extends AbstractController
                                  JWTTokenManagerInterface $JWTManager, UserPasswordHasherInterface $passwordHasher)
     {
         $user = $security->getUser();
-
 
 
         if($user===null){
@@ -50,7 +51,7 @@ class SignInController extends AbstractController
 
                 $response = new JsonResponse(
                     ["Authorization" => $token,
-                        'user' => "connexion réussie"],
+                        'user' => $findUser],
                     Response::HTTP_ACCEPTED);
 
                 $response->headers->add(["token"=>$token]);

@@ -283,14 +283,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
         return array(
             'id' => $this->id,
             'email'=> $this->email,
-            'firstname'=> $this->email,
-            'lastname'=> $this->email,
+            'firstname'=> $this->firstName,
+            'lastname'=> $this->lastName,
             'address'=> $this->address,
             'postalcode'=> $this->postalCode,
             'city'=> $this->city,
             'restaurant' => $this->restaurant,
             'orders' => $this->orders,
-            'comments' => $this->comments
+            'comments' => $this->comments,
+            'roles' => $this->roles
         );
     }
 }

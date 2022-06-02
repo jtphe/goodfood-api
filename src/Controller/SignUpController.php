@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use phpDocumentor\Reflection\DocBlock\Serializer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,23 +13,32 @@ use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
 use PDOException;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Service\AccessControl;
+use function Symfony\Bundle\FrameworkBundle\Controller\json;
 
 class SignUpController extends AbstractController
-{   
-        /**
+{
+
+
+    /**
      * @Route(name="signup", path="/signup", methods={"POST"})
      * @param Request $request
      * @throws Exception
      * @return JsonResponse
      */
-    public function signupAsUser(Request $request, UserPasswordHasherInterface $passwordHasher, ManagerRegistry $doctrine ) {
+    public function signupAsUser(Request $request, UserPasswordHasherInterface $passwordHasher, ManagerRegistry $doctrine,
+                                JWTTokenManagerInterface $JWTManager)
+    {
         
         try {
-        $userData = json_decode($request->getContent(), true); 
+
+        $userData = json_decode($request->getContent(), true);
+
+
         $user = New User();
 
         $email = $userData['email'];
-        $password = $userData['password']; 
+        $password = $userData['password'];
 
         $hashedPassword = $passwordHasher->hashPassword($user, $userData['password']);
 
@@ -43,8 +54,8 @@ class SignUpController extends AbstractController
         $user->setPostalCode($postalCode);
         $user->setAddress($address);
         */
-        $confirmedPassword = $userData['confirmedPassword'];
 
+        $confirmedPassword = $userData['confirmedPassword'];
 
 
         $user->setEmail($email);
@@ -78,19 +89,39 @@ class SignUpController extends AbstractController
 
         
         $em->persist($user); 
-        $em->flush(); 
-        $message = ["message" => "Compte crée"];
-        return new JsonResponse($message, Response::HTTP_CREATED);
+        $em->flush();
+
+        $token = $JWTManager->create($user);
+
+
+        $response = new JsonResponse(
+            ['user' => $user,
+                'token' => $token ],
+            Response::HTTP_CREATED);
+
+        $response->headers->add(["authorization" => $token]);
+
+        return $response;
+
+
         } catch (PDOException $e) {
 
             $message = ["message" => $e]; 
 
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST); 
-
         }
-        
-        
-
 
    }
+   /**
+    * @Route(name="createuser", path="/createuser", methods={"POST"})
+    */
+    public function createUser(Request $request, UserPasswordHasherInterface $passwordHasher, ManagerRegistry $doctrine,
+                               JWTTokenManagerInterface $JWTManager, AccessControl $accessControl)
+    {
+
+        $user = $accessControl->verifyToken($request);
+
+
+
+    }
 }
