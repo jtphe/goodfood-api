@@ -118,8 +118,9 @@ class SignUpController extends AbstractController
     public function createUser(Request $request, UserPasswordHasherInterface $passwordHasher, ManagerRegistry $doctrine,
                                JWTTokenManagerInterface $JWTManager, AccessControl $accessControl)
     {
-
         $user = $accessControl->verifyToken($request);
+
+
 
 
 
