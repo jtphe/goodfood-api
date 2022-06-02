@@ -68,22 +68,22 @@ class SignUpController extends AbstractController
         $findedUser = $em->getRepository(User::class)->findOneBy(["email" => $email ]);
 
         if (isset($findedUser)) {
-            $message = ["message" => "An account with this email is already recorded"];
+            $message = ["message" => "Account already exists"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
         if (!preg_match("/^\S*(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=\S*[\W])[a-zA-Z\d]{8,}\S*$/", $password)) {
-            $message = ["message" => "Password should be longer than 8 chars, Should contain at least one uppercase letter, one lowercase letter, one special chars, and one digit"];
+            $message = ["message" => "Password length"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST); 
           //  return $this->json(["message" => ""]);
         }
         if ($password !== $confirmedPassword) {
 
-         $message = ["message" => "Les mots de passes ne sont pas exacts"];
+         $message = ["message" => "Passwords are not the same"];
          return new JsonResponse($message, Response::HTTP_BAD_REQUEST);  
         }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $message = ["message" =>"Format invalide de l'email"];
+            $message = ["message" =>"Invalid email format"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);  
           }
 
