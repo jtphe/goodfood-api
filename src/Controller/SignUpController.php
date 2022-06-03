@@ -39,29 +39,11 @@ class SignUpController extends AbstractController
 
         $email = $userData['email'];
         $password = $userData['password'];
-
         $hashedPassword = $passwordHasher->hashPassword($user, $userData['password']);
-
-        /* Données dorénavant nullables en BDD
-        $lastName = $userData['lastname'];
-        $firstName = $userData['firstname'];
-        $address = $userData['address'];
-        $city = $userData['city'];
-        $postalCode = $userData['postalCode'];
-        $user->setFirstName($firstName);
-        $user->setLastName($lastName);
-        $user->setCity($city);
-        $user->setPostalCode($postalCode);
-        $user->setAddress($address);
-        */
-
         $confirmedPassword = $userData['confirmedPassword'];
-
 
         $user->setEmail($email);
         $user->setPassword($hashedPassword);
-        
-
         
         $em = $doctrine->getManager(); 
 
