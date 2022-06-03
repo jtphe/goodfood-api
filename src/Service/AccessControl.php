@@ -51,6 +51,11 @@ class AccessControl
         return $user;
     }
 
+    public function verifyRole($user,$role)
+    {
+
+    }
+
 
 
 }
