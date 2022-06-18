@@ -65,11 +65,11 @@ class SignUpController extends AbstractController
          $message = ["message" => "Passwords are not the same"];
          return new JsonResponse($message, Response::HTTP_BAD_REQUEST);  
         }
-
+   
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $message = ["message" =>"Invalid email format"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);  
-          }
+        }
 
         $user->setRoles(["ROLE_CLIENT"]);
         
