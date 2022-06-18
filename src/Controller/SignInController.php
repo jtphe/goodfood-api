@@ -50,7 +50,7 @@ class SignInController extends AbstractController
                 $token = $JWTManager->create($findUser);
 
                 $response = new JsonResponse(
-                    ["Authorization" => $token,
+                    ["token" => $token,
                         'user' => $findUser],
                     Response::HTTP_ACCEPTED);
 
