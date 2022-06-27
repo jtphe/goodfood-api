@@ -7,6 +7,7 @@ use App\Entity\Order;
 use App\Entity\OrderProductAndMenu;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 class OrderController extends AbstractController {
@@ -42,7 +43,8 @@ class OrderController extends AbstractController {
 
             }
         } catch (PDOException $e) {
-            throw ('error'); 
+            $message = ["message" => $e];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
-use phpDocumentor\Reflection\DocBlock\Serializer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,64 +32,58 @@ class SignUpController extends AbstractController
     {
 
         try {
-
             $userData = json_decode($request->getContent(), true);
-
 
             $user = new User();
 
-        $email = $userData['email'];
-        $password = $userData['password'];
-        $hashedPassword = $passwordHasher->hashPassword($user, $userData['password']);
-        $confirmedPassword = $userData['confirmedPassword'];
+            $email = $userData['email'];
+            $password = $userData['password'];
+            $hashedPassword = $passwordHasher->hashPassword($user, $userData['password']);
+            $confirmedPassword = $userData['confirmedPassword'];
 
-        $user->setEmail($email);
-        $user->setPassword($hashedPassword);
-        
-        $em = $doctrine->getManager(); 
+            $user->setEmail($email);
+            $user->setPassword($hashedPassword);
+            
+            $em = $doctrine->getManager(); 
 
-            $findedUser = $em->getRepository(User::class)->findOneBy(["email" => $email]);
-        if (isset($findedUser)) {
-            $message = ["message" => "Account already exists"];
-            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-        }
-        if (!preg_match("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_.;])[A-Za-z\d@$!%*?&_.;]{8,}$^", $password)) {
-            $message = ["message" => "Password length"];
-            return new JsonResponse($message, Response::HTTP_BAD_REQUEST); 
-          //  return $this->json(["message" => ""]);
-        }
-        if ($password !== $confirmedPassword) {
-         $message = ["message" => "Passwords are not the same"];
-         return new JsonResponse($message, Response::HTTP_BAD_REQUEST);  
-        }
+                $findedUser = $em->getRepository(User::class)->findOneBy(["email" => $email]);
+            if (isset($findedUser)) {
+                $message = ["message" => "Account already exists"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+            }
+            if (!preg_match("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_.;])[A-Za-z\d@$!%*?&_.;]{8,}$^", $password)) {
+                $message = ["message" => "Password length"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST); 
+            //  return $this->json(["message" => ""]);
+            }
+            if ($password !== $confirmedPassword) {
+            $message = ["message" => "Passwords are not the same"];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);  
+            }
 
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $message = ["message" => "Invalid email format"];
-            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-        }
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $message = ["message" => "Invalid email format"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+            }
 
-            $user->setRoles(["client"]);
+                $user->setRoles(["client"]);
 
-            $em->persist($user);
-            $em->flush();
+                $em->persist($user);
+                $em->flush();
 
-            $token = $JWTManager->create($user);
-
-
-            $response = new JsonResponse(
-                ['user' => $user,
-                    'token' => $token],
-                Response::HTTP_CREATED);
-
-            $response->headers->add(["authorization" => $token]);
-
-            return $response;
+                $token = $JWTManager->create($user);
 
 
+                $response = new JsonResponse(
+                    ['user' => $user,
+                        'token' => $token],
+                    Response::HTTP_CREATED);
+
+                $response->headers->add(["authorization" => $token]);
+
+                return $response;
         } catch (PDOException $e) {
-
             $message = ["message" => $e];
-
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
@@ -182,11 +175,8 @@ class SignUpController extends AbstractController
             return new JsonResponse($message, Response::HTTP_CREATED);
 
         } catch (PDOException $e) {
-
             $message = ["message" => $e];
-
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-
         }
     }
 
@@ -242,11 +232,8 @@ class SignUpController extends AbstractController
             return new JsonResponse($message, Response::HTTP_CREATED);
 
         } catch (PDOException $e) {
-
             $message = ["message" => $e];
-
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-
         }
     }
 }
