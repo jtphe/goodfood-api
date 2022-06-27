@@ -1,16 +1,18 @@
 <?php
 
 use App\Entity\Product;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\ProductRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController; 
 
 
-Class ProductController extends AbstractController {
+class ProductController extends AbstractController {
 
     /**
-     * @Route (name="selectAllProducts", path="/selectAllProducts", method={"GET"})
+     * @Route (name="selectAllProducts", path="/selectAllProducts", methods={"GET"})
      * @param Request $request 
      * @throws Exception 
      * @return JsonResponse
@@ -25,7 +27,7 @@ Class ProductController extends AbstractController {
 
 
  /**
-  * @Route (name="selectProductsByName", path="/selectProductsByName", method={"GET"})
+  * @Route (name="selectProductsByName", path="/selectProductsByName", methods={"GET"})
   * @param Request $request 
   * @throws Exception 
   * @return JsonResponse
@@ -44,7 +46,7 @@ Class ProductController extends AbstractController {
   }
 
   /**
-   * @Route (name="selectProductsByType", path="/selectProductsByName", method={"GET"})
+   * @Route (name="selectProductsByType", path="/selectProductsByName", methods={"GET"})
    * @param Request $request 
    * @throws Exception 
    * @return JsonResponse 
@@ -64,24 +66,28 @@ Class ProductController extends AbstractController {
      return $this->json($arrayOfProductsFilteredByType); 
 
   }
-  /**
-   * @Route (name='createProduct', path="/createProduct", method={"POST"})
-   * @param Request $request 
-   * @throws Exception 
-   * @return JsonResponse 
-   */
-  public function createProduct($request, ManagerRegistry $doctrine) {
-     
 
+    /**
+     * @Route (name="createProduct", path="/createProduct", methods={"POST"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+  public function createProduct(Request $request, ManagerRegistry $doctrine)
+  {
+      $message = ["message" => "on dev"];
+      return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
   }
-   /**
-    * @Route (name="removeProductFromDb", path="/removeProductFromDB", method={"DELETE"})
-    * @param Request $request 
-    * @throws Exception 
-    */
-   public function removeProductFromDb() { 
 
-    
+
+    /**
+     * @Route (name="removeProductFromDb", path="/removeProductFromDB", methods={"DELETE"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+   public function removeProductFromDb()
+   {
+       $message = ["message" => "on dev"];
+       return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
 
    }
 }

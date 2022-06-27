@@ -4,11 +4,14 @@ use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController; 
 use App\Entity\Restaurant; 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
-Class RestaurantController extends AbstractController {
+class RestaurantController extends AbstractController
+{
     
     /**
-     * @Route (name='createRestaurant', path='/restaurant/create, method={"POST"})
+     * @Route (name="createRestaurant", path="/restaurant/create", methods={"POST"})
      * @param Request $request 
      * @throws Exception 
      * @return JsonResponse
@@ -30,9 +33,6 @@ Class RestaurantController extends AbstractController {
         $em->flush(); 
 
         return $this->json(['message' => 'restaurant created', "statusCode" => 200]); 
-
-
-
 
      }
 
