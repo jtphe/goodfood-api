@@ -15,7 +15,6 @@ use Doctrine\Persistence\ManagerRegistry;
 use PDOException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Service\AccessControl;
-use function Symfony\Bundle\FrameworkBundle\Controller\json;
 
 class SignUpController extends AbstractController
 {
