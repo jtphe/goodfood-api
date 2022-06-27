@@ -157,17 +157,15 @@ class SignUpController extends AbstractController
             $em->persist($newUser);
             $em->flush();
 
-
-            $email = (new Email())
+            $mail = (new Email())
                 ->from('goodfood.api.contact@gmail.com')
                 ->to($email)
                 ->subject('Inscription')
-                ->text($password)
-                ->html('<p>Mot de passe pour goodfood</p>');
+                ->text("Votre mot de passe temporaire à modifier après votre première connexion : ".$password);
 
-            $mailer->send($email);
+            $mailer->send($mail);
 
-            $message = ["message" => "création"];
+            $message = ["message" => "created"];
 
             return new JsonResponse($message, Response::HTTP_CREATED);
 
@@ -193,14 +191,12 @@ class SignUpController extends AbstractController
             $lastName = $userData['lastname'];
             $password = $userData['password'];
 
-
             $findedUser = $doctrine->getRepository(User::class)->findOneBy(["email" => $email]);
 
             if (isset($findedUser)) {
                 $message = ["message" => "An account with this email is already recorded"];
                 return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
             }
-
 
             $hashedPassword = $passwordHasher->hashPassword($newUser, $password);
 
@@ -214,15 +210,13 @@ class SignUpController extends AbstractController
             $em->persist($newUser);
             $em->flush();
 
-
-            $email = (new Email())
+            $mail = (new Email())
                 ->from('goodfood.api.contact@gmail.com')
                 ->to($email)
                 ->subject('Inscription')
-                ->text($password)
-                ->html('<p>Mot de passe pour goodfood</p>');
+                ->text("Votre mot de passe temporaire à modifier après votre première connexion : ".$password);
 
-            $mailer->send($email);
+            $mailer->send($mail);
 
             $message = ["message" => "Created"];
 
