@@ -23,7 +23,7 @@ class Restaurant
     #[ORM\Column(type: 'string', length: 255)]
     private $description;
 
-    #[ORM\Column(type: 'string', length: 15)]
+    #[ORM\Column(type: 'string', length: 15, nullable: true)]
     private $phone;
 
     #[ORM\Column(type: 'string', length: 75)]
@@ -45,7 +45,7 @@ class Restaurant
     private $comments;
 
     #[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'restaurant')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private $country;
 
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Propose::class, orphanRemoval: true)]

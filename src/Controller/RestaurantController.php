@@ -28,7 +28,6 @@ class RestaurantController extends AbstractController
         $restaurant->setAddress($restaurantData['address']);
         $restaurant->setpostalCode($restaurantData['postalCode']);
         $restaurant->setCity($restaurantData['city']);
-        $restaurant->setCountry($restaurantData['country']);
 
 
         $em->persist($restaurant);

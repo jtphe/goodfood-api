@@ -19,11 +19,11 @@ class Propose
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $avaible;
 
-    #[ORM\ManyToOne(targetEntity: restaurant::class, inversedBy: 'proposes')]
+    #[ORM\ManyToOne(targetEntity: Restaurant::class, inversedBy: 'proposes')]
     #[ORM\JoinColumn(nullable: false)]
     private $restaurant;
 
-    #[ORM\ManyToOne(targetEntity: product::class, inversedBy: 'proposes')]
+    #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'proposes')]
     #[ORM\JoinColumn(nullable: false)]
     private $product;
 
