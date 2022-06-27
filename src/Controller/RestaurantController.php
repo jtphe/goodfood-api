@@ -37,7 +37,28 @@ class RestaurantController extends AbstractController
     }
 
     /**
-    * @Route (name="selectAllRestaurants", path="/api/selectAllRestaurants", methods={"GET"})
+     * @Route (name="getRestaurant", path="/restaurant/get/{id}", methods={"GET"})
+     * @param ManagerRegistry $doctrine
+     * @param $id
+     * @return JsonResponse
+     */
+    public function getRestaurant(ManagerRegistry $doctrine, $id)
+    {
+
+        $em = $doctrine->getManager();
+        $restaurant = $em->getRepository(Restaurant::class)->findBy(["id" => $id]);
+
+        if($restaurant)
+        {
+            return $this->json($restaurant, 200);
+        }
+
+        return new JsonResponse(['message' => "Restaurant not found"], Response::HTTP_NOT_FOUND);
+    }
+
+
+    /**
+    * @Route (name="selectAllRestaurants", path="/restaurant/all", methods={"GET"})
     * @param Request $request
     * @throws Exception
     * @return JsonResponse
@@ -45,12 +66,12 @@ class RestaurantController extends AbstractController
     public function selectAllRestaurants(Request $request, ManagerRegistry $doctrine)
     {
         $em = $doctrine->getManager();
-        $prodcuts = $em->getRepository(Restaurant::class)->findAll();
-        return $this->json($prodcuts, 200);
+        $restaurants = $em->getRepository(Restaurant::class)->findAll();
+        return $this->json($restaurants, 200);
     }
 
     /**
-     * @Route (name="filterRestaurants", path="/api/filterRestaurants", methods={"POST"})
+     * @Route (name="filterRestaurants", path="/restaurant/filter", methods={"POST"})
      * @param Request $request
      * @throws Exception
      * @return JsonResponse
