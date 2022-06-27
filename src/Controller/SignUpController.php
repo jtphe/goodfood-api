@@ -65,7 +65,7 @@ class SignUpController extends AbstractController
         }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $message = ["message" => "Format invalide de l'email"];
+            $message = ["message" => "Invalid email format"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
