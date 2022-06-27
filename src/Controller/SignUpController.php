@@ -29,7 +29,6 @@ class SignUpController extends AbstractController
     public function signupAsUser(Request $request, UserPasswordHasherInterface $passwordHasher, ManagerRegistry $doctrine,
                                  JWTTokenManagerInterface $JWTManager)
     {
-
         try {
             $userData = json_decode($request->getContent(), true);
 
@@ -96,7 +95,6 @@ class SignUpController extends AbstractController
                                JWTTokenManagerInterface $JWTManager, AccessControl $accessControl, MailerInterface $mailer)
     {
         try {
-
             $user = $accessControl->verifyToken($request);
 
             $userData = json_decode($request->getContent(), true);
@@ -226,7 +224,7 @@ class SignUpController extends AbstractController
 
             $mailer->send($email);
 
-            $message = ["message" => "création"];
+            $message = ["message" => "Created"];
 
             return new JsonResponse($message, Response::HTTP_CREATED);
 
