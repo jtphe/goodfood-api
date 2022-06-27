@@ -45,6 +45,14 @@ class ProductRepository extends ServiceEntityRepository
         }
     }
 
+    public function selectProductsByName($chars) {
+        $entityManager = $this->getEntityManager(); 
+    
+        $query = $entityManager->createQuery("SELECT * FROM products WHERE name LIKE '%".$chars."%'"); 
+    
+        return $query->getResult(); 
+    }
+
     // /**
     //  * @return Product[] Returns an array of Product objects
     //  */
