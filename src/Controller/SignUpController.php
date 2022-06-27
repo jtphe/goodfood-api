@@ -54,7 +54,7 @@ class SignUpController extends AbstractController
             $message = ["message" => "Account already exists"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
-        if (!preg_match("/^\S*(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=\S*[\W])[a-zA-Z\d]{8,}\S*$/", $password)) {
+        if (!preg_match("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_.;])[A-Za-z\d@$!%*?&_.;]{8,}$^", $password)) {
             $message = ["message" => "Password length"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST); 
           //  return $this->json(["message" => ""]);
