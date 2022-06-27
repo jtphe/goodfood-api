@@ -30,14 +30,14 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/client, roles: ROLE_CLIENT }
-        - { path: ^/worker, roles: ROLE_WORKER }
-        - { path: ^/manager, roles: ROLE_MANAGER }
-        - { path: ^/corporate, roles: ROLE_CORPORATE }
+        - { path: ^/client, roles: client }
+        - { path: ^/worker, roles: worker }
+        - { path: ^/manager, roles: manager }
+        - { path: ^/corporate, roles: corporate }
 
     role_hierarchy:
-        ROLE_MANAGER: ROLE_WORKER
-        ROLE_CORPORATE: ROLE_MANAGER
+        client: worker
+        corporate: manager
 
 when@test:
     security:

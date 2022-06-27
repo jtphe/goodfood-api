@@ -2,18 +2,18 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints\Json;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ApiResource]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -29,19 +29,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     private $password;
 
-    #[ORM\Column(type: 'string', length: 50)]
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
     private $firstName;
 
-    #[ORM\Column(type: 'string', length: 50)]
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
     private $lastName;
 
-    #[ORM\Column(type: 'string', length: 100)]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
     private $address;
 
-    #[ORM\Column(type: 'string', length: 10)]
+    #[ORM\Column(type: 'string', length: 10, nullable: true)]
     private $postalCode;
 
-    #[ORM\Column(type: 'string', length: 30)]
+    #[ORM\Column(type: 'string', length: 30, nullable: true)]
     private $city;
 
     #[ORM\OneToMany(mappedBy: 'users', targetEntity: Restaurant::class)]
@@ -52,6 +52,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'users', targetEntity: Order::class)]
     private $orders;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $passwordToken;
 
     public function __construct()
     {
@@ -274,6 +277,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $order->setUsers(null);
             }
         }
+
+        return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return array(
+            'id' => $this->id,
+            'email'=> $this->email,
+            'firstname'=> $this->firstName,
+            'lastname'=> $this->lastName,
+            'address'=> $this->address,
+            'postalcode'=> $this->postalCode,
+            'restaurant' => $this->restaurant,
+            'city'=> $this->city,
+            'roles' => $this->roles[0]
+        );
+    }
+
+    public function getPasswordToken(): ?string
+    {
+        return $this->passwordToken;
+    }
+
+    public function setPasswordToken(?string $passwordToken): self
+    {
+        $this->passwordToken = $passwordToken;
 
         return $this;
     }
