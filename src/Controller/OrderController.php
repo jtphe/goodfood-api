@@ -8,7 +8,6 @@ use App\Entity\Order;
 use App\Entity\OrderProductAndMenu;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 class OrderController extends AbstractController {
