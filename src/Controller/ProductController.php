@@ -1,7 +1,7 @@
 <?php
 
 use App\Entity\Product;
-use App\Entity\User;
+use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\ProductRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController; 
@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 Class ProductController extends AbstractController {
 
     /**
-     * @Route (name="selectAllProducts", path="/api/selectAllProducts", method={"GET"})
+     * @Route (name="selectAllProducts", path="/selectAllProducts", method={"GET"})
      * @param Request $request 
      * @throws Exception 
      * @return JsonResponse
@@ -25,7 +25,7 @@ Class ProductController extends AbstractController {
 
 
  /**
-  * @Route (name="selectProductsByName", path="/api/selectProductsByName", method={"GET"})
+  * @Route (name="selectProductsByName", path="/selectProductsByName", method={"GET"})
   * @param Request $request 
   * @throws Exception 
   * @return JsonResponse
@@ -44,7 +44,7 @@ Class ProductController extends AbstractController {
   }
 
   /**
-   * @Route (name="selectProductsByType", path="/api/selectProductsByName", method={"GET"})
+   * @Route (name="selectProductsByType", path="/selectProductsByName", method={"GET"})
    * @param Request $request 
    * @throws Exception 
    * @return JsonResponse 
@@ -65,7 +65,7 @@ Class ProductController extends AbstractController {
 
   }
   /**
-   * @Route (name='createProduct', path="/api/createProduct", method={"POST"})
+   * @Route (name='createProduct', path="/createProduct", method={"POST"})
    * @param Request $request 
    * @throws Exception 
    * @return JsonResponse 
@@ -75,7 +75,7 @@ Class ProductController extends AbstractController {
 
   }
    /**
-    * @Route (name="removeProductFromDb", path="/api/removeProductFromDB", method={"DELETE"})
+    * @Route (name="removeProductFromDb", path="/removeProductFromDB", method={"DELETE"})
     * @param Request $request 
     * @throws Exception 
     */
