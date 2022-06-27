@@ -36,9 +36,11 @@ class OrderController extends AbstractController {
 
             
             foreach ($orderData['productOrdered'] as $productOrdered) {
-
+                $OrderProductAndMenu = new OrderProductAndMenu; 
                 $OrderProductAndMenu->setOrderId($lastOrderId); 
                 $OrderProductAndMenu->setProductId($productOrdered['id']); 
+                $em->persist($OrderProductAndMenu);
+                $em->flush(); 
 
             }
         } catch (PDOException $e) {
