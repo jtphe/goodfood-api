@@ -30,7 +30,7 @@ class Restaurant
     private $address;
 
     #[ORM\Column(type: 'string', length: 15)]
-    private $postalCode;
+    private $postcalCode;
 
     #[ORM\Column(type: 'string', length: 55)]
     private $city;
@@ -122,14 +122,14 @@ class Restaurant
         return $this;
     }
 
-    public function getPostalCode(): ?string
+    public function getPostcalCode(): ?string
     {
-        return $this->postalCode;
+        return $this->postcalCode;
     }
 
-    public function setPostalCode(string $postalCode): self
+    public function setPostcalCode(string $postcalCode): self
     {
-        $this->postalCode = $postalCode;
+        $this->postcalCode = $postcalCode;
 
         return $this;
     }

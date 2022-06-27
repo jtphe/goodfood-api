@@ -64,14 +64,4 @@ Class ProductController extends AbstractController {
      return $this->json($arrayOfProductsFilteredByType); 
 
   }
-   /**
-    * @Route (name="removeProductFromDb", path="/api/removeProductFromDB", method={"DELETE"})
-    * @param Request $request 
-    * @throws Exception 
-    */
-   public function removeProductFromDb() { 
-
-    
-
-   }
 }
