@@ -248,6 +248,5 @@ class SignUpController extends AbstractController
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
 
         }
-
     }
 }

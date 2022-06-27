@@ -49,7 +49,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route(name="changePassword", path="/changepassword", methods={"PUT"})
+     * @Route(name="changepassword", path="/changepassword", methods={"PUT"})
      */
     public function changePassword(Request $request,
                                    ManagerRegistry $doctrine, UserPasswordHasherInterface $passwordHasher,
@@ -117,7 +117,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route(name="forgottenPassword", path="/forgottenPassword", methods={"POST"})
+     * @Route(name="forgottenpassword", path="/forgottenpassword", methods={"POST"})
      */
     public function forgottenPassword(Request $request,ManagerRegistry $doctrine, UserPasswordHasherInterface $passwordHasher,
                                         TokenGeneratorInterface $tokenGenerator)
@@ -145,7 +145,7 @@ class UserController extends AbstractController
     }
 
     /**
-     *@Route(name="resetPassword", path="/resetPassword", methods={"POST"})
+     *@Route(name="resetpassword", path="/resetpassword", methods={"POST"})
      */
     public function resetPassword(Request $request,ManagerRegistry $doctrine, UserPasswordHasherInterface $passwordHasher)
     {
