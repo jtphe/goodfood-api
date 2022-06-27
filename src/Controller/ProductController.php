@@ -88,6 +88,5 @@ class ProductController extends AbstractController {
    {
        $message = ["message" => "on dev"];
        return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-
    }
 }
