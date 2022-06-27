@@ -25,19 +25,19 @@ class SignUpController extends AbstractController
     /**
      * @Route(name="signup", path="/signup", methods={"POST"})
      * @param Request $request
-     * @throws Exception
      * @return JsonResponse
+     * @throws Exception
      */
     public function signupAsUser(Request $request, UserPasswordHasherInterface $passwordHasher, ManagerRegistry $doctrine,
-                                JWTTokenManagerInterface $JWTManager)
+                                 JWTTokenManagerInterface $JWTManager)
     {
-        
+
         try {
 
-        $userData = json_decode($request->getContent(), true);
+            $userData = json_decode($request->getContent(), true);
 
 
-        $user = New User();
+            $user = new User();
 
         $email = $userData['email'];
         $password = $userData['password'];
@@ -49,8 +49,7 @@ class SignUpController extends AbstractController
         
         $em = $doctrine->getManager(); 
 
-        $findedUser = $em->getRepository(User::class)->findOneBy(["email" => $email ]);
-
+            $findedUser = $em->getRepository(User::class)->findOneBy(["email" => $email]);
         if (isset($findedUser)) {
             $message = ["message" => "Account already exists"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
@@ -61,47 +60,46 @@ class SignUpController extends AbstractController
           //  return $this->json(["message" => ""]);
         }
         if ($password !== $confirmedPassword) {
-
          $message = ["message" => "Passwords are not the same"];
          return new JsonResponse($message, Response::HTTP_BAD_REQUEST);  
         }
-   
+
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $message = ["message" =>"Invalid email format"];
-            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);  
+            $message = ["message" => "Format invalide de l'email"];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
-        $user->setRoles(["client"]);
-        
-        $em->persist($user); 
-        $em->flush();
+            $user->setRoles(["client"]);
 
-        $token = $JWTManager->create($user);
+            $em->persist($user);
+            $em->flush();
+
+            $token = $JWTManager->create($user);
 
 
-        $response = new JsonResponse(
-            ['user' => $user,
-                'token' => $token ],
-            Response::HTTP_CREATED);
+            $response = new JsonResponse(
+                ['user' => $user,
+                    'token' => $token],
+                Response::HTTP_CREATED);
 
-        $response->headers->add(["authorization" => $token]);
+            $response->headers->add(["authorization" => $token]);
 
-        return $response;
+            return $response;
 
 
         } catch (PDOException $e) {
 
-            $message = ["message" => $e]; 
+            $message = ["message" => $e];
 
-            return new JsonResponse($message, Response::HTTP_BAD_REQUEST); 
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
-   }
+    }
 
 
-   /**
-    * @Route(name="createuser", path="/createuser", methods={"POST"})
-    */
+    /**
+     * @Route(name="createuser", path="/createuser", methods={"POST"})
+     */
     public function createUser(Request $request, UserPasswordHasherInterface $passwordHasher, ManagerRegistry $doctrine,
                                JWTTokenManagerInterface $JWTManager, AccessControl $accessControl, MailerInterface $mailer)
     {
@@ -113,8 +111,8 @@ class SignUpController extends AbstractController
 
             $newUser = new User();
             $email = $userData['email'];
-            $firstName = $userData['firstName'];
-            $lastName = $userData['lastName'];
+            $firstName = $userData['firstname'];
+            $lastName = $userData['lastname'];
 
             $findedUser = $doctrine->getRepository(User::class)->findOneBy(["email" => $email]);
 
@@ -191,63 +189,65 @@ class SignUpController extends AbstractController
 
         }
     }
-        /**
-         * @Route(name="createmanager", path="/createmanager", methods={"POST"})
-         */
-        public function createmanager(Request $request, UserPasswordHasherInterface $passwordHasher, ManagerRegistry $doctrine,
-                                      JWTTokenManagerInterface $JWTManager, AccessControl $accessControl, MailerInterface $mailer)
-        {
-            try {
 
-                $userData = json_decode($request->getContent(), true);
+    /**
+     * @Route(name="createmanager", path="/createmanager", methods={"POST"})
+     */
+    public function createmanager(Request $request, UserPasswordHasherInterface $passwordHasher, ManagerRegistry $doctrine,
+                                  JWTTokenManagerInterface $JWTManager, AccessControl $accessControl, MailerInterface $mailer)
+    {
+        try {
 
-                $newUser = new User();
-                $email = $userData['email'];
-                $firstName = $userData['firstName'];
-                $lastName = $userData['lastName'];
-                $password = $userData['password'];
+            $userData = json_decode($request->getContent(), true);
 
-
-                $findedUser = $doctrine->getRepository(User::class)->findOneBy(["email" => $email]);
-
-                if (isset($findedUser)) {
-                    $message = ["message" => "An account with this email is already recorded"];
-                    return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-                }
+            $newUser = new User();
+            $email = $userData['email'];
+            $firstName = $userData['firstname'];
+            $lastName = $userData['lastname'];
+            $password = $userData['password'];
 
 
-                $hashedPassword = $passwordHasher->hashPassword($newUser, $password);
+            $findedUser = $doctrine->getRepository(User::class)->findOneBy(["email" => $email]);
 
-                $em = $doctrine->getManager();
-
-                $newUser->setPassword($hashedPassword);
-                $newUser->setEmail($email);
-                $newUser->setRoles(["manager"]);
-                $newUser->setFirstName($firstName);
-                $newUser->setLastName($lastName);
-                $em->persist($newUser);
-                $em->flush();
-
-
-                $email = (new Email())
-                    ->from('goodfood.api.contact@gmail.com')
-                    ->to($email)
-                    ->subject('Inscription')
-                    ->text($password)
-                    ->html('<p>Mot de passe pour goodfood</p>');
-
-                $mailer->send($email);
-
-                $message = ["message" => "création"];
-
-                return new JsonResponse($message, Response::HTTP_CREATED);
-
-            } catch (PDOException $e) {
-
-                $message = ["message" => $e];
-
+            if (isset($findedUser)) {
+                $message = ["message" => "An account with this email is already recorded"];
                 return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-
             }
 
+
+            $hashedPassword = $passwordHasher->hashPassword($newUser, $password);
+
+            $em = $doctrine->getManager();
+
+            $newUser->setPassword($hashedPassword);
+            $newUser->setEmail($email);
+            $newUser->setRoles(["manager"]);
+            $newUser->setFirstName($firstName);
+            $newUser->setLastName($lastName);
+            $em->persist($newUser);
+            $em->flush();
+
+
+            $email = (new Email())
+                ->from('goodfood.api.contact@gmail.com')
+                ->to($email)
+                ->subject('Inscription')
+                ->text($password)
+                ->html('<p>Mot de passe pour goodfood</p>');
+
+            $mailer->send($email);
+
+            $message = ["message" => "création"];
+
+            return new JsonResponse($message, Response::HTTP_CREATED);
+
+        } catch (PDOException $e) {
+
+            $message = ["message" => $e];
+
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+
+        }
+
+    }
 }
