@@ -71,7 +71,7 @@ class SignUpController extends AbstractController
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);  
         }
 
-        $user->setRoles(["ROLE_CLIENT"]);
+        $user->setRoles(["client"]);
         
         $em->persist($user); 
         $em->flush();
@@ -113,8 +113,10 @@ class SignUpController extends AbstractController
 
             $newUser = new User();
             $email = $userData['email'];
+            $firstName = $userData['firstName'];
+            $lastName = $userData['lastName'];
 
-            $findedUser = $doctrine->getRepository(User::class)->findOneBy(["email" => $email ]);
+            $findedUser = $doctrine->getRepository(User::class)->findOneBy(["email" => $email]);
 
             if (isset($findedUser)) {
                 $message = ["message" => "An account with this email is already recorded"];
@@ -152,16 +154,20 @@ class SignUpController extends AbstractController
             // On randomize le tableau
             shuffle($password);
             // Conversion du tableau en string
-            $password=implode($password);
+            $password = implode($password);
 
-            $hashedPassword = $passwordHasher->hashPassword($user, $password);
+            $hashedPassword = $passwordHasher->hashPassword($newUser, $password);
+
+            $em = $doctrine->getManager();
 
             $newUser->setPassword($hashedPassword);
             $newUser->setEmail($email);
-            $newUser->setRoles(["ROLE_WORKER"]);
+            $newUser->setRoles(["worker"]);
             $newUser->addRestaurant($user->getRestaurant());
-            $doctrine->persist($user);
-            $doctrine->flush();
+            $newUser->setFirstName($firstName);
+            $newUser->setLastName($lastName);
+            $em->persist($newUser);
+            $em->flush();
 
 
             $email = (new Email())
@@ -173,7 +179,7 @@ class SignUpController extends AbstractController
 
             $mailer->send($email);
 
-            $message=["message"=>"création"];
+            $message = ["message" => "création"];
 
             return new JsonResponse($message, Response::HTTP_CREATED);
 
@@ -185,4 +191,63 @@ class SignUpController extends AbstractController
 
         }
     }
+        /**
+         * @Route(name="createmanager", path="/createmanager", methods={"POST"})
+         */
+        public function createmanager(Request $request, UserPasswordHasherInterface $passwordHasher, ManagerRegistry $doctrine,
+                                      JWTTokenManagerInterface $JWTManager, AccessControl $accessControl, MailerInterface $mailer)
+        {
+            try {
+
+                $userData = json_decode($request->getContent(), true);
+
+                $newUser = new User();
+                $email = $userData['email'];
+                $firstName = $userData['firstName'];
+                $lastName = $userData['lastName'];
+                $password = $userData['password'];
+
+
+                $findedUser = $doctrine->getRepository(User::class)->findOneBy(["email" => $email]);
+
+                if (isset($findedUser)) {
+                    $message = ["message" => "An account with this email is already recorded"];
+                    return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+                }
+
+
+                $hashedPassword = $passwordHasher->hashPassword($newUser, $password);
+
+                $em = $doctrine->getManager();
+
+                $newUser->setPassword($hashedPassword);
+                $newUser->setEmail($email);
+                $newUser->setRoles(["manager"]);
+                $newUser->setFirstName($firstName);
+                $newUser->setLastName($lastName);
+                $em->persist($newUser);
+                $em->flush();
+
+
+                $email = (new Email())
+                    ->from('goodfood.api.contact@gmail.com')
+                    ->to($email)
+                    ->subject('Inscription')
+                    ->text($password)
+                    ->html('<p>Mot de passe pour goodfood</p>');
+
+                $mailer->send($email);
+
+                $message = ["message" => "création"];
+
+                return new JsonResponse($message, Response::HTTP_CREATED);
+
+            } catch (PDOException $e) {
+
+                $message = ["message" => $e];
+
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+
+            }
+
 }

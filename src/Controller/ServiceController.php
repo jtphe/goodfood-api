@@ -18,9 +18,6 @@ class ServiceController extends AbstractController
 
     public function verifyToken($request)
     {
-
         $token = $request->headers->get("authorization");
-
-
     }
 }

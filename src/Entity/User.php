@@ -53,6 +53,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
     #[ORM\OneToMany(mappedBy: 'users', targetEntity: Order::class)]
     private $orders;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $passwordToken;
+
     public function __construct()
     {
         $this->restaurant = new ArrayCollection();
@@ -291,5 +294,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
             'city'=> $this->city,
             'roles' => $this->roles[0]
         );
+    }
+
+    public function getPasswordToken(): ?string
+    {
+        return $this->passwordToken;
+    }
+
+    public function setPasswordToken(?string $passwordToken): self
+    {
+        $this->passwordToken = $passwordToken;
+
+        return $this;
     }
 }

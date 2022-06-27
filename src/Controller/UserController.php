@@ -16,7 +16,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 
 class UserController extends AbstractController
@@ -59,6 +59,7 @@ class UserController extends AbstractController
 
         $user=$doctrine->getRepository(User::class)->findOneBy(["email" => $email]);
 
+        $em = $doctrine->getManager();
 
         $password = $user->getPassword();
 
@@ -113,6 +114,65 @@ class UserController extends AbstractController
             ->html('<p>See Twig integration for better HTML integration!</p>');
 
         $mailer->send($email);
+    }
+
+    /**
+     * @Route(name="forgottenPassword", path="/forgottenPassword", methods={"POST"})
+     */
+    public function forgottenPassword(Request $request,ManagerRegistry $doctrine, UserPasswordHasherInterface $passwordHasher,
+                                        TokenGeneratorInterface $tokenGenerator)
+    {
+        $userData = json_decode($request->getContent(), true);
+        $email = $userData['email'];
+
+        $user=$doctrine->getRepository(User::class)->findOneBy(["email" => $email]);
+        $em = $doctrine->getManager();
+
+        if($user){
+            $passwordToken = $tokenGenerator->generateToken();
+            $user->setPasswordToken($passwordToken);
+            $em->persist($user);
+
+            $response = new JsonResponse(
+                ['passwordToken' => $passwordToken],
+                Response::HTTP_ACCEPTED);
+            return $response;
+
+        }
+
+        return new JsonResponse(["message" => "l'utilisateur n'est pas trouvé"], Response::HTTP_NO_CONTENT);
+
+    }
+
+    /**
+     *@Route(name="resetPassword", path="/resetPassword", methods={"POST"})
+     */
+    public function resetPassword(Request $request,ManagerRegistry $doctrine, UserPasswordHasherInterface $passwordHasher)
+    {
+        $data= json_decode($request->getContent(), true);
+
+        $passwordToken = $data["passwordToken"];
+        $password = $data["password"];
+
+        $user=$doctrine->getRepository(User::class)->findOneBy(["passwordToken" => $passwordToken]);
+
+        if($user)
+        {
+            if (!preg_match("/^\S*(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=\S*[\W])[a-zA-Z\d]{8,}\S*$/", $password)) {
+                $message = ["message" => "Password should be longer than 8 chars, Should contain at least one uppercase letter, one lowercase letter, one special chars, and one digit"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+                //  return $this->json(["message" => ""]);
+            }
+
+            $user->setPassword($password);
+            $user->setPasswordToken(null);
+
+            $message = ["message" => "mot de passe réinitialisé"];
+            return new JsonResponse($message, Response::HTTP_OK);
+
+        }
+
+        return new JsonResponse(["message" => "l'utilisateur n'est pas trouvé"], Response::HTTP_NO_CONTENT);
     }
 
 
