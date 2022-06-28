@@ -174,7 +174,8 @@ class RestaurantController extends AbstractController
 
         $em = $doctrine->getManager();
         $restaurants = $em->getRepository(Restaurant::class)->findAll();
-        return $this->json($restaurants, 200);
+
+        return $this->json($restaurants, 200, [], ['group' => 'read']);
     }
 
     /**

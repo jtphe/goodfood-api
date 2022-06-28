@@ -8,6 +8,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
+use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+
 
 
 #[ORM\Entity(repositoryClass: RestaurantRepository::class)]
@@ -17,56 +21,94 @@ class Restaurant
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    /**
+     * @Groups("read")
+     */
     private $id;
 
     #[ORM\Column(type: 'string', length: 50)]
+    /**
+     * @Groups("read")
+     */
     private $name;
 
     #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @Groups("read")
+     */
     private $description;
 
     #[ORM\Column(type: 'string', length: 15, nullable: true)]
+    /**
+     * @Groups("read")
+     */
     private $phone;
 
     #[ORM\Column(type: 'string', length: 75)]
+    /**
+     * @Groups("read")
+     */
     private $address;
 
     #[ORM\Column(type: 'string', length: 15)]
+    /**
+     * @Groups("read")
+     */
     private $postalCode;
 
     #[ORM\Column(type: 'string', length: 55)]
+    /**
+     * @Groups("read")
+     */
     private $city;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    /**
+     * @Groups("read")
+     */
     private $photo;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'restaurant')]
-    #[MaxDepth(2)]
+    /**
+     * @Ignore
+     */
     private $users;
 
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Comment::class, orphanRemoval: true)]
-    #[MaxDepth(2)]
+    /**
+     * @Ignore
+     */
     private $comments;
 
     #[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'restaurant')]
     #[ORM\JoinColumn(nullable: true)]
-    #[MaxDepth(2)]
+    /**
+     * @Ignore
+     */
     private $country;
 
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Propose::class, orphanRemoval: true)]
-    #[MaxDepth(2)]
+    /**
+     * @Ignore
+     */
     private $proposes;
 
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Supplier::class)]
-    #[MaxDepth(2)]
+    /**
+     * @Ignore
+     */
     private $suppliers;
 
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Supply::class)]
-    #[MaxDepth(2)]
+    /**
+     * @Ignore
+     */
     private $supplies;
 
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Order::class)]
-    #[MaxDepth(2)]
+    /**
+     * @Ignore
+     */
     private $orders;
 
     public function __construct()
