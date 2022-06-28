@@ -224,7 +224,8 @@ class RestaurantController extends AbstractController
         if($restaurant)
         {
             $user->addRestaurant($restaurant);
-
+            $em->persist($restaurant);
+            $em->flush();
 
             return $this->json($restaurant, 200);
         }
