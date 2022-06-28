@@ -33,11 +33,27 @@ class RestaurantController extends AbstractController
         $em = $doctrine->getManager();
         $restaurant = new Restaurant;
         $restaurantData = json_decode($request->getContent(), true);
+
         $restaurant->setName($restaurantData['name']);
         $restaurant->setDescription($restaurantData['description']);
         $restaurant->setAddress($restaurantData['address']);
         $restaurant->setpostalCode($restaurantData['postalCode']);
         $restaurant->setCity($restaurantData['city']);
+
+        if(isset($restaurantData['country']))
+        {
+            $restaurant->setCountry($restaurantData['country']);
+        }
+
+        if(isset($restaurantData['phone']))
+        {
+            $restaurant->setCountry($restaurantData['phone']);
+        }
+
+        if(isset($restaurantData['photo']))
+        {
+            $restaurant->setCountry($restaurantData['photo']);
+        }
 
 
         $em->persist($restaurant);
