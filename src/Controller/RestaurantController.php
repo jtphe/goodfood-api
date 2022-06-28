@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Country;
 use App\Service\AccessControl;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,6 +14,13 @@ use App\Entity\Restaurant;
 
 class RestaurantController extends AbstractController
 {
+    private $accessControl;
+
+    public function __construct(accessControl $accessControl)
+    {
+        $this->accessControl = $accessControl;
+    }
+
 
     /**
      * @Route (name="createRestaurant", path="/restaurants/", methods={"POST"})
@@ -40,15 +48,26 @@ class RestaurantController extends AbstractController
 
     /**
      * @Route (name="getRestaurant", path="/restaurants/{id}", methods={"GET"})
+     * @param Request $request
      * @param ManagerRegistry $doctrine
      * @param $id
+     * @param AccessControl $accessControl
      * @return JsonResponse
      */
-    public function getRestaurant(ManagerRegistry $doctrine, $id, AccessControl $accessControl)
+    public function getRestaurant(Request $request,ManagerRegistry $doctrine, $id, AccessControl $accessControl)
     {
-        /* Token Verification
-        $user=$accessControl->verifyToken($request);
-        */
+        $user=$this->accessControl->verifyToken($request);
+        switch($user){
+            case 0:
+                $message = ["message" =>"Token vide"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+                break;
+            case 1:
+                $message = ["message" =>"Utilisateur introuvable ou erreur de token"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+                break;
+        }
+
 
         $em = $doctrine->getManager();
         $restaurant = $em->getRepository(Restaurant::class)->findBy(["id" => $id]);
@@ -70,9 +89,18 @@ class RestaurantController extends AbstractController
     */
     public function selectAllRestaurants(Request $request, ManagerRegistry $doctrine, AccessControl $accessControl)
     {
-        /* Token Verification
-        $user=$accessControl->verifyToken($request);
-        */
+        $user=$this->accessControl->verifyToken($request);
+
+        switch($user){
+            case 0:
+                $message = ["message" =>"Token vide"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+                break;
+            case 1:
+                $message = ["message" =>"Utilisateur introuvable ou erreur de token"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+                break;
+        }
 
         $em = $doctrine->getManager();
         $restaurants = $em->getRepository(Restaurant::class)->findAll();
@@ -87,9 +115,19 @@ class RestaurantController extends AbstractController
      */
     public function filterRestaurantsByCity(Request $request, ManagerRegistry $doctrine, AccessControl $accessControl, $id)
     {
-        /* Token Verification
-        $user=$accessControl->verifyToken($request);
-        */
+        $user=$this->accessControl->verifyToken($request);
+
+        switch($user){
+            case 0:
+                $message = ["message" =>"Token vide"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+                break;
+            case 1:
+                $message = ["message" =>"Utilisateur introuvable ou erreur de token"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+                break;
+        }
+
         $em = $doctrine->getManager();
         $data = json_decode($request->getContent(), true);
 
@@ -110,9 +148,17 @@ class RestaurantController extends AbstractController
      */
     public function setFavoriteRestaurant(Request $request, ManagerRegistry $doctrine, AccessControl $accessControl, $id)
     {
-        /* Token Verification
-        $user=$accessControl->verifyToken($request);
-        */
+        $user=$this->accessControl->verifyToken($request);
+        switch($user){
+            case 0:
+                $message = ["message" =>"Token vide"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+                break;
+            case 1:
+                $message = ["message" =>"Utilisateur introuvable ou erreur de token"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+                break;
+        }
 
         $em = $doctrine->getManager();
         $restaurant = $em->getRepository(Restaurant::class)->findBy(["id" => $id]);
@@ -133,9 +179,18 @@ class RestaurantController extends AbstractController
      */
     public function getRestaurantOrders(Request $request, ManagerRegistry $doctrine, AccessControl $accessControl, $id)
     {
-        /* Token Verification
-        $user=$accessControl->verifyToken($request);
-        */
+
+        $user=$this->accessControl->verifyToken($request);
+        switch($user){
+            case 0:
+                $message = ["message" =>"Token vide"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+                break;
+            case 1:
+                $message = ["message" =>"Utilisateur introuvable ou erreur de token"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+                break;
+        }
 
         $em = $doctrine->getManager();
         $restaurant = $em->getRepository(Restaurant::class)->findBy(["id" => $id]);
@@ -147,4 +202,60 @@ class RestaurantController extends AbstractController
         return new JsonResponse(['message' => "Restaurant not found"], Response::HTTP_NOT_FOUND);
     }
 
+    /**
+     * @Route (name="createCountry", path="/countries/", methods={"POST"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function createCountry(Request $request, ManagerRegistry $doctrine)
+    {
+
+        $em = $doctrine->getManager();
+        $country = new Country;
+        $countryData = json_decode($request->getContent(), true);
+        $country->setName($countryData['name']);
+        $country>setTax($countryData['tax']);
+
+        $em->persist($country);
+        $em->flush();
+
+        return $this->json(['message' => 'country created', "statusCode" => 200]);
     }
+
+    /**
+     * @Route (name="getCountries", path="/countries/", methods={"GET"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getCountries(Request $request, ManagerRegistry $doctrine)
+    {
+
+        $em = $doctrine->getManager();
+        $countries = $em->getRepository(Country::class)->findAll();
+        return $this->json($countries, 200);
+
+    }
+
+    /**
+     * @Route (name="getCountry", path="/countries/{id}", methods={"GET"})
+     * @param Request $request
+     * @param ManagerRegistry $doctrine
+     * @param $id
+     * @return JsonResponse
+     */
+    public function getCountry(Request $request,ManagerRegistry $doctrine, $id)
+    {
+
+        $em = $doctrine->getManager();
+        $country = $em->getRepository(Country::class)->findBy(["id" => $id]);
+
+        if($country)
+        {
+            return $this->json($country, 200);
+        }
+
+        return new JsonResponse(['message' => "country not found"], Response::HTTP_NOT_FOUND);
+    }
+
+
+}

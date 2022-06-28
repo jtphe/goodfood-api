@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Entity\User;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -34,7 +35,7 @@ class AccessControl
         if($token===null)
         {
             $message = ["message" =>"Token vide"];
-            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+            return 0;
         }
 
         $token = $this->JWTManager->parse($token);
@@ -44,8 +45,7 @@ class AccessControl
 
         if($user==null)
         {
-            $message = ["message" =>"Utilisateur introuvable ou erreur de token"];
-            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+            return 1;
         }
 
         return $user;
