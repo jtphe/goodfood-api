@@ -29,15 +29,10 @@ class SupplyController extends AbstractController
     {
         $user=$this->accessControl->verifyToken($request);
 
-        switch($user){
-            case 0:
-                $message = ["message" =>"Token vide"];
-                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-                break;
-            case 1:
-                $message = ["message" =>"Utilisateur introuvable ou erreur de token"];
-                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-                break;
+        if($user==null)
+        {
+            $message = ["message" => "Token vide"];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
         $em = $doctrine->getManager();
@@ -61,15 +56,10 @@ class SupplyController extends AbstractController
     {
         $user=$this->accessControl->verifyToken($request);
 
-        switch($user){
-            case 0:
-                $message = ["message" =>"Token vide"];
-                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-                break;
-            case 1:
-                $message = ["message" =>"Utilisateur introuvable ou erreur de token"];
-                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-                break;
+        if($user==null)
+        {
+            $message = ["message" => "Token vide"];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
         $em = $doctrine->getManager();
@@ -87,15 +77,10 @@ class SupplyController extends AbstractController
     {
         $user=$this->accessControl->verifyToken($request);
 
-        switch($user){
-            case 0:
-                $message = ["message" =>"Token vide"];
-                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-                break;
-            case 1:
-                $message = ["message" =>"Utilisateur introuvable ou erreur de token"];
-                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-                break;
+        if($user==null)
+        {
+            $message = ["message" => "Token vide"];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
         $em = $doctrine->getManager();
@@ -119,15 +104,10 @@ class SupplyController extends AbstractController
     {
         $user=$this->accessControl->verifyToken($request);
 
-        switch($user){
-            case 0:
-                $message = ["message" =>"Token vide"];
-                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-                break;
-            case 1:
-                $message = ["message" =>"Utilisateur introuvable ou erreur de token"];
-                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-                break;
+        if($user==null)
+        {
+            $message = ["message" => "Token vide"];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
         $em = $doctrine->getManager();
@@ -187,15 +167,10 @@ class SupplyController extends AbstractController
     {
         $user=$this->accessControl->verifyToken($request);
 
-        switch($user){
-            case 0:
-                $message = ["message" =>"Token vide"];
-                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-                break;
-            case 1:
-                $message = ["message" =>"Utilisateur introuvable ou erreur de token"];
-                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-                break;
+        if($user==null)
+        {
+            $message = ["message" => "Token vide"];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
         $em = $doctrine->getManager();
@@ -219,15 +194,10 @@ class SupplyController extends AbstractController
     {
         $user=$this->accessControl->verifyToken($request);
 
-        switch($user){
-            case 0:
-                $message = ["message" =>"Token vide"];
-                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-                break;
-            case 1:
-                $message = ["message" =>"Utilisateur introuvable ou erreur de token"];
-                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-                break;
+        if($user==null)
+        {
+            $message = ["message" => "Token vide"];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
         $em = $doctrine->getManager();
@@ -252,15 +222,10 @@ class SupplyController extends AbstractController
     {
         $user=$this->accessControl->verifyToken($request);
 
-        switch($user){
-            case 0:
-                $message = ["message" =>"Token vide"];
-                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-                break;
-            case 1:
-                $message = ["message" =>"Utilisateur introuvable ou erreur de token"];
-                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-                break;
+        if($user==null)
+        {
+            $message = ["message" => "Token vide"];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
         $em = $doctrine->getManager();
@@ -277,15 +242,10 @@ class SupplyController extends AbstractController
     {
         $user=$this->accessControl->verifyToken($request);
 
-        switch($user){
-            case 0:
-                $message = ["message" =>"Token vide"];
-                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-                break;
-            case 1:
-                $message = ["message" =>"Utilisateur introuvable ou erreur de token"];
-                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-                break;
+        if($user==null)
+        {
+            $message = ["message" => "Token vide"];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
         $em = $doctrine->getManager();
@@ -325,15 +285,10 @@ class SupplyController extends AbstractController
     {
         $user=$this->accessControl->verifyToken($request);
 
-        switch($user){
-            case 0:
-                $message = ["message" =>"Token vide"];
-                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-                break;
-            case 1:
-                $message = ["message" =>"Utilisateur introuvable ou erreur de token"];
-                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-                break;
+        if($user==null)
+        {
+            $message = ["message" => "Token vide"];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
         $em = $doctrine->getManager();
