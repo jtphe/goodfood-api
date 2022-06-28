@@ -343,8 +343,6 @@ class Restaurant
 
     public function jsonSerialize()
     {
-        $users = $this->users->map(function($user){return $user->getId();})->getValues();
-
         return array(
             'id' => $this->id,
             'name'=> $this->name,
