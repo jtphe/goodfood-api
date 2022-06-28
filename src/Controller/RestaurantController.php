@@ -12,14 +12,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Restaurant;
+use Symfony\Component\Serializer\SerializerInterface;
+
 
 class RestaurantController extends AbstractController
 {
     private $accessControl;
+    private $serializer;
 
-    public function __construct(accessControl $accessControl)
+    public function __construct(accessControl $accessControl, SerializerInterface $serializer)
     {
         $this->accessControl = $accessControl;
+        $this->serializer=$serializer;
     }
 
 
@@ -227,7 +231,8 @@ class RestaurantController extends AbstractController
             $em->persist($restaurant);
             $em->flush();
 
-            return $this->json($restaurant, 200);
+
+            return $this->json($restaurant->jsonSerialize(), 200);
         }
 
         return new JsonResponse(['message' => "Restaurant not found"], Response::HTTP_NOT_FOUND);

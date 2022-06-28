@@ -7,6 +7,8 @@ use App\Repository\RestaurantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
+
 
 #[ORM\Entity(repositoryClass: RestaurantRepository::class)]
 #[ApiResource]
@@ -39,25 +41,32 @@ class Restaurant
     private $photo;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'restaurant')]
+    #[MaxDepth(2)]
     private $users;
 
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Comment::class, orphanRemoval: true)]
+    #[MaxDepth(2)]
     private $comments;
 
     #[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'restaurant')]
     #[ORM\JoinColumn(nullable: true)]
+    #[MaxDepth(2)]
     private $country;
 
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Propose::class, orphanRemoval: true)]
+    #[MaxDepth(2)]
     private $proposes;
 
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Supplier::class)]
+    #[MaxDepth(2)]
     private $suppliers;
 
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Supply::class)]
+    #[MaxDepth(2)]
     private $supplies;
 
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Order::class)]
+    #[MaxDepth(2)]
     private $orders;
 
     public function __construct()
@@ -334,6 +343,8 @@ class Restaurant
 
     public function jsonSerialize()
     {
+        $users = $this->users->map(function($user){return $user->getId();})->getValues();
+
         return array(
             'id' => $this->id,
             'name'=> $this->name,
@@ -341,7 +352,7 @@ class Restaurant
             'phone'=> $this->phone,
             'address'=> $this->address,
             'postalcode'=> $this->postalCode,
-            'city'=> $this->city
+            'city'=> $this->city,
         );
     }
 }
