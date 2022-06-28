@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\AccessControl;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,12 +15,13 @@ class RestaurantController extends AbstractController
 {
 
     /**
-     * @Route (name="createRestaurant", path="/restaurant/create", methods={"POST"})
+     * @Route (name="createRestaurant", path="/restaurants/", methods={"POST"})
      * @param Request $request
      * @return JsonResponse
      */
     public function createRestaurant(Request $request, ManagerRegistry $doctrine)
     {
+
         $em = $doctrine->getManager();
         $restaurant = new Restaurant;
         $restaurantData = json_decode($request->getContent(), true);
@@ -37,13 +39,16 @@ class RestaurantController extends AbstractController
     }
 
     /**
-     * @Route (name="getRestaurant", path="/restaurant/get/{id}", methods={"GET"})
+     * @Route (name="getRestaurant", path="/restaurants/{id}", methods={"GET"})
      * @param ManagerRegistry $doctrine
      * @param $id
      * @return JsonResponse
      */
-    public function getRestaurant(ManagerRegistry $doctrine, $id)
+    public function getRestaurant(ManagerRegistry $doctrine, $id, AccessControl $accessControl)
     {
+        /* Token Verification
+        $user=$accessControl->verifyToken($request);
+        */
 
         $em = $doctrine->getManager();
         $restaurant = $em->getRepository(Restaurant::class)->findBy(["id" => $id]);
@@ -58,26 +63,33 @@ class RestaurantController extends AbstractController
 
 
     /**
-    * @Route (name="selectAllRestaurants", path="/restaurant/all", methods={"GET"})
+    * @Route (name="selectAllRestaurants", path="/restaurants/", methods={"GET"})
     * @param Request $request
     * @throws Exception
     * @return JsonResponse
     */
-    public function selectAllRestaurants(Request $request, ManagerRegistry $doctrine)
+    public function selectAllRestaurants(Request $request, ManagerRegistry $doctrine, AccessControl $accessControl)
     {
+        /* Token Verification
+        $user=$accessControl->verifyToken($request);
+        */
+
         $em = $doctrine->getManager();
         $restaurants = $em->getRepository(Restaurant::class)->findAll();
         return $this->json($restaurants, 200);
     }
 
     /**
-     * @Route (name="filterRestaurants", path="/restaurant/filter", methods={"POST"})
+     * @Route (name="filterRestaurants", path="/restaurants/filter", methods={"POST"})
      * @param Request $request
      * @throws Exception
      * @return JsonResponse
      */
-    public function filterRestaurantsByCity(Request $request, ManagerRegistry $doctrine)
+    public function filterRestaurantsByCity(Request $request, ManagerRegistry $doctrine, AccessControl $accessControl, $id)
     {
+        /* Token Verification
+        $user=$accessControl->verifyToken($request);
+        */
         $em = $doctrine->getManager();
         $data = json_decode($request->getContent(), true);
 
@@ -89,4 +101,52 @@ class RestaurantController extends AbstractController
 
         return $this->json($restaurants, 200);
     }
-}
+
+    /**
+     * @Route (name="setfavoriteRestaurant", path="/restaurants/setfavorite/{id}", methods={"PUT"})
+     * @param Request $request
+     * @throws Exception
+     * @return JsonResponse
+     */
+    public function setFavoriteRestaurant(Request $request, ManagerRegistry $doctrine, AccessControl $accessControl)
+    {
+        /* Token Verification
+        $user=$accessControl->verifyToken($request);
+        */
+
+        $em = $doctrine->getManager();
+        $restaurant = $em->getRepository(Restaurant::class)->findBy(["id" => $id]);
+
+        if($restaurant)
+        {
+            return $this->json($restaurant, 200);
+        }
+
+        return new JsonResponse(['message' => "Restaurant not found"], Response::HTTP_NOT_FOUND);
+    }
+
+    /**
+     * @Route (name="getRestaurantOrders", path="/restaurants/{id}/orders/", methods={"GET"})
+     * @param Request $request
+     * @throws Exception
+     * @return JsonResponse
+     */
+    public function getRestaurantOrders(Request $request, ManagerRegistry $doctrine, AccessControl $accessControl, $id)
+    {
+        /* Token Verification
+        $user=$accessControl->verifyToken($request);
+        */
+
+        $em = $doctrine->getManager();
+        $restaurant = $em->getRepository(Restaurant::class)->findBy(["id" => $id]);
+
+        if($restaurant)
+        {
+            return $this->json($restaurant->getOrders(), 200);
+        }
+
+        return new JsonResponse(['message' => "Restaurant not found"], Response::HTTP_NOT_FOUND);
+
+    }
+
+    }

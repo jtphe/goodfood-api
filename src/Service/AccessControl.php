@@ -29,7 +29,7 @@ class AccessControl
 
     public function verifyToken($request)
     {
-        $token = $request->headers->get("authorization");
+        $token = $request->headers->get("token");
 
         if($token===null)
         {

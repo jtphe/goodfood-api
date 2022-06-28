@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,8 +17,9 @@ class ServiceController extends AbstractController
         $this->JWTManager=JWTTokenManagerInterface::class;
     }
 
-    public function verifyToken($request)
+    public function verifyToken($request, JWTTokenManagerInterface $JWTManager)
     {
-        $token = $request->headers->get("authorization");
+        $token = $request->headers->get("token");
+        $JWTManager->decode($token);
     }
 }
