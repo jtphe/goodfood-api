@@ -108,7 +108,7 @@ class RestaurantController extends AbstractController
      * @throws Exception
      * @return JsonResponse
      */
-    public function setFavoriteRestaurant(Request $request, ManagerRegistry $doctrine, AccessControl $accessControl)
+    public function setFavoriteRestaurant(Request $request, ManagerRegistry $doctrine, AccessControl $accessControl, $id)
     {
         /* Token Verification
         $user=$accessControl->verifyToken($request);
@@ -144,9 +144,7 @@ class RestaurantController extends AbstractController
         {
             return $this->json($restaurant->getOrders(), 200);
         }
-
         return new JsonResponse(['message' => "Restaurant not found"], Response::HTTP_NOT_FOUND);
-
     }
 
     }
