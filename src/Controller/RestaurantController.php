@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Country;
 use App\Service\AccessControl;
 use Doctrine\Persistence\ManagerRegistry;
@@ -61,6 +62,65 @@ class RestaurantController extends AbstractController
 
         return $this->json(['message' => 'restaurant created', "statusCode" => 200]);
     }
+
+    /**
+     * @Route (name="updateRestaurant", path="/restaurants/{id}", methods={"PUT"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function updateRestaurant(Request $request, ManagerRegistry $doctrine,$id)
+    {
+
+        $em = $doctrine->getManager();
+        $restaurant = $em->getRepository(Restaurant::class)->findBy(["id" => $id]);
+
+        if($restaurant)
+        {
+            $restaurantData = json_decode($request->getContent(), true);
+
+            if(isset($restaurantData['name']))
+            {
+                $restaurant->setCountry($restaurantData['name']);
+            }
+            if(isset($restaurantData['description']))
+            {
+                $restaurant->setCountry($restaurantData['description']);
+            }
+            if(isset($restaurantData['address']))
+            {
+                $restaurant->setCountry($restaurantData['address']);
+            }
+            if(isset($restaurantData['postalCode']))
+            {
+                $restaurant->setCountry($restaurantData['postalCode']);
+            }
+            if(isset($restaurantData['city']))
+            {
+                $restaurant->setCountry($restaurantData['city']);
+            }
+            if(isset($restaurantData['country']))
+            {
+                $restaurant->setCountry($restaurantData['country']);
+            }
+            if(isset($restaurantData['phone']))
+            {
+                $restaurant->setCountry($restaurantData['phone']);
+            }
+            if(isset($restaurantData['photo']))
+            {
+                $restaurant->setCountry($restaurantData['photo']);
+            }
+            $em->persist($restaurant);
+            $em->flush();
+
+            return $this->json($restaurant, 200);
+
+        }
+
+        return new JsonResponse(['message' => "Restaurant not found"], Response::HTTP_NOT_FOUND);
+
+    }
+
 
     /**
      * @Route (name="getRestaurant", path="/restaurants/{id}", methods={"GET"})
@@ -181,7 +241,9 @@ class RestaurantController extends AbstractController
 
         if($restaurant)
         {
-            return $this->json($restaurant, 200);
+            $user->addRestaurant($restaurant);
+
+            return $this->json($user, 200);
         }
 
         return new JsonResponse(['message' => "Restaurant not found"], Response::HTTP_NOT_FOUND);
@@ -272,6 +334,80 @@ class RestaurantController extends AbstractController
 
         return new JsonResponse(['message' => "country not found"], Response::HTTP_NOT_FOUND);
     }
+
+    /**
+     * @Route (name="createComment", path="/restaurants/{id}/comments", methods={"POST"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function createComment(Request $request, ManagerRegistry $doctrine, $id)
+    {
+        $user=$this->accessControl->verifyToken($request);
+
+        switch($user){
+            case 0:
+                $message = ["message" =>"Token vide"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+                break;
+            case 1:
+                $message = ["message" =>"Utilisateur introuvable ou erreur de token"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+                break;
+        }
+
+        $em = $doctrine->getManager();
+        $restaurant = $em->getRepository(Restaurant::class)->findBy(["id" => $id]);
+
+        $comment = new Comment();
+        $commentData = json_decode($request->getContent(), true);
+
+        $comment->setDescription($commentData['description']);
+        $comment->setUsers($user);
+        $comment->setRestaurant($restaurant);
+        $comment->setRating($commentData['rating']);
+
+        $em->persist($comment);
+        $em->flush();
+
+        return $this->json(['message' => 'comment created', "statusCode" => 200]);
+    }
+
+    /**
+     * @Route (name="getRestaurantComments", path="/restaurants/{id}/comments", methods={"GET"})
+     * @param Request $request
+     * @param ManagerRegistry $doctrine
+     * @param $id
+     * @return JsonResponse
+     */
+    public function getRestaurantComments(Request $request,ManagerRegistry $doctrine, $id)
+    {
+        $user=$this->accessControl->verifyToken($request);
+        switch($user){
+            case 0:
+                $message = ["message" =>"Token vide"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+                break;
+            case 1:
+                $message = ["message" =>"Utilisateur introuvable ou erreur de token"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+                break;
+        }
+
+
+        $em = $doctrine->getManager();
+        $restaurant = $em->getRepository(Restaurant::class)->findBy(["id" => $id]);
+
+        if($restaurant)
+        {
+            $comments = $restaurant->getComments();
+            return $this->json($comments, 200);
+        }
+
+        return new JsonResponse(['message' => "Comments not found"], Response::HTTP_NOT_FOUND);
+    }
+
+
+
 
 
 }
