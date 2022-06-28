@@ -35,7 +35,7 @@ class AccessControl
         if($token===null)
         {
             $message = ["message" =>"Token vide"];
-            return 0;
+            return null;
         }
 
         $token = $this->JWTManager->parse($token);
@@ -45,7 +45,7 @@ class AccessControl
 
         if($user==null)
         {
-            return 1;
+            return null;
         }
 
         return $user;

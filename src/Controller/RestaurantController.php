@@ -225,23 +225,22 @@ class RestaurantController extends AbstractController
     public function setFavoriteRestaurant(Request $request, ManagerRegistry $doctrine,$id)
     {
         $user=$this->accessControl->verifyToken($request);
-        switch($user){
-            case 0:
-                $message = ["message" =>"Token vide"];
-                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-                break;
-            case 1:
-                $message = ["message" =>"Utilisateur introuvable ou erreur de token"];
-                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-                break;
+
+        if($user==null)
+        {
+            $message = ["message" => "Token vide"];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
         $em = $doctrine->getManager();
-        $restaurant = $em->getRepository(Restaurant::class)->findBy(["id" => $id]);
+
+        $restaurant = $em->getRepository(Restaurant::class)->findOneBy(["id" => $id]);
 
         if($restaurant)
         {
             $user->addRestaurant($restaurant);
+
+
             return $this->json($restaurant, 200);
         }
 
@@ -270,7 +269,7 @@ class RestaurantController extends AbstractController
         }
 
         $em = $doctrine->getManager();
-        $restaurant = $em->getRepository(Restaurant::class)->findBy(["id" => $id]);
+        $restaurant = $em->getRepository(Restaurant::class)->findOneBy(["id" => $id]);
 
         if($restaurant)
         {
@@ -324,7 +323,7 @@ class RestaurantController extends AbstractController
     {
 
         $em = $doctrine->getManager();
-        $country = $em->getRepository(Country::class)->findBy(["id" => $id]);
+        $country = $em->getRepository(Country::class)->findOneBy(["id" => $id]);
 
         if($country)
         {
@@ -355,7 +354,7 @@ class RestaurantController extends AbstractController
         }
 
         $em = $doctrine->getManager();
-        $restaurant = $em->getRepository(Restaurant::class)->findBy(["id" => $id]);
+        $restaurant = $em->getRepository(Restaurant::class)->findOneBy(["id" => $id]);
 
         $comment = new Comment();
         $commentData = json_decode($request->getContent(), true);
@@ -394,7 +393,7 @@ class RestaurantController extends AbstractController
 
 
         $em = $doctrine->getManager();
-        $restaurant = $em->getRepository(Restaurant::class)->findBy(["id" => $id]);
+        $restaurant = $em->getRepository(Restaurant::class)->findOneBy(["id" => $id]);
 
         if($restaurant)
         {

@@ -99,7 +99,7 @@ class SupplyController extends AbstractController
         }
 
         $em = $doctrine->getManager();
-        $supplier = $em->getRepository(Supplier::class)->findBy(["id" => $id]);
+        $supplier = $em->getRepository(Supplier::class)->findOneBy(["id" => $id]);
 
         if($supplier)
         {
@@ -131,7 +131,7 @@ class SupplyController extends AbstractController
         }
 
         $em = $doctrine->getManager();
-        $supplier = $em->getRepository(Supplier::class)->findBy(["id" => $id]);
+        $supplier = $em->getRepository(Supplier::class)->findOneBy(["id" => $id]);
 
         if($supplier)
         {
@@ -199,7 +199,7 @@ class SupplyController extends AbstractController
         }
 
         $em = $doctrine->getManager();
-        $supply = $em->getRepository(Supply::class)->findBy(["id" => $id]);
+        $supply = $em->getRepository(Supply::class)->findOneBy(["id" => $id]);
 
         if($supply)
         {
@@ -231,7 +231,7 @@ class SupplyController extends AbstractController
         }
 
         $em = $doctrine->getManager();
-        $supply = $em->getRepository(Supply::class)->findBy(["id" => $id]);
+        $supply = $em->getRepository(Supply::class)->findOneBy(["id" => $id]);
 
         if($supply)
         {
@@ -289,7 +289,7 @@ class SupplyController extends AbstractController
         }
 
         $em = $doctrine->getManager();
-        $supply = $em->getRepository(Supply::class)->findBy(["id" => $id]);
+        $supply = $em->getRepository(Supply::class)->findOneBy(["id" => $id]);
 
         if($supply)
         {
@@ -337,7 +337,7 @@ class SupplyController extends AbstractController
         }
 
         $em = $doctrine->getManager();
-        $supplier = $em->getRepository(Supply::class)->findBy(["id" => $id]);
+        $supplier = $em->getRepository(Supply::class)->findOneBy(["id" => $id]);
 
         $supplies=$supplier->getSupplies();
         return $this->json($supplies, 200);
