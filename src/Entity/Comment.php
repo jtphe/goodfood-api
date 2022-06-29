@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 #[ApiResource]
@@ -27,6 +28,9 @@ class Comment
 
     #[ORM\ManyToOne(targetEntity: restaurant::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
+    /**
+     * @Ignore
+     */
     private $restaurant;
 
     public function getId(): ?int

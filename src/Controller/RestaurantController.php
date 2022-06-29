@@ -367,8 +367,6 @@ class RestaurantController extends AbstractController
             $message = ["message" => "Token vide"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
-
-
         $em = $doctrine->getManager();
         $restaurant = $em->getRepository(Restaurant::class)->findOneBy(["id" => $id]);
 

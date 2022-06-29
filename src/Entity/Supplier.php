@@ -7,6 +7,7 @@ use App\Repository\SupplierRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: SupplierRepository::class)]
 #[ApiResource]
@@ -22,9 +23,13 @@ class Supplier
 
     #[ORM\ManyToOne(targetEntity: restaurant::class, inversedBy: 'suppliers')]
     #[ORM\JoinColumn(nullable: false)]
+
     private $restaurant;
 
     #[ORM\OneToMany(mappedBy: 'supplier', targetEntity: Supply::class)]
+    /**
+     * @Ignore
+     */
     private $supplies;
 
     public function __construct()
