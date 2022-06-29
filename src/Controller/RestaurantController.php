@@ -232,6 +232,9 @@ class RestaurantController extends AbstractController
             if($user->getRestaurant() === $restaurant)
             {
                 $user->setRestaurant(null);
+
+                return new JsonResponse(['message' => "Favorite Restaurant Removed"], Response::HTTP_OK);
+
             }
 
             $user->setRestaurant($restaurant);
