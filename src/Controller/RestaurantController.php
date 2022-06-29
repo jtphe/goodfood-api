@@ -228,12 +228,12 @@ class RestaurantController extends AbstractController
 
         if($restaurant)
         {
-            $user->addRestaurant($restaurant);
+            $user->setRestaurant($restaurant);
             $em->persist($restaurant);
             $em->flush();
 
 
-            return $this->json($restaurant->jsonSerialize(), 200);
+            return new JsonResponse(['message' => "Favorite Restaurant Selected"], Response::HTTP_NOT_FOUND);
         }
 
         return new JsonResponse(['message' => "Restaurant not found"], Response::HTTP_NOT_FOUND);

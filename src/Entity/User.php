@@ -47,11 +47,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
     #[ORM\Column(type: 'string', length: 30, nullable: true)]
     private $city;
 
-    #[ORM\OneToMany(mappedBy: 'users', targetEntity: Restaurant::class)]
-    /**
-     * @Ignore
-     */
-    private $restaurant;
 
     #[ORM\OneToMany(mappedBy: 'users', targetEntity: Comment::class, orphanRemoval: true)]
     /**
@@ -67,6 +62,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $passwordToken;
+
+    #[ORM\ManyToOne(targetEntity: Restaurant::class, inversedBy: 'Users')]
+    private $restaurant;
 
     public function __construct()
     {
@@ -204,36 +202,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
     }
 
     /**
-     * @return Collection<int, Restaurant>
-     */
-    public function getRestaurant(): Collection
-    {
-        return $this->restaurant;
-    }
-
-    public function addRestaurant(Restaurant $restaurant): self
-    {
-        if (!$this->restaurant->contains($restaurant)) {
-            $this->restaurant[] = $restaurant;
-            $restaurant->setUsers($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRestaurant(Restaurant $restaurant): self
-    {
-        if ($this->restaurant->removeElement($restaurant)) {
-            // set the owning side to null (unless already changed)
-            if ($restaurant->getUsers() === $this) {
-                $restaurant->setUsers(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, Comment>
      */
     public function getComments(): Collection
@@ -316,6 +284,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
     public function setPasswordToken(?string $passwordToken): self
     {
         $this->passwordToken = $passwordToken;
+
+        return $this;
+    }
+
+    public function getRestaurant(): ?Restaurant
+    {
+        return $this->restaurant;
+    }
+
+    public function setRestaurant(?Restaurant $restaurant): self
+    {
+        $this->restaurant = $restaurant;
 
         return $this;
     }

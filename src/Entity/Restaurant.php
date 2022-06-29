@@ -68,12 +68,6 @@ class Restaurant
      */
     private $photo;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'restaurant')]
-    /**
-     * @Ignore
-     */
-    private $users;
-
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Comment::class, orphanRemoval: true)]
     /**
      * @Ignore
@@ -108,6 +102,9 @@ class Restaurant
      */
     private $orders;
 
+    #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: User::class)]
+    private $Users;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -115,6 +112,7 @@ class Restaurant
         $this->suppliers = new ArrayCollection();
         $this->supplies = new ArrayCollection();
         $this->orders = new ArrayCollection();
+        $this->Users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -206,17 +204,6 @@ class Restaurant
         return $this;
     }
 
-    public function getUsers(): ?User
-    {
-        return $this->users;
-    }
-
-    public function setUsers(?User $users): self
-    {
-        $this->users = $users;
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Comment>
@@ -391,5 +378,35 @@ class Restaurant
             'postalcode'=> $this->postalCode,
             'city'=> $this->city,
         );
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->Users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->Users->contains($user)) {
+            $this->Users[] = $user;
+            $user->setRestaurant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->Users->removeElement($user)) {
+            // set the owning side to null (unless already changed)
+            if ($user->getRestaurant() === $this) {
+                $user->setRestaurant(null);
+            }
+        }
+
+        return $this;
     }
 }
