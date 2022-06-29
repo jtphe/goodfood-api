@@ -65,7 +65,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
 
     #[ORM\ManyToOne(targetEntity: Restaurant::class, inversedBy: 'Users')]
     /**
-     * @Ignore
+     * @Ignore()
      */
     private $restaurant;
 
@@ -273,9 +273,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
             'address'=> $this->address,
             'postalcode'=> $this->postalCode,
             'city'=> $this->city,
-            'roles' => $this->roles[0]
+            'roles' => $this->roles[0],
+            'restaurant' =>$this->restaurant->getId()
         );
+
     }
+
 
     public function getPasswordToken(): ?string
     {

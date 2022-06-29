@@ -17,10 +17,21 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 
 class UserController extends AbstractController
 {
+
+    private $accessControl;
+    private $serializer;
+
+    public function __construct(accessControl $accessControl, SerializerInterface $serializer)
+    {
+        $this->accessControl = $accessControl;
+        $this->serializer=$serializer;
+    }
+
 
 
     /**
@@ -170,6 +181,32 @@ class UserController extends AbstractController
         }
 
         return new JsonResponse(["message" => "l'utilisateur n'est pas trouvé"], Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     *@Route(name="getUserRestaurant", path="/users/restaurant", methods={"GET"})
+     */
+    public function getUserRestaurant(Request $request,ManagerRegistry $doctrine)
+    {
+        $user=$this->accessControl->verifyToken($request);
+
+        if($user==null)
+        {
+            $message = ["message" => "Token vide"];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+        }
+
+        $em = $doctrine->getManager();
+
+        $restaurant=$user->getRestaurant();
+        if($restaurant)
+        {
+            return $this->json($restaurant,200);
+
+        }
+
+        return new JsonResponse(['message' => "Restaurant not selected"], Response::HTTP_NOT_FOUND);
+
     }
 
 

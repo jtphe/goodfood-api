@@ -370,19 +370,6 @@ class Restaurant
         return $this;
     }
 
-    public function jsonSerialize()
-    {
-        return array(
-            'id' => $this->id,
-            'name'=> $this->name,
-            'description'=> $this->description,
-            'phone'=> $this->phone,
-            'address'=> $this->address,
-            'postalcode'=> $this->postalCode,
-            'city'=> $this->city,
-        );
-    }
-
     /**
      * @return Collection<int, User>
      */
@@ -412,4 +399,19 @@ class Restaurant
 
         return $this;
     }
+
+    public function jsonSerialize()
+    {
+        return array(
+            'id' => $this->id,
+            'name'=> $this->name,
+            'description'=> $this->description,
+            'phone'=> $this->phone,
+            'address'=> $this->address,
+            'postalcode'=> $this->postalCode,
+            'city'=> $this->city,
+            'country' => $this->country->getId()
+        );
+    }
+
 }
