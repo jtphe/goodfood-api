@@ -103,6 +103,9 @@ class Restaurant
     private $orders;
 
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: User::class)]
+    /**
+     * @Ignore
+     */
     private $Users;
 
     public function __construct()
