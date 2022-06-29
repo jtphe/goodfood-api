@@ -229,10 +229,11 @@ class RestaurantController extends AbstractController
         if($restaurant)
         {
 
-            if($user->getRestaurant ===$restaurant)
+            if($user->getRestaurant() === $restaurant)
             {
-
+                $user->setRestaurant(null);
             }
+
             $user->setRestaurant($restaurant);
             $em->persist($restaurant);
             $em->flush();
