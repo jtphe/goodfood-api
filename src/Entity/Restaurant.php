@@ -106,7 +106,7 @@ class Restaurant
     /**
      * @Ignore
      */
-    private $Users;
+    private $user;
 
     public function __construct()
     {
@@ -115,7 +115,7 @@ class Restaurant
         $this->suppliers = new ArrayCollection();
         $this->supplies = new ArrayCollection();
         $this->orders = new ArrayCollection();
-        $this->Users = new ArrayCollection();
+        $this->user = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -373,15 +373,15 @@ class Restaurant
     /**
      * @return Collection<int, User>
      */
-    public function getUsers(): Collection
+    public function getuser(): Collection
     {
-        return $this->Users;
+        return $this->user;
     }
 
     public function addUser(User $user): self
     {
-        if (!$this->Users->contains($user)) {
-            $this->Users[] = $user;
+        if (!$this->user->contains($user)) {
+            $this->user[] = $user;
             $user->setRestaurant($this);
         }
 
@@ -390,7 +390,7 @@ class Restaurant
 
     public function removeUser(User $user): self
     {
-        if ($this->Users->removeElement($user)) {
+        if ($this->user->removeElement($user)) {
             // set the owning side to null (unless already changed)
             if ($user->getRestaurant() === $this) {
                 $user->setRestaurant(null);

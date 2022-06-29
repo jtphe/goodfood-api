@@ -252,7 +252,7 @@ class RestaurantController extends AbstractController
     }
 
     /**
-     * @Route (name="getRestaurantOrders", path="/restaurants/{id}/orders/", methods={"GET"})
+     * @Route (name="getRestaurantOrders", path="/restaurants/{id}/orders", methods={"GET"})
      * @param Request $request
      * @throws Exception
      * @return JsonResponse

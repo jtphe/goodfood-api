@@ -53,7 +53,7 @@ class UserController extends AbstractController
             return $this->json($user, 200, [], ['group' => 'read']);
         }
 
-        return new JsonResponse(["message" => "l'utilisateur n'est pas trouvé"], Response::HTTP_NO_CONTENT);
+        return new JsonResponse(["message" => "User not found"], Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -85,13 +85,13 @@ class UserController extends AbstractController
 
         if ($oldPassword != $password) {
 
-            $message = ["message" => "Le mot de passe est mauvais"];
+            $message = ["message" => "Wrong Password"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
         if ($newPassword == $oldPassword) {
 
-            $message = ["message" => "Ce sont les mêmes mot de passe"];
+            $message = ["message" => "Not the same passwords"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
@@ -100,7 +100,7 @@ class UserController extends AbstractController
 
         $em->persist($user);
         $em->flush();
-        $message = ["message" => "Mot de passe modifié"];
+        $message = ["message" => "Password Modified"];
         return new JsonResponse($message, Response::HTTP_CREATED);
     }
 
@@ -148,7 +148,7 @@ class UserController extends AbstractController
 
         }
 
-        return new JsonResponse(["message" => "l'utilisateur n'est pas trouvé"], Response::HTTP_NO_CONTENT);
+        return new JsonResponse(["message" => "User not found"], Response::HTTP_NO_CONTENT);
 
     }
 
@@ -175,16 +175,16 @@ class UserController extends AbstractController
             $user->setPassword($password);
             $user->setPasswordToken(null);
 
-            $message = ["message" => "mot de passe réinitialisé"];
+            $message = ["message" => "Password reinitialised"];
             return new JsonResponse($message, Response::HTTP_OK);
 
         }
 
-        return new JsonResponse(["message" => "l'utilisateur n'est pas trouvé"], Response::HTTP_NO_CONTENT);
+        return new JsonResponse(["message" => "User not found"], Response::HTTP_NO_CONTENT);
     }
 
     /**
-     *@Route(name="getUserRestaurant", path="/users/restaurant", methods={"GET"})
+     *@Route(name="getUserRestaurant", path="/users/restaurants", methods={"GET"})
      */
     public function getUserRestaurant(Request $request,ManagerRegistry $doctrine)
     {
@@ -192,7 +192,7 @@ class UserController extends AbstractController
 
         if($user==null)
         {
-            $message = ["message" => "Token vide"];
+            $message = ["message" => "Empty Token"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
