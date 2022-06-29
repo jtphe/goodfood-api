@@ -229,18 +229,21 @@ class RestaurantController extends AbstractController
         if($restaurant)
         {
 
-            if($user->getRestaurant() === $restaurant)
+            if($user->getRestaurant() == $restaurant)
             {
                 $user->setRestaurant(null);
+                $restaurant->removeUser($user);
+
+                $em->persist($restaurant);
+                $em->persist($user);
+                $em->flush();
 
                 return new JsonResponse(['message' => "Favorite Restaurant Removed"], Response::HTTP_OK);
-
             }
 
             $user->setRestaurant($restaurant);
             $em->persist($restaurant);
             $em->flush();
-
 
             return new JsonResponse(['message' => "Favorite Restaurant Selected"], Response::HTTP_OK);
         }
