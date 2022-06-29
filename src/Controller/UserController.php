@@ -38,11 +38,8 @@ class UserController extends AbstractController
 
         if($user)
         {
-            $response = new JsonResponse(
-                ['user' => $user],
-                Response::HTTP_ACCEPTED);
 
-            return $response;
+            return $this->json($user, 200, [], ['group' => 'read']);
         }
 
         return new JsonResponse(["message" => "l'utilisateur n'est pas trouvé"], Response::HTTP_NO_CONTENT);

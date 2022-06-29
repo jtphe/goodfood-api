@@ -64,11 +64,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
     private $passwordToken;
 
     #[ORM\ManyToOne(targetEntity: Restaurant::class, inversedBy: 'Users')]
+    /**
+     * @Ignore
+     */
     private $restaurant;
 
     public function __construct()
     {
-        $this->restaurant = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->orders = new ArrayCollection();
     }
@@ -270,7 +272,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
             'lastname'=> $this->lastName,
             'address'=> $this->address,
             'postalcode'=> $this->postalCode,
-            'restaurant' => $this->restaurant,
             'city'=> $this->city,
             'roles' => $this->roles[0]
         );

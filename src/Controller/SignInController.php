@@ -49,15 +49,9 @@ class SignInController extends AbstractController
 
                 $token = $JWTManager->create($findUser);
 
-                $response = new JsonResponse(
-                    ["token" => $token,
-                        'user' => $findUser],
-                    Response::HTTP_ACCEPTED);
 
-                $response->headers->add(["token"=>$token]);
+                return $this->json(["token"=>$token,"user"=>$findUser->jsonSerialize()], 200, [],['group' => 'read']);
 
-
-                return $response;
 
             }
 
