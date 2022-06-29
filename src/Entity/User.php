@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Validator\Constraints\Json;
 use Symfony\Component\Serializer\Serializer;
 
@@ -47,12 +48,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
     private $city;
 
     #[ORM\OneToMany(mappedBy: 'users', targetEntity: Restaurant::class)]
+    /**
+     * @Ignore
+     */
     private $restaurant;
 
     #[ORM\OneToMany(mappedBy: 'users', targetEntity: Comment::class, orphanRemoval: true)]
+    /**
+     * @Ignore
+     */
     private $comments;
 
     #[ORM\OneToMany(mappedBy: 'users', targetEntity: Order::class)]
+    /**
+     * @Ignore
+     */
     private $orders;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]

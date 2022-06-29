@@ -7,6 +7,7 @@ use App\Repository\CountryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: CountryRepository::class)]
 #[ApiResource]
@@ -24,6 +25,9 @@ class Country
     private $tax;
 
     #[ORM\OneToMany(mappedBy: 'country', targetEntity: restaurant::class)]
+    /**
+     * @Ignore
+     */
     private $restaurant;
 
     public function __construct()

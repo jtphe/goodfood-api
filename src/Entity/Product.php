@@ -7,6 +7,7 @@ use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ApiResource]
@@ -30,6 +31,9 @@ class Product
     private $image;
 
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: Propose::class, orphanRemoval: true)]
+    /**
+     * @Ignore
+     */
     private $proposes;
 
     public function __construct()

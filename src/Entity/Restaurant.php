@@ -75,13 +75,13 @@ class Restaurant
     private $users;
 
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Comment::class, orphanRemoval: true)]
+    /**
+     * @Ignore
+     */
     private $comments;
 
     #[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'restaurant')]
     #[ORM\JoinColumn(nullable: true)]
-    /**
-     * @Ignore
-     */
     private $country;
 
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Propose::class, orphanRemoval: true)]

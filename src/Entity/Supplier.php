@@ -23,7 +23,6 @@ class Supplier
 
     #[ORM\ManyToOne(targetEntity: restaurant::class, inversedBy: 'suppliers')]
     #[ORM\JoinColumn(nullable: false)]
-
     private $restaurant;
 
     #[ORM\OneToMany(mappedBy: 'supplier', targetEntity: Supply::class)]
