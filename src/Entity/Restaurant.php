@@ -410,7 +410,7 @@ class Restaurant
             'address'=> $this->address,
             'postalcode'=> $this->postalCode,
             'city'=> $this->city,
-            'country' => $this->country->getId()
+            'country' => $this->country  ? $this->country->getId() : null
         );
     }
 
