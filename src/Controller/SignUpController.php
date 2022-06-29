@@ -77,7 +77,7 @@ class SignUpController extends AbstractController
                         'token' => $token],
                     Response::HTTP_CREATED);
 
-                $response->headers->add(["authorization" => $token]);
+                $response->headers->add(["token" => $token]);
 
                 return $response;
         } catch (PDOException $e) {

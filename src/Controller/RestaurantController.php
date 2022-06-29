@@ -207,7 +207,7 @@ class RestaurantController extends AbstractController
     }
 
     /**
-     * @Route (name="setfavoriteRestaurant", path="/restaurants/setfavorite/{id}", methods={"PUT"})
+     * @Route (name="setfavoriteRestaurant", path="/restaurants/{id}/setfavorite", methods={"PUT"})
      * @param Request $request
      * @throws Exception
      * @return JsonResponse
