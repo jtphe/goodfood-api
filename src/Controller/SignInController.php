@@ -61,10 +61,10 @@ class SignInController extends AbstractController
 
             }
 
-            return new JsonResponse(['message' => "Mauvais identifiants"], Response::HTTP_UNAUTHORIZED);
+            return new JsonResponse(['message' => "Bad ID"], Response::HTTP_UNAUTHORIZED);
         }
 
-        return new JsonResponse(['message' => "Déja connecté"], Response::HTTP_UNAUTHORIZED);
+        return new JsonResponse(['message' => "Already connected"], Response::HTTP_UNAUTHORIZED);
 
     }
 
