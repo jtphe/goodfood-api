@@ -49,7 +49,7 @@ class SignInController extends AbstractController
 
                 $token = $JWTManager->create($findUser);
 
-                if (!$passwordHasher->isPasswordValid($user, $password)) {
+                if (!$passwordHasher->isPasswordValid($findUser, $password)) {
                     return new JsonResponse(['message' => "Bad Password"], Response::HTTP_UNAUTHORIZED);
                 }
 
