@@ -97,7 +97,7 @@ class ProductController extends AbstractController {
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
-        if($user->getRoles()[0]!="worker" or $user->getRoles()[0]!="manager")
+        if(!$user->getRoles()->contains("worker") or !$user->getRoles()->contains("manager"))
         {
             $message = ["message" => "Worker access required"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
