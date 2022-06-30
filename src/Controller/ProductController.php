@@ -29,7 +29,8 @@ class ProductController extends AbstractController {
     /**
      * @Route (name="selectAllProducts", path="/restaurants/{id}/products", methods={"GET"})
      * @param Request $request
-     * @throws Exception
+     * @param ManagerRegistry $doctrine
+     * @param $id
      * @return JsonResponse
      */
     public function selectAllProducts(Request $request, ManagerRegistry $doctrine, $id )
@@ -128,7 +129,8 @@ class ProductController extends AbstractController {
     /**
      * @Route (name="updateProduct", path="/products/{id}", methods={"PUT"})
      * @param Request $request
-     * @throws Exception
+     * @param ManagerRegistry $doctrine
+     * @param $id
      * @return JsonResponse
      */
     public function updateProduct(Request $request, ManagerRegistry $doctrine, $id)

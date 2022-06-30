@@ -415,7 +415,7 @@ class RestaurantController extends AbstractController
 
         if($comment)
         {
-            if($comment->getUsers()->getId() == $user->getId())
+            if($comment->getUser()->getId() == $user->getId())
             {
                 $em->remove($comment);
                 $em->flush();
