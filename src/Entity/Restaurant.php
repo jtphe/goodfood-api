@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\RestaurantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -16,7 +15,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: RestaurantRepository::class)]
 #[ApiResource]
-class Restaurant
+class Restaurant implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -103,12 +102,14 @@ class Restaurant
     private $user;
 
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Product::class, orphanRemoval: true)]
+    /**
+     * @Ignore
+     */
     private $products;
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
-        $this->proposes = new ArrayCollection();
         $this->suppliers = new ArrayCollection();
         $this->supplies = new ArrayCollection();
         $this->orders = new ArrayCollection();

@@ -47,7 +47,7 @@ class Order
 
     #[ORM\ManyToOne(targetEntity: user::class, inversedBy: 'orders')]
     #[ORM\JoinColumn(nullable: false)]
-    private $users;
+    private $user;
 
     #[ORM\ManyToOne(targetEntity: restaurant::class, inversedBy: 'orders')]
     #[ORM\JoinColumn(nullable: false)]
@@ -178,14 +178,14 @@ class Order
         return $this;
     }
 
-    public function getUsers(): ?user
+    public function getUser(): ?user
     {
-        return $this->users;
+        return $this->user;
     }
 
-    public function setUsers(?user $users): self
+    public function setUser(?user $user): self
     {
-        $this->users = $users;
+        $this->user = $user;
 
         return $this;
     }

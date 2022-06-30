@@ -12,6 +12,8 @@ use App\Repository\ProductRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\SerializerInterface;
+
 
 
 class ProductController extends AbstractController {
@@ -30,7 +32,7 @@ class ProductController extends AbstractController {
      * @throws Exception
      * @return JsonResponse
      */
-    public function selectAllProducts($request, ManagerRegistry $doctrine, $id )
+    public function selectAllProducts(Request $request, ManagerRegistry $doctrine, $id )
     {
 
         $user=$this->accessControl->verifyToken($request);
@@ -56,10 +58,11 @@ class ProductController extends AbstractController {
     /**
      * @Route (name="getProduct", path="/products/{id}", methods={"GET"})
      * @param Request $request
-     * @throws Exception
+     * @param ManagerRegistry $doctrine
+     * @param $id
      * @return JsonResponse
      */
-    public function getProduct($request, ManagerRegistry $doctrine, $id )
+    public function getProduct(Request $request, ManagerRegistry $doctrine, $id )
     {
 
         $user=$this->accessControl->verifyToken($request);
@@ -97,7 +100,7 @@ class ProductController extends AbstractController {
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
-        if(!$user->getRoles()->contains("worker") or !$user->getRoles()->contains("manager"))
+        if(in_array('manager', $user->getRoles(), false) or in_array('worker', $user->getRoles(), false) )
         {
             $message = ["message" => "Worker access required"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
@@ -128,7 +131,7 @@ class ProductController extends AbstractController {
      * @throws Exception
      * @return JsonResponse
      */
-    public function updateProduct($request, ManagerRegistry $doctrine, $id)
+    public function updateProduct(Request $request, ManagerRegistry $doctrine, $id)
     {
         $user=$this->accessControl->verifyToken($request);
         if($user==null)
@@ -178,14 +181,14 @@ class ProductController extends AbstractController {
     }
 
 
-
     /**
      * @Route (name="selectProductsByName", path="/selectProductsByName", methods={"GET"})
      * @param Request $request
-     * @throws Exception
+     * @param ManagerRegistry $doctrine
+     * @param ProductRepository $productRepository
      * @return JsonResponse
      */
-    public function selectProductsByName($request, ManagerRegistry $doctrine, ProductRepository $productRepository) {
+    public function selectProductsByName(Request $request, ManagerRegistry $doctrine, ProductRepository $productRepository) {
 
         $chars = json_decode($request->getContent(), true);
         $productsFilteredByName = $productRepository->selectProductsByName($chars);
@@ -201,10 +204,10 @@ class ProductController extends AbstractController {
     /**
      * @Route (name="selectProductsByType", path="/selectProductsByName", methods={"GET"})
      * @param Request $request
-     * @throws Exception
+     * @param ManagerRegistry $doctrine
      * @return JsonResponse
      */
-    public function selectProductsByType($request, ManagerRegistry $doctrine) {
+    public function selectProductsByType(Request $request, ManagerRegistry $doctrine) {
         $type = json_decode($request->getContent(), true);
         $em = $doctrine->getManager();
         $productsFilteredByType = $em->getRepository(Product::class)->findBy(["id" => $type['id']]);

@@ -2,32 +2,50 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Validator\Constraints\Json;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ApiResource]
-class Product
+class Product implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    /**
+     * @Groups("read")
+     */
     private $id;
 
     #[ORM\Column(type: 'string', length: 100)]
+    /**
+     * @Groups("read")
+     */
     private $name;
 
     #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @Groups("read")
+     */
     private $description;
 
     #[ORM\Column(type: 'float')]
+    /**
+     * @Groups("read")
+     */
     private $price;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    /**
+     * @Groups("read")
+     */
     private $image;
 
     #[ORM\ManyToOne(targetEntity: restaurant::class, inversedBy: 'products')]
@@ -35,9 +53,15 @@ class Product
     private $restaurant;
 
     #[ORM\Column(type: 'integer')]
+    /**
+     * @Groups("read")
+     */
     private $stock;
 
     #[ORM\Column(type: 'integer', nullable: true)]
+    /**
+     * @Groups("read")
+     */
     private $discount;
 
 
@@ -81,6 +105,21 @@ class Product
 
         return $this;
     }
+
+    public function jsonSerialize()
+    {
+        return array(
+            'id' => $this->id,
+            'name'=> $this->name,
+            'description'=> $this->description,
+            'image'=> $this->image,
+            'price'=> $this->price,
+            'discount'=> $this->discount,
+            'stock'=> $this->stock,
+            'restaurant' => $this->restaurant  ? $this->restaurant->getId() : null
+        );
+    }
+
 
     public function getImage(): ?string
     {
@@ -128,20 +167,6 @@ class Product
         $this->discount = $discount;
 
         return $this;
-    }
-
-    public function jsonSerialize()
-    {
-        return array(
-            'id' => $this->id,
-            'name'=> $this->name,
-            'description'=> $this->description,
-            'image'=> $this->image,
-            'price'=> $this->price,
-            'discount'=> $this->discount,
-            'stock'=> $this->stock,
-            'restaurant' => $this->restaurant  ? $this->restaurant->getId() : null
-        );
     }
 
 }

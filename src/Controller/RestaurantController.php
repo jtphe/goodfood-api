@@ -181,7 +181,9 @@ class RestaurantController extends AbstractController
     /**
      * @Route (name="filterRestaurants", path="/restaurants/filter", methods={"POST"})
      * @param Request $request
-     * @throws Exception
+     * @param ManagerRegistry $doctrine
+     * @param AccessControl $accessControl
+     * @param $id
      * @return JsonResponse
      */
     public function filterRestaurantsByCity(Request $request, ManagerRegistry $doctrine, AccessControl $accessControl, $id)
@@ -209,7 +211,8 @@ class RestaurantController extends AbstractController
     /**
      * @Route (name="setfavoriteRestaurant", path="/restaurants/{id}/setfavorite", methods={"PUT"})
      * @param Request $request
-     * @throws Exception
+     * @param ManagerRegistry $doctrine
+     * @param $id
      * @return JsonResponse
      */
     public function setFavoriteRestaurant(Request $request, ManagerRegistry $doctrine,$id)
@@ -354,15 +357,18 @@ class RestaurantController extends AbstractController
         $commentData = json_decode($request->getContent(), true);
 
         $comment->setDescription($commentData['description']);
-        $comment->setUsers($user);
+        $comment->setUser($user);
         $comment->setRestaurant($restaurant);
-        $comment->setRating($commentData['rating']);
+
+        if(isset($commentData['rating']))
+        {
+            $comment->setRating($commentData['rating']);
+        }
 
         $em->persist($comment);
         $em->flush();
 
-        return $this->json(['message' => 'comment created', "statusCode" => 200]);
-    }
+        return $this->json($comment, 200);    }
 
     /**
      * @Route (name="getRestaurantComments", path="/restaurants/{id}/comments", methods={"GET"})

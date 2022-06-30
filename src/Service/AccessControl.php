@@ -53,7 +53,7 @@ class AccessControl
 
     public function verifyStaff($user,$entity)
     {
-        if($user->getRoles()[0]!="worker" or $user->getRoles()[0]!="manager" )
+        if(in_array('manager', $user->getRoles(), false) or in_array('worker', $user->getRoles(), false))
         {
             return null;
         }
