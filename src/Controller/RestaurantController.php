@@ -379,6 +379,7 @@ class RestaurantController extends AbstractController
             $message = ["message" => "Token vide"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
+
         $em = $doctrine->getManager();
         $restaurant = $em->getRepository(Restaurant::class)->findOneBy(["id" => $id]);
 
@@ -389,6 +390,35 @@ class RestaurantController extends AbstractController
         }
 
         return new JsonResponse(['message' => "Comments not found"], Response::HTTP_NOT_FOUND);
+    }
+
+    /**
+     * @Route (name="deleteComment", path="/comments/{id}", methods={"DELETE"})
+     */
+    public function deleteComment(Request $request, ManagerRegistry $doctrine, $id)
+    {
+        $user=$this->accessControl->verifyToken($request);
+        if($user==null)
+        {
+            $message = ["message" => "Empty or Invalid Token"];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+        }
+
+        $em = $doctrine->getManager();
+        $comment = $em->getRepository(Comment::class)->findOneBy(["id" => $id]);
+
+        if($comment)
+        {
+            if($comment->getUsers()->getId() == $user->getId())
+            {
+                $em->remove($comment);
+                $em->flush();
+
+                return new JsonResponse(['message' => "Comment deleted"], Response::HTTP_ACCEPTED);
+            }
+            return new JsonResponse(['message' => "Acces Denied to the comment"], Response::HTTP_FORBIDDEN);
+        }
+        return new JsonResponse(['message' => "Comment not found"], Response::HTTP_NOT_FOUND);
     }
 
 

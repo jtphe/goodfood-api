@@ -206,6 +206,7 @@ class SupplyController extends AbstractController
         if($supply)
         {
             $em->remove($supply);
+            $em->flush();
             return new JsonResponse(['message' => "Supply deleted"], Response::HTTP_NOT_FOUND);
         }
 
