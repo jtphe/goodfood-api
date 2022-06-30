@@ -96,4 +96,16 @@ class Supply
 
         return $this;
     }
+
+    public function jsonSerialize()
+    {
+        return array(
+            'id' => $this->id,
+            'name'=> $this->name,
+            'quantity'=> $this->quantity,
+            'price'=> $this->price,
+            'restaurant'=> $this->restaurant,
+            'supplier'=> $this->supplier,
+        );
+    }
 }

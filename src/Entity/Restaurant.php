@@ -78,12 +78,6 @@ class Restaurant
     #[ORM\JoinColumn(nullable: true)]
     private $country;
 
-    #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Propose::class, orphanRemoval: true)]
-    /**
-     * @Ignore
-     */
-    private $proposes;
-
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Supplier::class)]
     /**
      * @Ignore
@@ -108,6 +102,9 @@ class Restaurant
      */
     private $user;
 
+    #[ORM\OneToMany(mappedBy: 'Restaurant', targetEntity: Product::class, orphanRemoval: true)]
+    private $products;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -116,6 +113,7 @@ class Restaurant
         $this->supplies = new ArrayCollection();
         $this->orders = new ArrayCollection();
         $this->user = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -250,35 +248,6 @@ class Restaurant
         return $this;
     }
 
-    /**
-     * @return Collection<int, Propose>
-     */
-    public function getProposes(): Collection
-    {
-        return $this->proposes;
-    }
-
-    public function addPropose(Propose $propose): self
-    {
-        if (!$this->proposes->contains($propose)) {
-            $this->proposes[] = $propose;
-            $propose->setRestaurant($this);
-        }
-
-        return $this;
-    }
-
-    public function removePropose(Propose $propose): self
-    {
-        if ($this->proposes->removeElement($propose)) {
-            // set the owning side to null (unless already changed)
-            if ($propose->getRestaurant() === $this) {
-                $propose->setRestaurant(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Supplier>
@@ -412,6 +381,36 @@ class Restaurant
             'city'=> $this->city,
             'country' => $this->country  ? $this->country->getId() : null
         );
+    }
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(Product $product): self
+    {
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+            $product->setRestaurant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): self
+    {
+        if ($this->products->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getRestaurant() === $this) {
+                $product->setRestaurant(null);
+            }
+        }
+
+        return $this;
     }
 
 }

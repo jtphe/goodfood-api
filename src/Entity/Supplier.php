@@ -94,4 +94,12 @@ class Supplier
 
         return $this;
     }
+
+    public function jsonSerialize()
+    {
+        return array(
+            'id' => $this->id,
+            'name'=> $this->name,
+        );
+    }
 }

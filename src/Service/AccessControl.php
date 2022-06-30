@@ -51,8 +51,18 @@ class AccessControl
         return $user;
     }
 
-    public function verifyRole($user,$role)
+    public function verifyStaff($user,$entity)
     {
+        if(!$user->isGranted("worker"))
+        {
+            return null;
+        }
+
+        if($user->getRestaurant()===$entity->getRestaurant())
+        {
+            return true;
+        }
+
 
     }
 
