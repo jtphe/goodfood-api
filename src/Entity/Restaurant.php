@@ -249,6 +249,25 @@ class Restaurant implements \JsonSerializable
         return $this;
     }
 
+    public function getAvgRating()
+    {
+        $comments = $this->getComments();
+        $arrayRating = [];
+        $sum=0;
+
+        foreach($comments as $comment)
+        {
+            if($comment->getRating()!=null)
+            {
+                array_push($arrayRating,$comment->getRating());
+                $sum+=$comment->getRating();
+            }
+        }
+
+        $nb = count($arrayRating);
+        return $sum/$nb;
+    }
+
 
     /**
      * @return Collection<int, Supplier>
@@ -380,7 +399,8 @@ class Restaurant implements \JsonSerializable
             'address'=> $this->address,
             'postalcode'=> $this->postalCode,
             'city'=> $this->city,
-            'country' => $this->country  ? $this->country->getId() : null
+            'country' => $this->country  ? $this->country->getId() : null,
+            'avgRating' => $this->getAvgRating()  ? $this->getAvgRating()  : null
         );
     }
 
