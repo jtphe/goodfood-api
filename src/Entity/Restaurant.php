@@ -102,7 +102,7 @@ class Restaurant
      */
     private $user;
 
-    #[ORM\OneToMany(mappedBy: 'Restaurant', targetEntity: Product::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Product::class, orphanRemoval: true)]
     private $products;
 
     public function __construct()

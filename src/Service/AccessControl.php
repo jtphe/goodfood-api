@@ -53,7 +53,7 @@ class AccessControl
 
     public function verifyStaff($user,$entity)
     {
-        if(!$user->isGranted("worker"))
+        if($user->getRoles()[0]!="worker" or $user->getRoles()[0]!="manager" )
         {
             return null;
         }
@@ -62,6 +62,8 @@ class AccessControl
         {
             return true;
         }
+
+        return null;
 
 
     }

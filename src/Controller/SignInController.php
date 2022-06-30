@@ -53,7 +53,7 @@ class SignInController extends AbstractController
                     return new JsonResponse(['message' => "Bad Password"], Response::HTTP_UNAUTHORIZED);
                 }
 
-                return $this->json(["token"=>$token,"user"=>$findUser,'restaurant' => $findUser->getRestaurant()], 200, []);
+                return $this->json(["token"=>$token,"user"=>$findUser,'restaurant' => $findUser->getRestaurant() ? $findUser->getRestaurant() : null], 200, []);
 
 
             }

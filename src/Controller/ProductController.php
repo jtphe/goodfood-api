@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Controller;
+
 use App\Entity\Product;
 use App\Entity\Restaurant;
 use App\Service\AccessControl;
@@ -8,7 +10,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\ProductRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController; 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 
 
 class ProductController extends AbstractController {
@@ -23,32 +26,32 @@ class ProductController extends AbstractController {
 
     /**
      * @Route (name="selectAllProducts", path="/restaurants/{id}/products", methods={"GET"})
-     * @param Request $request 
-     * @throws Exception 
+     * @param Request $request
+     * @throws Exception
      * @return JsonResponse
      */
-     public function selectAllProducts($request, ManagerRegistry $doctrine, $id )
-     {
+    public function selectAllProducts($request, ManagerRegistry $doctrine, $id )
+    {
 
-         $user=$this->accessControl->verifyToken($request);
-         if($user==null)
-         {
-             $message = ["message" => "Token vide"];
-             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-         }
+        $user=$this->accessControl->verifyToken($request);
+        if($user==null)
+        {
+            $message = ["message" => "Token vide"];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+        }
 
-         $em = $doctrine->getManager();
-         $restaurant = $em->getRepository(Restaurant::class)->findOneBy(["id" => $id]);
+        $em = $doctrine->getManager();
+        $restaurant = $em->getRepository(Restaurant::class)->findOneBy(["id" => $id]);
 
-         if($restaurant)
-         {
-             $products = $restaurant->getProducts();
-             return $this->json($products, 200);
-         }
+        if($restaurant)
+        {
+            $products = $restaurant->getProducts();
+            return $this->json($products, 200);
+        }
 
-         return new JsonResponse(['message' => "Products not found"], Response::HTTP_NOT_FOUND);
+        return new JsonResponse(['message' => "Products not found"], Response::HTTP_NOT_FOUND);
 
-     }
+    }
 
     /**
      * @Route (name="getProduct", path="/products/{id}", methods={"GET"})
@@ -81,10 +84,10 @@ class ProductController extends AbstractController {
     /**
      * @Route (name="createProduct", path="/products", methods={"POST"})
      * @param Request $request
-     * @throws Exception
+     * @param ManagerRegistry $doctrine
      * @return JsonResponse
      */
-    public function createProduct($request, ManagerRegistry $doctrine)
+    public function createProduct(Request $request, ManagerRegistry $doctrine)
     {
 
         $user=$this->accessControl->verifyToken($request);
@@ -94,7 +97,7 @@ class ProductController extends AbstractController {
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
-        if(!$user->isGranted("worker"))
+        if($user->getRoles()[0]!="worker" or $user->getRoles()[0]!="manager")
         {
             $message = ["message" => "Worker access required"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
@@ -176,80 +179,80 @@ class ProductController extends AbstractController {
 
 
 
-     /**
-      * @Route (name="selectProductsByName", path="/selectProductsByName", methods={"GET"})
-      * @param Request $request
-      * @throws Exception
-      * @return JsonResponse
-      */
-      public function selectProductsByName($request, ManagerRegistry $doctrine, ProductRepository $productRepository) {
+    /**
+     * @Route (name="selectProductsByName", path="/selectProductsByName", methods={"GET"})
+     * @param Request $request
+     * @throws Exception
+     * @return JsonResponse
+     */
+    public function selectProductsByName($request, ManagerRegistry $doctrine, ProductRepository $productRepository) {
 
         $chars = json_decode($request->getContent(), true);
         $productsFilteredByName = $productRepository->selectProductsByName($chars);
         $arrayOfProductsFilteredByName = [];
         foreach ($productsFilteredByName as $productFilteredByName) {
-          array_push($arrayOfProductsFilteredByName, $productFilteredByName);
+            array_push($arrayOfProductsFilteredByName, $productFilteredByName);
 
         }
         return $this->json($arrayOfProductsFilteredByName, 200);
 
-      }
+    }
 
-      /**
-       * @Route (name="selectProductsByType", path="/selectProductsByName", methods={"GET"})
-       * @param Request $request
-       * @throws Exception
-       * @return JsonResponse
-       */
-      public function selectProductsByType($request, ManagerRegistry $doctrine) {
-         $type = json_decode($request->getContent(), true);
-         $em = $doctrine->getManager();
-         $productsFilteredByType = $em->getRepository(Product::class)->findBy(["id" => $type['id']]);
+    /**
+     * @Route (name="selectProductsByType", path="/selectProductsByName", methods={"GET"})
+     * @param Request $request
+     * @throws Exception
+     * @return JsonResponse
+     */
+    public function selectProductsByType($request, ManagerRegistry $doctrine) {
+        $type = json_decode($request->getContent(), true);
+        $em = $doctrine->getManager();
+        $productsFilteredByType = $em->getRepository(Product::class)->findBy(["id" => $type['id']]);
 
-         $arrayOfProductsFilteredByType = [];
+        $arrayOfProductsFilteredByType = [];
 
-         foreach ($productsFilteredByType as $productFilteredByType) {
+        foreach ($productsFilteredByType as $productFilteredByType) {
 
             array_push($arrayOfProductsFilteredByType, $productFilteredByType);
-         }
+        }
 
-         return $this->json($arrayOfProductsFilteredByType);
+        return $this->json($arrayOfProductsFilteredByType);
 
-      }
+    }
 
 
 
-        /**
-         * @Route (name="deleteProduct", path="/products/{id}", methods={"DELETE"})
-         * @param Request $request
-         * @return JsonResponse
-         */
-       public function deleteProduct($request, ManagerRegistry $doctrine, $id )
-       {
-           $user=$this->accessControl->verifyToken($request);
-           if($user==null)
-           {
-               $message = ["message" => "Token vide"];
-               return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-           }
+    /**
+     * @Route (name="deleteProduct", path="/products/{id}", methods={"DELETE"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function deleteProduct($request, ManagerRegistry $doctrine, $id )
+    {
+        $user=$this->accessControl->verifyToken($request);
+        if($user==null)
+        {
+            $message = ["message" => "Token vide"];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+        }
 
-           $em = $doctrine->getManager();
-           $product = $em->getRepository(Product::class)->findOneBy(["id" => $id]);
+        $em = $doctrine->getManager();
+        $product = $em->getRepository(Product::class)->findOneBy(["id" => $id]);
 
-           if($product)
-           {
-               if ($this->accessControl->verifyStaff($user, $product)) {
-                   $message = ["message" => "Access Denied"];
-                   return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-               }
-           }
+        if($product)
+        {
+            if ($this->accessControl->verifyStaff($user, $product)) {
+                $message = ["message" => "Access Denied"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+            }
+        }
 
-           $em->remove($product);
-           $em->flush();
+        $em->remove($product);
+        $em->flush();
 
-           $message = ["message" => "Product deleted"];
-           return new JsonResponse($message, Response::HTTP_OK);
-       }
+        $message = ["message" => "Product deleted"];
+        return new JsonResponse($message, Response::HTTP_OK);
+    }
 
 
 }
