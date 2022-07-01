@@ -417,10 +417,14 @@ class RestaurantController extends AbstractController
         {
             if($comment->getUser()->getId() == $user->getId())
             {
+
                 $em->remove($comment);
                 $em->flush();
 
-                return new JsonResponse(['message' => "Comment deleted"], Response::HTTP_ACCEPTED);
+                $restaurant=$comment->getRestaurant();
+
+
+                return $this->json($restaurant,200);
             }
             return new JsonResponse(['message' => "Acces Denied to the comment"], Response::HTTP_FORBIDDEN);
         }
