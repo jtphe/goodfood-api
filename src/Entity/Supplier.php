@@ -11,7 +11,7 @@ use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: SupplierRepository::class)]
 #[ApiResource]
-class Supplier
+class Supplier implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -95,6 +95,13 @@ class Supplier
         return $this;
     }
 
+    /**
+     * @ReturnTypeWillChange
+     * @return mixed
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @psalm-pure
+     */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return array(

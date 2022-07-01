@@ -86,6 +86,13 @@ class Comment implements \JsonSerializable
         return $this;
     }
 
+    /**
+     * @ReturnTypeWillChange
+     * @return mixed
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @psalm-pure
+     */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return array(
