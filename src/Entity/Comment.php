@@ -94,6 +94,7 @@ class Comment implements \JsonSerializable
             'rating'=> $this->rating,
             'user'=> $this->user,
             'restaurant'=> $this->restaurant->getId(),
+            'avgRating' => $this->restaurant->getAvgRating()
         );
     }
 }
