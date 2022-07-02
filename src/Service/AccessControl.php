@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Entity\User;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -29,12 +30,12 @@ class AccessControl
 
     public function verifyToken($request)
     {
-        $token = $request->headers->get("authorization");
+        $token = $request->headers->get("token");
 
         if($token===null)
         {
             $message = ["message" =>"Token vide"];
-            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+            return null;
         }
 
         $token = $this->JWTManager->parse($token);
@@ -44,15 +45,26 @@ class AccessControl
 
         if($user==null)
         {
-            $message = ["message" =>"Utilisateur introuvable ou erreur de token"];
-            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+            return null;
         }
 
         return $user;
     }
 
-    public function verifyRole($user,$role)
+    public function verifyStaff($user,$entity)
     {
+        if(in_array('manager', $user->getRoles(), false) or in_array('worker', $user->getRoles(), false))
+        {
+            return null;
+        }
+
+        if($user->getRestaurant()===$entity->getRestaurant())
+        {
+            return true;
+        }
+
+        return null;
+
 
     }
 

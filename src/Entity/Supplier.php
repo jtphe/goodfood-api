@@ -7,10 +7,11 @@ use App\Repository\SupplierRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: SupplierRepository::class)]
 #[ApiResource]
-class Supplier
+class Supplier implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -25,6 +26,9 @@ class Supplier
     private $restaurant;
 
     #[ORM\OneToMany(mappedBy: 'supplier', targetEntity: Supply::class)]
+    /**
+     * @Ignore
+     */
     private $supplies;
 
     public function __construct()
@@ -89,5 +93,20 @@ class Supplier
         }
 
         return $this;
+    }
+
+    /**
+     * @ReturnTypeWillChange
+     * @return mixed
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @psalm-pure
+     */
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()
+    {
+        return array(
+            'id' => $this->id,
+            'name'=> $this->name,
+        );
     }
 }

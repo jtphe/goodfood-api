@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SupplyRepository::class)]
 #[ApiResource]
-class Supply
+class Supply implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -95,5 +95,24 @@ class Supply
         $this->supplier = $supplier;
 
         return $this;
+    }
+
+    /**
+     * @ReturnTypeWillChange
+     * @return mixed
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @psalm-pure
+     */
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()
+    {
+        return array(
+            'id' => $this->id,
+            'name'=> $this->name,
+            'quantity'=> $this->quantity,
+            'price'=> $this->price,
+            'restaurant'=> $this->restaurant,
+            'supplier'=> $this->supplier,
+        );
     }
 }

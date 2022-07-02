@@ -49,22 +49,19 @@ class SignInController extends AbstractController
 
                 $token = $JWTManager->create($findUser);
 
-                $response = new JsonResponse(
-                    ["token" => $token,
-                        'user' => $findUser],
-                    Response::HTTP_ACCEPTED);
+                if (!$passwordHasher->isPasswordValid($findUser, $password)) {
+                    return new JsonResponse(['message' => "Bad Password"], Response::HTTP_UNAUTHORIZED);
+                }
 
-                $response->headers->add(["token"=>$token]);
+                return $this->json(["token"=>$token,"user"=>$findUser,'restaurant' => $findUser->getRestaurant() ? $findUser->getRestaurant() : null], 200, []);
 
-
-                return $response;
 
             }
 
-            return new JsonResponse(['message' => "Mauvais identifiants"], Response::HTTP_UNAUTHORIZED);
+            return new JsonResponse(['message' => "Bad ID"], Response::HTTP_UNAUTHORIZED);
         }
 
-        return new JsonResponse(['message' => "Déja connecté"], Response::HTTP_UNAUTHORIZED);
+        return new JsonResponse(['message' => "Already connected"], Response::HTTP_UNAUTHORIZED);
 
     }
 

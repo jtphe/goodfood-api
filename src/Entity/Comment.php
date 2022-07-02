@@ -5,10 +5,11 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 #[ApiResource]
-class Comment
+class Comment implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,15 +19,18 @@ class Comment
     #[ORM\Column(type: 'string', length: 255)]
     private $description;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $rating;
 
     #[ORM\ManyToOne(targetEntity: user::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
-    private $users;
+    private $user;
 
     #[ORM\ManyToOne(targetEntity: restaurant::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
+    /**
+     * @Ignore
+     */
     private $restaurant;
 
     public function getId(): ?int
@@ -58,14 +62,14 @@ class Comment
         return $this;
     }
 
-    public function getUsers(): ?user
+    public function getUser(): ?user
     {
-        return $this->users;
+        return $this->user;
     }
 
-    public function setUsers(?user $users): self
+    public function setUser(?user $user): self
     {
-        $this->users = $users;
+        $this->user = $user;
 
         return $this;
     }
@@ -80,5 +84,24 @@ class Comment
         $this->restaurant = $restaurant;
 
         return $this;
+    }
+
+    /**
+     * @ReturnTypeWillChange
+     * @return mixed
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @psalm-pure
+     */
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()
+    {
+        return array(
+            'id' => $this->id,
+            'description'=> $this->description,
+            'rating'=> $this->rating,
+            'user'=> $this->user,
+            'restaurant'=> $this->restaurant->getId(),
+            'avgRating' => $this->restaurant->getAvgRating()
+        );
     }
 }

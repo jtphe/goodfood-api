@@ -2,40 +2,68 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Validator\Constraints\Json;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ApiResource]
-class Product
+class Product implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    /**
+     * @Groups("read")
+     */
     private $id;
 
     #[ORM\Column(type: 'string', length: 100)]
+    /**
+     * @Groups("read")
+     */
     private $name;
 
     #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @Groups("read")
+     */
     private $description;
 
     #[ORM\Column(type: 'float')]
+    /**
+     * @Groups("read")
+     */
     private $price;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    /**
+     * @Groups("read")
+     */
     private $image;
 
-    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Propose::class, orphanRemoval: true)]
-    private $proposes;
+    #[ORM\ManyToOne(targetEntity: restaurant::class, inversedBy: 'products')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $restaurant;
 
-    public function __construct()
-    {
-        $this->proposes = new ArrayCollection();
-    }
+    #[ORM\Column(type: 'integer')]
+    /**
+     * @Groups("read")
+     */
+    private $stock;
+
+    #[ORM\Column(type: 'integer', nullable: true)]
+    /**
+     * @Groups("read")
+     */
+    private $discount;
+
 
     public function getId(): ?int
     {
@@ -78,6 +106,28 @@ class Product
         return $this;
     }
 
+    /**
+     * @ReturnTypeWillChange
+     * @return mixed
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @psalm-pure
+     */
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()
+    {
+        return array(
+            'id' => $this->id,
+            'name'=> $this->name,
+            'description'=> $this->description,
+            'image'=> $this->image,
+            'price'=> $this->price,
+            'discount'=> $this->discount,
+            'stock'=> $this->stock,
+            'restaurant' => $this->restaurant  ? $this->restaurant->getId() : null
+        );
+    }
+
+
     public function getImage(): ?string
     {
         return $this->image;
@@ -90,33 +140,40 @@ class Product
         return $this;
     }
 
-    /**
-     * @return Collection<int, Propose>
-     */
-    public function getProposes(): Collection
+    public function getRestaurant(): ?Restaurant
     {
-        return $this->proposes;
+        return $this->restaurant;
     }
 
-    public function addPropose(Propose $propose): self
+    public function setRestaurant(?Restaurant $restaurant): self
     {
-        if (!$this->proposes->contains($propose)) {
-            $this->proposes[] = $propose;
-            $propose->setProduct($this);
-        }
+        $this->restaurant = $restaurant;
 
         return $this;
     }
 
-    public function removePropose(Propose $propose): self
+    public function getStock(): ?int
     {
-        if ($this->proposes->removeElement($propose)) {
-            // set the owning side to null (unless already changed)
-            if ($propose->getProduct() === $this) {
-                $propose->setProduct(null);
-            }
-        }
+        return $this->stock;
+    }
+
+    public function setStock(int $stock): self
+    {
+        $this->stock = $stock;
 
         return $this;
     }
+
+    public function getDiscount(): ?int
+    {
+        return $this->discount;
+    }
+
+    public function setDiscount(?int $discount): self
+    {
+        $this->discount = $discount;
+
+        return $this;
+    }
+
 }

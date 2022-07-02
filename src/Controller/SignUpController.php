@@ -77,7 +77,7 @@ class SignUpController extends AbstractController
                         'token' => $token],
                     Response::HTTP_CREATED);
 
-                $response->headers->add(["authorization" => $token]);
+                $response->headers->add(["token" => $token]);
 
                 return $response;
         } catch (PDOException $e) {
@@ -151,7 +151,7 @@ class SignUpController extends AbstractController
             $newUser->setPassword($hashedPassword);
             $newUser->setEmail($email);
             $newUser->setRoles(["worker"]);
-            $newUser->addRestaurant($user->getRestaurant());
+            $newUser->setRestaurant($user->getRestaurant());
             $newUser->setFirstName($firstName);
             $newUser->setLastName($lastName);
             $em->persist($newUser);

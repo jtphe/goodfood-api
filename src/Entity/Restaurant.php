@@ -2,71 +2,119 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\RestaurantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
+use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+
+
 
 #[ORM\Entity(repositoryClass: RestaurantRepository::class)]
 #[ApiResource]
-class Restaurant
+class Restaurant implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    /**
+     * @Groups("read")
+     */
     private $id;
 
     #[ORM\Column(type: 'string', length: 50)]
+    /**
+     * @Groups("read")
+     */
     private $name;
 
     #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @Groups("read")
+     */
     private $description;
 
-    #[ORM\Column(type: 'string', length: 15)]
+    #[ORM\Column(type: 'string', length: 15, nullable: true)]
+    /**
+     * @Groups("read")
+     */
     private $phone;
 
     #[ORM\Column(type: 'string', length: 75)]
+    /**
+     * @Groups("read")
+     */
     private $address;
 
     #[ORM\Column(type: 'string', length: 15)]
-    private $postcalCode;
+    /**
+     * @Groups("read")
+     */
+    private $postalCode;
 
     #[ORM\Column(type: 'string', length: 55)]
+    /**
+     * @Groups("read")
+     */
     private $city;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    /**
+     * @Groups("read")
+     */
     private $photo;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'restaurant')]
-    private $users;
-
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Comment::class, orphanRemoval: true)]
+    /**
+     * @Ignore
+     */
     private $comments;
 
     #[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'restaurant')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private $country;
 
-    #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Propose::class, orphanRemoval: true)]
-    private $proposes;
-
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Supplier::class)]
+    /**
+     * @Ignore
+     */
     private $suppliers;
 
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Supply::class)]
+    /**
+     * @Ignore
+     */
     private $supplies;
 
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Order::class)]
+    /**
+     * @Ignore
+     */
     private $orders;
+
+    #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: User::class)]
+    /**
+     * @Ignore
+     */
+    private $user;
+
+    #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Product::class, orphanRemoval: true)]
+    /**
+     * @Ignore
+     */
+    private $products;
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
-        $this->proposes = new ArrayCollection();
         $this->suppliers = new ArrayCollection();
         $this->supplies = new ArrayCollection();
         $this->orders = new ArrayCollection();
+        $this->user = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -122,14 +170,14 @@ class Restaurant
         return $this;
     }
 
-    public function getPostcalCode(): ?string
+    public function getPostalCode(): ?string
     {
-        return $this->postcalCode;
+        return $this->postalCode;
     }
 
-    public function setPostcalCode(string $postcalCode): self
+    public function setPostalCode(string $postalCode): self
     {
-        $this->postcalCode = $postcalCode;
+        $this->postalCode = $postalCode;
 
         return $this;
     }
@@ -158,17 +206,6 @@ class Restaurant
         return $this;
     }
 
-    public function getUsers(): ?User
-    {
-        return $this->users;
-    }
-
-    public function setUsers(?User $users): self
-    {
-        $this->users = $users;
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Comment>
@@ -212,35 +249,28 @@ class Restaurant
         return $this;
     }
 
-    /**
-     * @return Collection<int, Propose>
-     */
-    public function getProposes(): Collection
+    public function getAvgRating()
     {
-        return $this->proposes;
-    }
+        $comments = $this->getComments();
+        $arrayRating = [];
+        $sum=0;
 
-    public function addPropose(Propose $propose): self
-    {
-        if (!$this->proposes->contains($propose)) {
-            $this->proposes[] = $propose;
-            $propose->setRestaurant($this);
-        }
-
-        return $this;
-    }
-
-    public function removePropose(Propose $propose): self
-    {
-        if ($this->proposes->removeElement($propose)) {
-            // set the owning side to null (unless already changed)
-            if ($propose->getRestaurant() === $this) {
-                $propose->setRestaurant(null);
+        foreach($comments as $comment)
+        {
+            if($comment->getRating()!=null)
+            {
+                array_push($arrayRating,$comment->getRating());
+                $sum+=$comment->getRating();
             }
         }
-
-        return $this;
+        $nb = count($arrayRating);
+        if($nb!=0)
+        {
+            return $sum/$nb;
+        }
+        return 0;
     }
+
 
     /**
      * @return Collection<int, Supplier>
@@ -331,4 +361,87 @@ class Restaurant
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getuser(): Collection
+    {
+        return $this->user;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->user->contains($user)) {
+            $this->user[] = $user;
+            $user->setRestaurant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->user->removeElement($user)) {
+            // set the owning side to null (unless already changed)
+            if ($user->getRestaurant() === $this) {
+                $user->setRestaurant(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @ReturnTypeWillChange
+     * @return mixed
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @psalm-pure
+     */
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()
+    {
+        return array(
+            'id' => $this->id,
+            'name'=> $this->name,
+            'description'=> $this->description,
+            'phone'=> $this->phone,
+            'address'=> $this->address,
+            'postalcode'=> $this->postalCode,
+            'city'=> $this->city,
+            'country' => $this->country  ? $this->country->getId() : null,
+            'avgRating' => $this->getAvgRating()  ? $this->getAvgRating()  : null
+        );
+    }
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(Product $product): self
+    {
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+            $product->setRestaurant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): self
+    {
+        if ($this->products->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getRestaurant() === $this) {
+                $product->setRestaurant(null);
+            }
+        }
+
+        return $this;
+    }
+
 }
