@@ -49,7 +49,7 @@ class Product implements \JsonSerializable
     private $image;
 
     #[ORM\ManyToOne(targetEntity: restaurant::class, inversedBy: 'products')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private $restaurant;
 
     #[ORM\Column(type: 'integer')]

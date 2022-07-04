@@ -184,7 +184,7 @@ class ProductController extends AbstractController {
 
 
     /**
-     * @Route (name="selectProductsByName", path="/selectProductsByName", methods={"GET"})
+     * @Route (name="selectProductsByName", path="/product/byName", methods={"GET"})
      * @param Request $request
      * @param ManagerRegistry $doctrine
      * @param ProductRepository $productRepository
@@ -204,7 +204,7 @@ class ProductController extends AbstractController {
     }
 
     /**
-     * @Route (name="selectProductsByType", path="/selectProductsByName", methods={"GET"})
+     * @Route (name="selectProductsByType", path="/products/byType", methods={"GET"})
      * @param Request $request
      * @param ManagerRegistry $doctrine
      * @return JsonResponse
@@ -224,6 +224,29 @@ class ProductController extends AbstractController {
         return $this->json($arrayOfProductsFilteredByType);
 
     }
+
+    /**
+     * @Route (name="getProductByType", path="/restaurant/{id}/products/{type}", methods={"GET"})
+     * @param Request $request
+     * @param ManagerRegistry $doctrine
+     * @return JsonResponse
+     */
+    public function getProductsByType(Request $request, ManagerRegistry $doctrine, $id, $type)
+        {
+            $em = $doctrine->getManager();
+            $restaurant = $em->getRepository(Response::class)->findOneBy(["id" => $id]);
+
+            if($restaurant)
+            {
+                $products = $restaurant;
+
+            }
+
+            return new JsonResponse(['message' => "restaurant not found"], Response::HTTP_NOT_FOUND);
+
+        }
+
+
 
 
 

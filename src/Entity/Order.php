@@ -202,6 +202,22 @@ class Order
         return $this;
     }
 
+    public function jsonSerialize()
+    {
+        return array(
+            'id' => $this->id,
+            'price'=> $this->price,
+            'address'=> $this->address,
+            'city'=> $this->city,
+            'postalCode'=> $this->postalCode,
+            'archive'=> $this->archive,
+            'statut'=> $this->statut,
+            'type'=> $this->type,
+            'user'=> $this->user,
+            'restaurant'=> $this->restaurant->getId()
+        );
+    }
+
 
 
   
