@@ -35,7 +35,7 @@ class OrderController extends AbstractController {
             $user=$this->accessControl->verifyToken($request);
             if($user==null)
             {
-                $message = ["message" => "Token vide"];
+                $message = ["message" => "Empty Token"];
                 return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
             }
 
@@ -68,6 +68,7 @@ class OrderController extends AbstractController {
                 $order->setPayment($orderData['payment']);
                 $order->setArchive((false);
                 $order->setRestaurant($restaurant);
+                $order->setStatut(0);
 
                 $lastOrderId = $order->getId();
                 $OrderProductAndMenu = new OrderProductAndMenu;
@@ -76,9 +77,7 @@ class OrderController extends AbstractController {
 
                     $OrderProductAndMenu->setOrderId($lastOrderId);
                     $OrderProductAndMenu->setProductId($productOrdered['id']);
-
                 }
-
 
                 $em->persist($order);
                 $em->flush();
@@ -92,4 +91,51 @@ class OrderController extends AbstractController {
                     return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
                 }
             }
+
+    /**
+     * @Route(name="changeOrderStatut", path="/orders/{id}/changestatut", methods={"POST"})
+     * @param Request $request
+     * @throws Exception
+     * @return JsonResponse
+     */
+    public function changeOrderStatut(Request $request, ManagerRegistry $doctrine, $id) {
+        try {
+            $user = $this->accessControl->verifyToken($request);
+            if ($user == null) {
+                $message = ["message" => "Empty Token"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+            }
+
+            $em = $doctrine->getManager();
+
+            $order = $em->getRepository(Order::class)->findOneBy(["id" => $id]);
+
+            if($order)
+            {
+                if ($this->accessControl->verifyStaff($user, $order)) {
+                    $message = ["message" => "Access Denied"];
+                    return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+                }
+
+                $orderData = json_decode($request->getContent(), true);
+
+                $order->setStatut($orderData["statut"]);
+
+                $em->persist($order);
+                $em->flush();
+
+                return $this->json($order, 200);
+
+            }
+
+            return new JsonResponse(['message' => "Order not found"], Response::HTTP_NOT_FOUND);
+
+        }
+        catch (PDOException $e) {
+                $message = ["message" => $e];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+            }
+
+
+    }
 }
