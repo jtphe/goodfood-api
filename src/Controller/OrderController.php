@@ -66,7 +66,7 @@ class OrderController extends AbstractController {
                 $order->setPrice($orderData['price']);
                 $order->setType($orderData['type']);
                 $order->setPayment($orderData['payment']);
-                $order->setArchive((false);
+                $order->setArchive((false));
                 $order->setRestaurant($restaurant);
                 $order->setStatut(0);
 
