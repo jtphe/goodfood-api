@@ -112,6 +112,7 @@ class ProductController extends AbstractController {
         $em=$doctrine->getManager();
 
         $product = new Product();
+
         $product->setRestaurant($user->getRestaurant());
 
         $product->setName($productData['name']);

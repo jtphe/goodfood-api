@@ -42,7 +42,7 @@ class Order
     #[ORM\Column(type: 'string', length: 30)]
     private $type;
 
-    #[ORM\Column(type: 'integer']
+    #[ORM\Column(type: 'integer')]
     private $statut;
 
     #[ORM\ManyToOne(targetEntity: user::class, inversedBy: 'orders')]
