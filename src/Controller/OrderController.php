@@ -66,10 +66,10 @@ class OrderController extends AbstractController {
                 $order->setPrice($orderData['price']);
                 $order->setType($orderData['type']);
                 $order->setPayment($orderData['payment']);
-                $order->setArchive(false);
+                $order->setArchive((false));
+
                 $order->setRestaurant($restaurant);
                 $order->setStatut(0);
-
                 $lastOrderId = $order->getId();
                 $OrderProductAndMenu = new OrderProductAndMenu;
 
@@ -119,7 +119,7 @@ class OrderController extends AbstractController {
 
                 $orderData = json_decode($request->getContent(), true);
 
-                $order->setStatut($orderData["statut"]);
+                $order->setStatus($orderData["statut"]);
 
                 $em->persist($order);
                 $em->flush();

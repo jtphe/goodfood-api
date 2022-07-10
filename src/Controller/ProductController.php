@@ -120,6 +120,7 @@ class ProductController extends AbstractController {
         $product->setPrice($productData['price']);
         $product->setDescription($productData['description']);
         $product->setStock($productData['stock']);
+        $product->setType($productData['type']);
 
         $em->persist($product);
         $em->flush();

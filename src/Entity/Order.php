@@ -39,7 +39,7 @@ class Order
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $payment;
 
-    #[ORM\Column(type: 'string', length: 30)]
+    #[ORM\Column(type: 'integer')]
     private $type;
 
     #[ORM\Column(type: 'integer')]
@@ -154,24 +154,24 @@ class Order
         return $this;
     }
 
-    public function getType(): ?string
+    public function getType(): ?int
     {
         return $this->type;
     }
 
-    public function setType(string $type): self
+    public function setType(int $type): self
     {
         $this->type = $type;
 
         return $this;
     }
 
-    public function getStatut(): ?string
+    public function getStatut(): ?int
     {
         return $this->statut;
     }
 
-    public function setStatut(string $statut): self
+    public function setStatut(int $statut): self
     {
         $this->statut = $statut;
 

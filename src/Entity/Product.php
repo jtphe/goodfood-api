@@ -30,7 +30,7 @@ class Product implements \JsonSerializable
      */
     private $name;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     /**
      * @Groups("read")
      */
@@ -63,6 +63,9 @@ class Product implements \JsonSerializable
      * @Groups("read")
      */
     private $discount;
+
+    #[ORM\Column(type: 'integer')]
+    private $type;
 
 
     public function getId(): ?int
@@ -107,12 +110,12 @@ class Product implements \JsonSerializable
     }
 
     /**
-     * @ReturnTypeWillChange
+     * @ReturntypeWillChange
      * @return mixed
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
      * @psalm-pure
      */
-    #[\ReturnTypeWillChange]
+    #[\ReturntypeWillChange]
     public function jsonSerialize()
     {
         return array(
@@ -172,6 +175,18 @@ class Product implements \JsonSerializable
     public function setDiscount(?int $discount): self
     {
         $this->discount = $discount;
+
+        return $this;
+    }
+
+    public function getType(): ?int
+    {
+        return $this->type;
+    }
+
+    public function setType(int $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }
