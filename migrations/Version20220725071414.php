@@ -66,7 +66,7 @@ final class Version20220725071414 extends AbstractMigration
         $this->addSql('CREATE TABLE "order" (id INT NOT NULL, user_id INT NOT NULL, restaurant_id INT NOT NULL, date TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, archive BOOLEAN NOT NULL, price DOUBLE PRECISION NOT NULL, address VARCHAR(255) DEFAULT NULL, postal_code VARCHAR(15) DEFAULT NULL, city VARCHAR(55) DEFAULT NULL, payment VARCHAR(255) DEFAULT NULL, type INT NOT NULL, statut INT NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX idx_f5299398b1e7706e ON "order" (restaurant_id)');
         $this->addSql('CREATE INDEX idx_f5299398a76ed395 ON "order" (user_id)');
-        $this->addSql('ALTER TABLE "order" ALTER COLUMN type INT NOT NULL');
+        $this->addSql('ALTER TABLE "order" ALTER COLUMN "type" TYPE integer USING ("type"::integer);');
         $this->abortIf(
             !$this->connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\PostgreSQL100Platform,
             "Migration can only be executed safely on '\Doctrine\DBAL\Platforms\PostgreSQL100Platform'."
