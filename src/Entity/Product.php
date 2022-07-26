@@ -4,37 +4,65 @@ namespace App\Entity;
 
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
-class Product
+class Product implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    /**
+     * @Groups("read")
+     */
     private $id;
 
     #[ORM\Column(type: 'string', length: 55)]
+    /**
+     * @Groups("read")
+     */
     private $name;
 
     #[ORM\Column(type: 'string', length: 200, nullable: true)]
+    /**
+     * @Groups("read")
+     */
     private $description;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    /**
+     * @Groups("read")
+     */
     private $image;
 
     #[ORM\Column(type: 'integer')]
+    /**
+     * @Groups("read")
+     */
     private $stock;
 
     #[ORM\ManyToOne(targetEntity: Restaurant::class, inversedBy: 'products')]
+    /**
+     * @Groups("read")
+     */
     private $restaurant;
 
     #[ORM\Column(type: 'integer')]
+    /**
+     * @Groups("read")
+     */
     private $productType;
 
     #[ORM\Column(type: 'float')]
+    /**
+     * @Groups("read")
+     */
     private $price;
 
     #[ORM\Column(type: 'integer', nullable: true)]
+    /**
+     * @Groups("read")
+     */
     private $discount;
 
     public function getId(): ?int
@@ -136,5 +164,27 @@ class Product
         $this->discount = $discount;
 
         return $this;
+    }
+
+    /**
+     * @ReturnTypeWillChange
+     * @return mixed
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @psalm-pure
+     */
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()
+    {
+        return array(
+            'id' => $this->id,
+            'name'=> $this->name,
+            'description'=> $this->description,
+            'image'=> $this->image,
+            'discount'=> $this->discount,
+            'restaurant'=> $this->restaurant  ? $this->restaurant->getId() : null,
+            'productType'=> $this->productType,
+            'stock' => $this->stock,
+            'price' => $this->price
+        );
     }
 }

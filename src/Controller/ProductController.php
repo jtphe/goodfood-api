@@ -46,9 +46,10 @@ class ProductController extends AbstractController {
         $em = $doctrine->getManager();
         $restaurant = $em->getRepository(Restaurant::class)->findOneBy(["id" => $id]);
 
+
         if($restaurant)
         {
-            $products = $restaurant->getProducts();
+            $products = $em->getRepository(Product::class)->findBy(["restaurant" => [$id,null]]);
             return $this->json($products, 200);
         }
 
@@ -101,13 +102,13 @@ class ProductController extends AbstractController {
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
-        /*
-        if(in_array('manager', $user->getRoles(), false) or in_array('worker', $user->getRoles(), false) )
+
+        if(in_array('client', $user->getRoles(), true))
         {
-            $message = ["message" => "Worker access required"];
+            $message = ["message" => "Worker or manager access required"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
-        */
+
 
         $productData = json_decode($request->getContent(), true);
 
@@ -209,37 +210,15 @@ class ProductController extends AbstractController {
     }
 
     /**
-     * @Route (name="selectProductsByType", path="/products/byType", methods={"GET"})
+     * @Route (name="getProductByType", path="/restaurant/{id}/products/{productType}", methods={"GET"})
      * @param Request $request
      * @param ManagerRegistry $doctrine
      * @return JsonResponse
      */
-    public function selectProductsByType(Request $request, ManagerRegistry $doctrine) {
-        $type = json_decode($request->getContent(), true);
-        $em = $doctrine->getManager();
-        $productsFilteredByType = $em->getRepository(Product::class)->findBy(["id" => $type['id']]);
-
-        $arrayOfProductsFilteredByType = [];
-
-        foreach ($productsFilteredByType as $productFilteredByType) {
-
-            array_push($arrayOfProductsFilteredByType, $productFilteredByType);
-        }
-
-        return $this->json($arrayOfProductsFilteredByType);
-
-    }
-
-    /**
-     * @Route (name="getProductByType", path="/restaurant/{id}/products/{type}", methods={"GET"})
-     * @param Request $request
-     * @param ManagerRegistry $doctrine
-     * @return JsonResponse
-     */
-    public function getProductsByType(Request $request, ManagerRegistry $doctrine, $id, $type)
+    public function getProductsByType(Request $request, ManagerRegistry $doctrine, $id, $productType)
         {
             $em = $doctrine->getManager();
-            $restaurant = $em->getRepository(Response::class)->findOneBy(["id" => $id]);
+            $restaurant = $em->getRepository(Restaurant::class)->findOneBy(["id" => $id]);
 
             if($restaurant)
             {
