@@ -101,11 +101,13 @@ class ProductController extends AbstractController {
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
+        /*
         if(in_array('manager', $user->getRoles(), false) or in_array('worker', $user->getRoles(), false) )
         {
             $message = ["message" => "Worker access required"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
+        */
 
         $productData = json_decode($request->getContent(), true);
 
@@ -120,9 +122,10 @@ class ProductController extends AbstractController {
         $product->setPrice($productData['price']);
         $product->setDescription($productData['description']);
         $product->setStock($productData['stock']);
-        $product->setType($productData['type']);
+        $product->setProductType($productData['productType']);
 
-        $em->persist($product);
+
+        $em->getRepository(Product::class)->add($product);
         $em->flush();
 
         return new JsonResponse(['message' => "Product added"], Response::HTTP_CREATED);

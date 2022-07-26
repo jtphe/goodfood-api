@@ -53,13 +53,7 @@ class Order
     #[ORM\JoinColumn(nullable: false)]
     private $restaurant;
 
-    #[ORM\ManyToMany(targetEntity: Product::class)]
-    private $OrderProduct;
 
-    public function __construct()
-    {
-        $this->OrderProduct = new ArrayCollection();
-    }
 
 
 
@@ -218,7 +212,9 @@ class Order
         );
     }
 
+    public function isArchive(): ?bool
+    {
+        return $this->archive;
+    }
 
-
-  
 }

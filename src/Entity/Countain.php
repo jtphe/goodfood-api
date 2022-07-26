@@ -16,10 +16,6 @@ class Countain
     #[ORM\Column(type: 'integer')]
     private $quantity;
 
-    #[ORM\ManyToOne(targetEntity: product::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    private $product;
-
     #[ORM\ManyToOne(targetEntity: order::class)]
     #[ORM\JoinColumn(nullable: false)]
     private $orders;
@@ -37,18 +33,6 @@ class Countain
     public function setQuantity(int $quantity): self
     {
         $this->quantity = $quantity;
-
-        return $this;
-    }
-
-    public function getProduct(): ?product
-    {
-        return $this->product;
-    }
-
-    public function setProduct(?product $product): self
-    {
-        $this->product = $product;
 
         return $this;
     }

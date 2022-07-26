@@ -3,70 +3,39 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Ignore;
-use Symfony\Component\Validator\Constraints\Json;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Annotation\Groups;
-
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
-#[ApiResource]
-class Product implements \JsonSerializable
+class Product
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    /**
-     * @Groups("read")
-     */
     private $id;
 
-    #[ORM\Column(type: 'string', length: 100)]
-    /**
-     * @Groups("read")
-     */
+    #[ORM\Column(type: 'string', length: 55)]
     private $name;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    /**
-     * @Groups("read")
-     */
+    #[ORM\Column(type: 'string', length: 200, nullable: true)]
     private $description;
 
-    #[ORM\Column(type: 'float')]
-    /**
-     * @Groups("read")
-     */
-    private $price;
-
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    /**
-     * @Groups("read")
-     */
     private $image;
 
-    #[ORM\ManyToOne(targetEntity: restaurant::class, inversedBy: 'products')]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\Column(type: 'integer')]
+    private $stock;
+
+    #[ORM\ManyToOne(targetEntity: Restaurant::class, inversedBy: 'products')]
     private $restaurant;
 
     #[ORM\Column(type: 'integer')]
-    /**
-     * @Groups("read")
-     */
-    private $stock;
+    private $productType;
+
+    #[ORM\Column(type: 'float')]
+    private $price;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    /**
-     * @Groups("read")
-     */
     private $discount;
-
-    #[ORM\Column(type: 'integer')]
-    private $type;
-
 
     public function getId(): ?int
     {
@@ -90,46 +59,12 @@ class Product implements \JsonSerializable
         return $this->description;
     }
 
-    public function setDescription(string $description): self
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
 
         return $this;
     }
-
-    public function getPrice(): ?float
-    {
-        return $this->price;
-    }
-
-    public function setPrice(float $price): self
-    {
-        $this->price = $price;
-
-        return $this;
-    }
-
-    /**
-     * @ReturntypeWillChange
-     * @return mixed
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @psalm-pure
-     */
-    #[\ReturntypeWillChange]
-    public function jsonSerialize()
-    {
-        return array(
-            'id' => $this->id,
-            'name'=> $this->name,
-            'description'=> $this->description,
-            'image'=> $this->image,
-            'price'=> $this->price,
-            'discount'=> $this->discount,
-            'stock'=> $this->stock,
-            'restaurant' => $this->restaurant  ? $this->restaurant->getId() : null
-        );
-    }
-
 
     public function getImage(): ?string
     {
@@ -139,18 +74,6 @@ class Product implements \JsonSerializable
     public function setImage(?string $image): self
     {
         $this->image = $image;
-
-        return $this;
-    }
-
-    public function getRestaurant(): ?Restaurant
-    {
-        return $this->restaurant;
-    }
-
-    public function setRestaurant(?Restaurant $restaurant): self
-    {
-        $this->restaurant = $restaurant;
 
         return $this;
     }
@@ -167,6 +90,42 @@ class Product implements \JsonSerializable
         return $this;
     }
 
+    public function getRestaurant(): ?Restaurant
+    {
+        return $this->restaurant;
+    }
+
+    public function setRestaurant(?Restaurant $restaurant): self
+    {
+        $this->restaurant = $restaurant;
+
+        return $this;
+    }
+
+    public function getProductType(): ?int
+    {
+        return $this->productType;
+    }
+
+    public function setProductType(int $productType): self
+    {
+        $this->productType = $productType;
+
+        return $this;
+    }
+
+    public function getPrice(): ?float
+    {
+        return $this->price;
+    }
+
+    public function setPrice(float $price): self
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
     public function getDiscount(): ?int
     {
         return $this->discount;
@@ -178,17 +137,4 @@ class Product implements \JsonSerializable
 
         return $this;
     }
-
-    public function getType(): ?int
-    {
-        return $this->type;
-    }
-
-    public function setType(int $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
 }

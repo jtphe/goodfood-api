@@ -101,11 +101,9 @@ class Restaurant implements \JsonSerializable
      */
     private $user;
 
-    #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Product::class, orphanRemoval: true)]
-    /**
-     * @Ignore
-     */
+    #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Product::class)]
     private $products;
+
 
     public function __construct()
     {
@@ -443,5 +441,6 @@ class Restaurant implements \JsonSerializable
 
         return $this;
     }
+
 
 }
