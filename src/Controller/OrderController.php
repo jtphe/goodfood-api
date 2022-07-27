@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Order;
-use App\Entity\OrderProductAndMenu;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\AccessControl;
@@ -71,7 +70,6 @@ class OrderController extends AbstractController {
                 $order->setRestaurant($restaurant);
                 $order->setStatut(0);
                 $lastOrderId = $order->getId();
-                $OrderProductAndMenu = new OrderProductAndMenu;
 
                 foreach ($orderData['productOrdered'] as $productOrdered) {
 
@@ -125,9 +123,7 @@ class OrderController extends AbstractController {
                 $em->flush();
 
                 return $this->json($order, 200);
-
             }
-
             return new JsonResponse(['message' => "Order not found"], Response::HTTP_NOT_FOUND);
 
         }
@@ -135,7 +131,5 @@ class OrderController extends AbstractController {
                 $message = ["message" => $e];
                 return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
             }
-
-
     }
 }

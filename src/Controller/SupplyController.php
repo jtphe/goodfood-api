@@ -10,6 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
+
 
 class SupplyController extends AbstractController
 {
@@ -21,7 +23,7 @@ class SupplyController extends AbstractController
     }
 
     /**
-     * @Route (name="createSupplier", path="/suppliers/", methods={"POST"})
+     * @Route (name="createSupplier", path="/suppliers", methods={"POST"})
      * @param Request $request
      * @return JsonResponse
      */
@@ -39,6 +41,7 @@ class SupplyController extends AbstractController
         $supplier = new Supplier();
         $supplierData = json_decode($request->getContent(), true);
         $supplier->setName($supplierData['name']);
+        $supplier->setRestaurant($user->getRestaurant());
 
         $em->persist($supplier);
         $em->flush();
@@ -47,11 +50,11 @@ class SupplyController extends AbstractController
     }
 
     /**
-     * @Route (name="selectAllSuppliers", path="/suppliers/", methods={"GET"})
+     * @Route (name="selectAllSuppliers", path="/suppliers", methods={"GET"})
      * @param Request $request
      * @throws Exception
      * @return JsonResponse
-     */
+    */
     public function selectAllSuppliers(Request $request, ManagerRegistry $doctrine)
     {
         $user=$this->accessControl->verifyToken($request);

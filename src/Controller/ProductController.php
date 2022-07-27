@@ -14,17 +14,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\SerializerInterface;
 
-
-
-class ProductController extends AbstractController {
-
+class ProductController extends AbstractController
+{
     private $accessControl;
 
     public function __construct(accessControl $accessControl)
     {
         $this->accessControl = $accessControl;
     }
-
 
     /**
      * @Route (name="selectAllProducts", path="/restaurants/{id}/products", methods={"GET"})
@@ -203,43 +200,16 @@ class ProductController extends AbstractController {
         $arrayOfProductsFilteredByName = [];
         foreach ($productsFilteredByName as $productFilteredByName) {
             array_push($arrayOfProductsFilteredByName, $productFilteredByName);
-
         }
         return $this->json($arrayOfProductsFilteredByName, 200);
-
     }
-
-    /**
-     * @Route (name="getProductByType", path="/restaurant/{id}/products/{productType}", methods={"GET"})
-     * @param Request $request
-     * @param ManagerRegistry $doctrine
-     * @return JsonResponse
-     */
-    public function getProductsByType(Request $request, ManagerRegistry $doctrine, $id, $productType)
-        {
-            $em = $doctrine->getManager();
-            $restaurant = $em->getRepository(Restaurant::class)->findOneBy(["id" => $id]);
-
-            if($restaurant)
-            {
-                $products = $restaurant;
-
-            }
-
-            return new JsonResponse(['message' => "restaurant not found"], Response::HTTP_NOT_FOUND);
-
-        }
-
-
-
-
 
     /**
      * @Route (name="deleteProduct", path="/products/{id}", methods={"DELETE"})
      * @param Request $request
      * @return JsonResponse
      */
-    public function deleteProduct($request, ManagerRegistry $doctrine, $id )
+    public function deleteProduct(Request $request, ManagerRegistry $doctrine, $id )
     {
         $user=$this->accessControl->verifyToken($request);
         if($user==null)
@@ -266,5 +236,30 @@ class ProductController extends AbstractController {
         return new JsonResponse($message, Response::HTTP_OK);
     }
 
+    /**
+     * @Route (name="testRouteur", path="/testrouteur", methods={"GET"})
+     */
+    public function routeurTest(){
+        echo "test";
+    }
 
+    /**
+     * @Route (name="getProductsByType", path="/restaurants/{id}/type/{type}", methods={"GET"})
+     * @param ManagerRegistry $doctrine
+     * @return JsonResponse
+     */
+    public function getProductsByType(ManagerRegistry $doctrine, $id, $type)
+    {
+        $em = $doctrine->getManager();
+        $restaurant = $em->getRepository(Restaurant::class)->findOneBy(["id" => $id]);
+
+        if($restaurant)
+        {
+            $products = $em->getRepository(Product::class)->findBy([["restaurant"=>[$restaurant,null]],
+                ["productType"=>$type]]);
+            return $this->json($products, 200);
+        }
+
+        return new JsonResponse(['message' => "restaurant not found"], Response::HTTP_NOT_FOUND);
+    }
 }
