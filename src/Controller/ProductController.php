@@ -236,12 +236,6 @@ class ProductController extends AbstractController
         return new JsonResponse($message, Response::HTTP_OK);
     }
 
-    /**
-     * @Route (name="testRouteur", path="/testrouteur", methods={"GET"})
-     */
-    public function routeurTest(){
-        return new JsonResponse(['message' => "test"], Response::HTTP_NOT_FOUND);
-    }
 
     /**
      * @Route (name="getProductsByType", path="/restaurants/{id}/type/{type}", methods={"GET"})
@@ -255,8 +249,9 @@ class ProductController extends AbstractController
 
         if($restaurant)
         {
-            $products = $em->getRepository(Product::class)->findBy([["restaurant"=>[$restaurant,null]],
-                ["productType"=>$type]]);
+            $products = $em->getRepository(Product::class)->findBy(array("restaurant"=>[$restaurant,null],
+                "productType"=>$type));
+
             return $this->json($products, 200);
         }
 
