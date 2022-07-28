@@ -240,7 +240,7 @@ class ProductController extends AbstractController
      * @Route (name="testRouteur", path="/testrouteur", methods={"GET"})
      */
     public function routeurTest(){
-        echo "test";
+        return new JsonResponse(['message' => "test"], Response::HTTP_NOT_FOUND);
     }
 
     /**

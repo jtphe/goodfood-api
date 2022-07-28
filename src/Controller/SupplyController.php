@@ -65,8 +65,10 @@ class SupplyController extends AbstractController
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
+        $restaurant=$user->getRestaurant();
+
         $em = $doctrine->getManager();
-        $suppliers = $em->getRepository(Supplier::class)->findAll();
+        $suppliers = $em->getRepository(Supplier::class)->findBy(["restaurant" => $restaurant]);
         return $this->json($suppliers, 200);
     }
 

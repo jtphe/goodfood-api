@@ -22,7 +22,6 @@ class OrderController extends AbstractController {
         $this->accessControl = $accessControl;
     }
 
-
     /**
      * @Route(name="createNewOrder", path="/restaurant/{id}/orders", methods={"POST"})
      * @param Request $request
