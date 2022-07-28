@@ -264,7 +264,7 @@ class Restaurant implements \JsonSerializable
         $nb = count($arrayRating);
         if($nb!=0)
         {
-            return $sum/$nb;
+            return round($sum/$nb,1);
         }
         return 0;
     }
