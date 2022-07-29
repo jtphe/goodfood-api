@@ -67,28 +67,34 @@ class OrderController extends AbstractController {
                     $order->setPostalCode($orderData['postalCode']);
                 }
 
-                $products = $orderData['products'];
-                $menus = $orderData['menus'];
+                $productsList = $orderData['products'];
+                $menusList = $orderData['menus'];
 
-                if(isset($menus)){
-                    foreach ($menus as $menuData) {
+                if(isset($menusList)){
+                    foreach ($menusList as $menus) {
                         $menu = new Menu();
-                        $menu->setPrice($menuData[0]);
 
-                        foreach ($menuData[1] as $product) {
-                            $product = $em->getRepository(Product::class)->find($product);
-                            $menu->addProduct($product);
-                        }
+                        $menu->setPrice($menus["price"]);
+
+                        $food = $em->getRepository(Product::class)->find($menus["food"]);
+                        $drink = $em->getRepository(Product::class)->find($menus["drink"]);
+                        $snack = $em->getRepository(Product::class)->find($menus["snack"]);
+
+                        $menu->addProduct($food);
+                        $menu->addProduct($snack);
+                        $menu->addProduct($drink);
 
                         $menu->setOrderMenu($order);
                         $em->persist($menu);
                     }
                 }
 
-                if(isset($products)) {
-                    foreach($products as $product) {
-                        $product = $em->getRepository(Product::class)->find($product);
-                        $order->addProduct($product);
+                if(isset($productsList)) {
+                    foreach($productsList as $products) {
+                        $product = $em->getRepository(Product::class)->find($products["id"]);
+                        for($i = 1; $i <= $products["quantity"]; $i++){
+                            $order->addProduct($product);
+                        }
                     }
                 }
 
