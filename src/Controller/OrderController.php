@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Product;
 use App\Entity\Restaurant;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -61,8 +62,11 @@ class OrderController extends AbstractController {
 
                 if(isset($orderData['postalCode'])){
                     $order->setPostalCode($orderData['postalCode']);
-
                 }
+
+                $products = $orderData['products'];
+                $menus = $orderData['menus'];
+
 
                 $order->setPrice($orderData['price']);
                 $order->setType($orderData['type']);
