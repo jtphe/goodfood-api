@@ -31,6 +31,9 @@ class Supplier implements \JsonSerializable
      */
     private $supplies;
 
+    #[ORM\Column(length: 55)]
+    private ?string $type = null;
+
     public function __construct()
     {
         $this->supplies = new ArrayCollection();
@@ -107,6 +110,19 @@ class Supplier implements \JsonSerializable
         return array(
             'id' => $this->id,
             'name'=> $this->name,
+            'type' => $this->type
         );
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
     }
 }

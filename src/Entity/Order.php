@@ -56,8 +56,9 @@ class Order
     #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'orders')]
     private Collection $products;
 
-    #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'orders')]
+    #[ORM\OneToMany(mappedBy: 'orderMenu', targetEntity: Menu::class)]
     private Collection $menus;
+
 
     public function __construct()
     {
@@ -260,7 +261,7 @@ class Order
     {
         if (!$this->menus->contains($menu)) {
             $this->menus[] = $menu;
-            $menu->addOrder($this);
+            $menu->setOrderMenu($this);
         }
 
         return $this;
@@ -269,10 +270,14 @@ class Order
     public function removeMenu(Menu $menu): self
     {
         if ($this->menus->removeElement($menu)) {
-            $menu->removeOrder($this);
+            // set the owning side to null (unless already changed)
+            if ($menu->getOrderMenu() === $this) {
+                $menu->setOrderMenu(null);
+            }
         }
 
         return $this;
     }
+
 
 }

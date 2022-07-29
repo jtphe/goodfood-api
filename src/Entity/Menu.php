@@ -21,8 +21,11 @@ class Menu
     #[ORM\ManyToMany(targetEntity: product::class, inversedBy: 'menus')]
     private Collection $products;
 
-    #[ORM\ManyToMany(targetEntity: Order::class, inversedBy: 'menus')]
-    private Collection $orders;
+    #[ORM\ManyToOne(inversedBy: 'menus')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Order $orderMenu = null;
+
+
 
     public function __construct()
     {
@@ -71,27 +74,16 @@ class Menu
         return $this;
     }
 
-    /**
-     * @return Collection<int, Order>
-     */
-    public function getOrders(): Collection
+    public function getOrderMenu(): ?Order
     {
-        return $this->orders;
+        return $this->orderMenu;
     }
 
-    public function addOrder(Order $order): self
+    public function setOrderMenu(?Order $orderMenu): self
     {
-        if (!$this->orders->contains($order)) {
-            $this->orders[] = $order;
-        }
+        $this->orderMenu = $orderMenu;
 
         return $this;
     }
 
-    public function removeOrder(Order $order): self
-    {
-        $this->orders->removeElement($order);
-
-        return $this;
-    }
 }

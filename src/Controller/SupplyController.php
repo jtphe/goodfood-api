@@ -41,6 +41,7 @@ class SupplyController extends AbstractController
         $supplier = new Supplier();
         $supplierData = json_decode($request->getContent(), true);
         $supplier->setName($supplierData['name']);
+        $supplier->setType($supplierData['type']);
         $supplier->setRestaurant($user->getRestaurant());
 
         $em->persist($supplier);
@@ -68,7 +69,9 @@ class SupplyController extends AbstractController
         $restaurant=$user->getRestaurant();
 
         $em = $doctrine->getManager();
+
         $suppliers = $em->getRepository(Supplier::class)->findBy(["restaurant" => $restaurant]);
+
         return $this->json($suppliers, 200);
     }
 

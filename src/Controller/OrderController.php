@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Menu;
 use App\Entity\Product;
 use App\Entity\Restaurant;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,7 +25,7 @@ class OrderController extends AbstractController {
     }
 
     /**
-     * @Route(name="createNewOrder", path="/restaurant/{id}/orders", methods={"POST"})
+     * @Route(name="createNewOrder", path="/restaurants/{id}/orders", methods={"POST"})
      * @param Request $request
      * @throws Exception
      * @return JsonResponse
@@ -42,7 +43,7 @@ class OrderController extends AbstractController {
 
             $em = $doctrine->getManager();
 
-            $restaurant = $em->getRepository(Restaurant::class)->findOneBy(["id" => $id]);
+            $restaurant = $em->getRepository(Restaurant::class)->find($id);
 
             if($restaurant)
             {
@@ -56,34 +57,61 @@ class OrderController extends AbstractController {
                     $order->setAddress($orderData['address']);
                 }
 
-                if(isset($orderData['city'])){
+                if(isset($orderData['city']))
+                {
                     $order->setCity($orderData['city']);
                 }
 
-                if(isset($orderData['postalCode'])){
+                if(isset($orderData['postalCode']))
+                {
                     $order->setPostalCode($orderData['postalCode']);
                 }
 
                 $products = $orderData['products'];
                 $menus = $orderData['menus'];
 
+                if(isset($menus)){
+                    foreach ($menus as $menuData) {
+                        $menu = new Menu();
+                        $menu->setPrice($menuData[0]);
+
+                        foreach ($menuData[1] as $product) {
+                            $product = $em->getRepository(Product::class)->find($product);
+                            $menu->addProduct($product);
+                        }
+
+                        $menu->setOrderMenu($order);
+                        $em->persist($menu);
+                    }
+                }
+
+                if(isset($products)) {
+                    foreach($products as $product) {
+                        $product = $em->getRepository(Product::class)->find($product);
+                        $order->addProduct($product);
+                    }
+                }
 
                 $order->setPrice($orderData['price']);
                 $order->setType($orderData['type']);
                 $order->setPayment($orderData['payment']);
+                $order->setDate(new \DateTime( 'now' ));
+
                 $order->setArchive((false));
 
                 $order->setRestaurant($restaurant);
                 $order->setStatut(0);
-                $lastOrderId = $order->getId();
+
 
 
                 $em->persist($order);
                 $em->flush();
 
+                return new JsonResponse(['message' => "Order Created"], Response::HTTP_CREATED);
+
 
             }
-            return new JsonResponse(['message' => "Products not found"], Response::HTTP_NOT_FOUND);
+            return new JsonResponse(['message' => "Restaurant not found"], Response::HTTP_NOT_FOUND);
 
         } catch (PDOException $e) {
                     $message = ["message" => $e];
