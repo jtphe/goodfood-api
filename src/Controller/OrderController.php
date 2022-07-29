@@ -30,7 +30,9 @@ class OrderController extends AbstractController {
      */
     public function createNewOrder(Request $request, ManagerRegistry $doctrine, $id) {
         try {
+
             $user=$this->accessControl->verifyToken($request);
+
             if($user==null)
             {
                 $message = ["message" => "Empty Token"];
@@ -47,6 +49,7 @@ class OrderController extends AbstractController {
                 $order = new Order;
 
                 $order->setUser($user);
+
                 if(isset($orderData['address']))
                 {
                     $order->setAddress($orderData['address']);
@@ -70,11 +73,6 @@ class OrderController extends AbstractController {
                 $order->setStatut(0);
                 $lastOrderId = $order->getId();
 
-                foreach ($orderData['productOrdered'] as $productOrdered) {
-
-                    $OrderProductAndMenu->setOrderId($lastOrderId);
-                    $OrderProductAndMenu->setProductId($productOrdered['id']);
-                }
 
                 $em->persist($order);
                 $em->flush();

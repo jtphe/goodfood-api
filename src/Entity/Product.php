@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -64,6 +66,18 @@ class Product implements \JsonSerializable
      * @Groups("read")
      */
     private $discount;
+
+    #[ORM\ManyToMany(targetEntity: Order::class, mappedBy: 'products')]
+    private Collection $orders;
+
+    #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'products')]
+    private Collection $menus;
+
+    public function __construct()
+    {
+        $this->orders = new ArrayCollection();
+        $this->menus = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -186,5 +200,59 @@ class Product implements \JsonSerializable
             'stock' => $this->stock,
             'price' => $this->price
         );
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders[] = $order;
+            $order->addProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): self
+    {
+        if ($this->orders->removeElement($order)) {
+            $order->removeProduct($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Menu>
+     */
+    public function getMenus(): Collection
+    {
+        return $this->menus;
+    }
+
+    public function addMenu(Menu $menu): self
+    {
+        if (!$this->menus->contains($menu)) {
+            $this->menus[] = $menu;
+            $menu->addProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMenu(Menu $menu): self
+    {
+        if ($this->menus->removeElement($menu)) {
+            $menu->removeProduct($this);
+        }
+
+        return $this;
     }
 }

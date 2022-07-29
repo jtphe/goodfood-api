@@ -53,10 +53,17 @@ class Order
     #[ORM\JoinColumn(nullable: false)]
     private $restaurant;
 
+    #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'orders')]
+    private Collection $products;
 
+    #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'orders')]
+    private Collection $menus;
 
-
-
+    public function __construct()
+    {
+        $this->products = new ArrayCollection();
+        $this->menus = new ArrayCollection();
+    }
 
 
     public function getId(): ?int
@@ -215,6 +222,57 @@ class Order
     public function isArchive(): ?bool
     {
         return $this->archive;
+    }
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(Product $product): self
+    {
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): self
+    {
+        $this->products->removeElement($product);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Menu>
+     */
+    public function getMenus(): Collection
+    {
+        return $this->menus;
+    }
+
+    public function addMenu(Menu $menu): self
+    {
+        if (!$this->menus->contains($menu)) {
+            $this->menus[] = $menu;
+            $menu->addOrder($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMenu(Menu $menu): self
+    {
+        if ($this->menus->removeElement($menu)) {
+            $menu->removeOrder($this);
+        }
+
+        return $this;
     }
 
 }
