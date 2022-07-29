@@ -108,13 +108,10 @@ class OrderController extends AbstractController {
                 $order->setRestaurant($restaurant);
                 $order->setStatut(0);
 
-
-
                 $em->persist($order);
                 $em->flush();
 
                 return new JsonResponse(['message' => "Order Created"], Response::HTTP_CREATED);
-
 
             }
             return new JsonResponse(['message' => "Restaurant not found"], Response::HTTP_NOT_FOUND);

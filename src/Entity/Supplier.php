@@ -34,6 +34,15 @@ class Supplier implements \JsonSerializable
     #[ORM\Column(length: 55)]
     private ?string $type = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $address = null;
+
+    #[ORM\Column(length: 15, nullable: true)]
+    private ?string $phone = null;
+
+    #[ORM\Column(length: 55, nullable: true)]
+    private ?string $contact = null;
+
     public function __construct()
     {
         $this->supplies = new ArrayCollection();
@@ -110,7 +119,10 @@ class Supplier implements \JsonSerializable
         return array(
             'id' => $this->id,
             'name'=> $this->name,
-            'type' => $this->type
+            'type' => $this->type,
+            'address' =>$this->address,
+            'contact' =>$this->contact,
+            'phone' => $this->phone
         );
     }
 
@@ -122,6 +134,42 @@ class Supplier implements \JsonSerializable
     public function setType(string $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?string $address): self
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getContact(): ?string
+    {
+        return $this->contact;
+    }
+
+    public function setContact(?string $contact): self
+    {
+        $this->contact = $contact;
 
         return $this;
     }

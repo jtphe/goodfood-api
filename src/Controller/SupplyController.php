@@ -42,6 +42,10 @@ class SupplyController extends AbstractController
         $supplierData = json_decode($request->getContent(), true);
         $supplier->setName($supplierData['name']);
         $supplier->setType($supplierData['type']);
+        $supplier->setAddress($supplierData['address']);
+        $supplier->setContact($supplierData['contact']);
+        $supplier->setPhone($supplierData['phone']);
+
         $supplier->setRestaurant($user->getRestaurant());
 
         $em->persist($supplier);
