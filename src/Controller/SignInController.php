@@ -33,10 +33,10 @@ class SignInController extends AbstractController
     {
         $user = $security->getUser();
 
-
+  
         if($user===null){
             $data = json_decode($request->getContent(), true);
-
+            
             $em= $doctrine->getManager();
 
             $email = $data["email"];
@@ -46,6 +46,7 @@ class SignInController extends AbstractController
 
 
             if($findUser!=null){
+                
 
                 $token = $JWTManager->create($findUser);
 
@@ -57,6 +58,7 @@ class SignInController extends AbstractController
 
 
             }
+            var_dump('hello');
 
             return new JsonResponse(['message' => "Bad ID"], Response::HTTP_UNAUTHORIZED);
         }

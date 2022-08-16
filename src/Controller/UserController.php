@@ -214,14 +214,14 @@ class UserController extends AbstractController
      * 
     */
     public function updateUser(Request $request, ManagerRegistry $doctrine, $id) {
-
+        
         $session=$this->accessControl->verifyToken($request);
 
         if($session==null)
         {
             $message = ["message" => "Empty or Invalid Token"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-        }
+        } 
         $em = $doctrine->getManager();
         $user = $em->getRepository(User::class)->findOneBy(["id" => $id]); 
         if ($user) {
@@ -234,17 +234,15 @@ class UserController extends AbstractController
                 $user->setLastName($userData['lastname']); 
             }
             if ($userData['address']) {
+                var_dump('ok');
                 $user->setAddress($userData['address']); 
             }    
+        }
             $em->persist($user);
             $em->flush();
             $message = ["message" => "Infos recorded"];
             return new JsonResponse($message, Response::HTTP_CREATED);
-        } else {
-            $message = ["message" => "user not found"];
-            return new JsonResponse($message, Response::HTTP_BAD_REQUEST); 
-
-        }
+      
 
         
     }

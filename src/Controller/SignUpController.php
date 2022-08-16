@@ -29,9 +29,11 @@ class SignUpController extends AbstractController
     public function signupAsUser(Request $request, UserPasswordHasherInterface $passwordHasher, ManagerRegistry $doctrine,
                                  JWTTokenManagerInterface $JWTManager)
     {
+        
         try {
+            
             $userData = json_decode($request->getContent(), true);
-
+            
             $user = new User();
 
             $email = $userData['email'];
