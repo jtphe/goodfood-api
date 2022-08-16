@@ -209,5 +209,42 @@ class UserController extends AbstractController
 
     }
 
+        /**
+     * @Route(name="updateRestaurant", path="/users/updateuser", methods={"PUT"}) 
+     * 
+    */
+    public function updateUser(Request $request, ManagerRegistry $doctrine, $id) {
+
+        $user=$this->accessControl->verifyToken($request);
+
+        if($user==null)
+        {
+            $message = ["message" => "Empty or Invalid Token"];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+        }
+        $em = $doctrine->getManager();
+        $user = $em->getRepository(User::class)->findOneBy(["id" => $id]); 
+
+        if ($user) {
+            $userData = json_decode($request->getContent(), true); 
+
+            if ($userData['firstname']) {
+                $user->setFirstName($userData['firstname']); 
+            }
+            if ($userData['lastname']) {
+                $user->setLastName($userData['lastname']); 
+            }
+            if ($userData['address']) {
+                $user->setAdress($userData['address']); 
+            }    
+            $em->persist($user);
+            $em->flush();
+            $message = ["message" => "Infos recorded"];
+            return new JsonResponse($message, Response::HTTP_CREATED);
+        }
+
+    }
+
+
 
 }
