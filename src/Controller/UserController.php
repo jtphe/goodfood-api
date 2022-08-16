@@ -224,7 +224,7 @@ class UserController extends AbstractController
         }
         $em = $doctrine->getManager();
         $user = $em->getRepository(User::class)->findOneBy(["id" => $id]); 
-
+        return new JsonResponse($user, Response::HTTP_CREATED); 
         if ($user) {
             $userData = json_decode($request->getContent(), true); 
 
