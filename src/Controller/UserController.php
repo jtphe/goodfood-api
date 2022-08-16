@@ -210,7 +210,7 @@ class UserController extends AbstractController
     }
 
         /**
-     * @Route(name="updateRestaurant", path="/users/updateuser", methods={"PUT"}) 
+     * @Route(name="updateUser", path="/users/updateuser", methods={"PUT"}) 
      * 
     */
     public function updateUser(Request $request, ManagerRegistry $doctrine, $id) {
