@@ -215,9 +215,9 @@ class UserController extends AbstractController
     */
     public function updateUser(Request $request, ManagerRegistry $doctrine, $id) {
 
-        $user=$this->accessControl->verifyToken($request);
+        $session=$this->accessControl->verifyToken($request);
 
-        if($user==null)
+        if($session==null)
         {
             $message = ["message" => "Empty or Invalid Token"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
@@ -241,8 +241,13 @@ class UserController extends AbstractController
             $em->flush();
             $message = ["message" => "Infos recorded"];
             return new JsonResponse($message, Response::HTTP_CREATED);
+        } else {
+            $message = ["message" => "user not found"];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST); 
+
         }
 
+        
     }
 
 
