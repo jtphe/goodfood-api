@@ -226,25 +226,28 @@ class UserController extends AbstractController
         $user = $em->getRepository(User::class)->findOneBy(["id" => $id]); 
         if ($user) {
             $userData = json_decode($request->getContent(), true); 
-
-            if ($userData['firstname']) {
-                $user->setFirstName($userData['firstname']); 
+            if ($userData['firstName']) {
+                $user->setFirstName($userData['firstName']); 
             }
-            if ($userData['lastname']) {
-                $user->setLastName($userData['lastname']); 
+            if ($userData['lastName']) {
+                $user->setLastName($userData['lastName']); 
             }
             if ($userData['address']) {
-                var_dump('ok');
                 $user->setAddress($userData['address']); 
-            }    
-        }
+            }
+            if ($userData['postalCode']) {
+                $user->setPostalCode($userData['postalCode']); 
+            }
+            if ($userData['city']) {
+                $user->setCity($userData['city']); 
+            }
+
             $em->persist($user);
             $em->flush();
-            $message = ["message" => "Infos recorded"];
-            return new JsonResponse($message, Response::HTTP_CREATED);
-      
-
-        
+            $message = ["message" => "User updated", "status" => 200];
+            return new JsonResponse($message, Response::HTTP_CREATED);      
+        }
+            
     }
 
 
