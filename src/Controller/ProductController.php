@@ -98,6 +98,7 @@ class ProductController extends AbstractController
             $message = ["message" => "Token vide"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
+        
 
 
         if(in_array('client', $user->getRoles(), true))
@@ -105,7 +106,7 @@ class ProductController extends AbstractController
             $message = ["message" => "Worker or manager access required"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
-
+        
 
         $productData = json_decode($request->getContent(), true);
 
@@ -126,7 +127,9 @@ class ProductController extends AbstractController
         $em->getRepository(Product::class)->add($product);
         $em->flush();
 
-        return new JsonResponse(['message' => "Product added"], Response::HTTP_CREATED);
+        
+
+        return new JsonResponse([$product], Response::HTTP_CREATED);
     }
 
     /**
