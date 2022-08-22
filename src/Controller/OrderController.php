@@ -121,7 +121,26 @@ class OrderController extends AbstractController {
                     return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
                 }
             }
+/*
+     * @Route(name="getAllOrdersByRestaurantId", path="/orders/{id}/getByRestaurant", methods={GET})
+     * @param Request $request
+     * @throws Exception
+     * @return JsonResponse 
+ */
+public function getAllOrdersByRestaurantId(Request $request, ManagerRegistry $doctrine, $id) {
 
+    $user = $this->accessControl->verifyToken($request);
+            if ($user == null) {
+                $message = ["message" => "Empty Token"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+            }
+
+            $em = $doctrine->getManager();
+            $orders = $em->getRepository(Order::class)->findBy(["restaurant_id" => $id]);
+            return $this->json($orders, 200);
+
+}
+   
     /**
      * @Route(name="changeOrderStatut", path="/orders/{id}/changestatut", methods={"POST"})
      * @param Request $request
