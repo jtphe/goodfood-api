@@ -257,27 +257,27 @@ class Order
         return $this->menus;
     }
 
-    public function addMenu(Menu $menu): self
-    {
-        if (!$this->menus->contains($menu)) {
-            $this->menus[] = $menu;
-            $menu->setOrderMenu($this);
-        }
+    // public function addMenu(Menu $menu): self
+    // {
+    //     if (!$this->menus->contains($menu)) {
+    //         $this->menus[] = $menu;
+    //         $menu->setOrderMenu($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removeMenu(Menu $menu): self
-    {
-        if ($this->menus->removeElement($menu)) {
-            // set the owning side to null (unless already changed)
-            if ($menu->getOrderMenu() === $this) {
-                $menu->setOrderMenu(null);
-            }
-        }
+    // public function removeMenu(Menu $menu): self
+    // {
+    //     if ($this->menus->removeElement($menu)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($menu->getOrderMenu() === $this) {
+    //             $menu->setOrderMenu(null);
+    //         }
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
 
 }

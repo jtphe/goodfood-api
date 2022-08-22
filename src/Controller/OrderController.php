@@ -171,14 +171,15 @@ class OrderController extends AbstractController {
      * @return JsonResponse
      */
 public function getAllOrdersByRestaurantId(Request $request, ManagerRegistry $doctrine, $id) {
-             $user = $this->accessControl->verifyToken($request);
-             if ($user == null) {
-                 $message = ["message" => "Empty Token"];
-                 return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-             }
+            //  $user = $this->accessControl->verifyToken($request);
+            //  if ($user == null) {
+            //      $message = ["message" => "Empty Token"];
+            //      return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+            //  }
 
             $em = $doctrine->getManager();
             $orders = $em->getRepository(Order::class)->findBy(["restaurant" => $id]);
+            
             return $this->json($orders, 200);
 
 }

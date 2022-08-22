@@ -30,7 +30,7 @@ class Menu
     public function __construct()
     {
         $this->products = new ArrayCollection();
-        $this->orders = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -74,16 +74,6 @@ class Menu
         return $this;
     }
 
-    public function getOrderMenu(): ?Order
-    {
-        return $this->orderMenu;
-    }
 
-    public function setOrderMenu(?Order $orderMenu): self
-    {
-        $this->orderMenu = $orderMenu;
-
-        return $this;
-    }
 
 }

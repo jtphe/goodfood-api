@@ -330,36 +330,7 @@ class Restaurant implements \JsonSerializable
         return $this;
     }
 
-    /**
-     * @return Collection<int, Order>
-     */
-    public function getOrders(): Collection
-    {
-        return $this->orders;
-    }
-
-    public function addOrder(Order $order): self
-    {
-        if (!$this->orders->contains($order)) {
-            $this->orders[] = $order;
-            $order->setRestaurant($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOrder(Order $order): self
-    {
-        if ($this->orders->removeElement($order)) {
-            // set the owning side to null (unless already changed)
-            if ($order->getRestaurant() === $this) {
-                $order->setRestaurant(null);
-            }
-        }
-
-        return $this;
-    }
-
+  
     /**
      * @return Collection<int, User>
      */
