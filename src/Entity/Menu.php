@@ -107,5 +107,11 @@ class Menu
     }
 
 
+    public function setOrderMenu(?Order $orderMenu): self
+    {
+        $this->orderMenu = $orderMenu;
+
+        return $this;
+    }
 
 }

@@ -171,11 +171,11 @@ class OrderController extends AbstractController {
      * @return JsonResponse
      */
 public function getAllOrdersByRestaurantId(Request $request, ManagerRegistry $doctrine, $id) {
-            //  $user = $this->accessControl->verifyToken($request);
-            //  if ($user == null) {
-            //      $message = ["message" => "Empty Token"];
-            //      return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-            //  }
+              $user = $this->accessControl->verifyToken($request);
+              if ($user == null) {
+                  $message = ["message" => "Empty Token"];
+                  return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+              }
 
             $em = $doctrine->getManager();
             $orders = $em->getRepository(Order::class)->findBy(["restaurant" => $id]);
@@ -183,4 +183,25 @@ public function getAllOrdersByRestaurantId(Request $request, ManagerRegistry $do
             return $this->json($orders, 200);
 
 }
+    /**
+     * @Route(name="getAllOrdersByUser", path="/user/{id}/orders", methods={"GET"})
+     * @param Request $request
+     * @throws Exception
+     * @return JsonResponse
+     */
+    public function getAllOrdersByUserId(Request $request, ManagerRegistry $doctrine, $id) {
+        
+        $user = $this->accessControl->verifyToken($request);
+        if ($user == null) {
+            $message = ["message" => "Empty Token"];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+        }
+        $em = $doctrine->getManager();
+        $orders = $em->getRepository(Order::class)->findBy(["user" => $id]);
+
+        return $this->json($orders, 200); 
+
+    }
+    
 }
+
