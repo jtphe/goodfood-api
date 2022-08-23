@@ -50,6 +50,18 @@ class Menu
         return $this;
     }
 
+    public function getOrderMenu(): ?Order
+    {
+        return $this->orderMenu;
+    }
+
+    public function setRestaurant(?Order $order): self
+    {
+        $this->orderMenu = $order;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, product>
      */
@@ -72,6 +84,26 @@ class Menu
         $this->products->removeElement($product);
 
         return $this;
+    }
+
+    /**
+     * @ReturnTypeWillChange
+     * @return mixed
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @psalm-pure
+     */
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()
+    {
+        return array(
+            'id' => $this->id,
+            'price'=> $this->price,
+            'food'=> $this->products[0],
+            'snack'=> $this->products[1],
+            'drink'=> $this->products[2],
+            'order'=> $this->orderMenu->getId(),
+        );
+
     }
 
 
