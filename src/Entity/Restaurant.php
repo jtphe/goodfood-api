@@ -393,6 +393,7 @@ class Restaurant implements \JsonSerializable
             'id' => $this->id,
             'name'=> $this->name,
             'description'=> $this->description,
+            'photo' =>$this->photo,
             'phone'=> $this->phone,
             'address'=> $this->address,
             'postalcode'=> $this->postalCode,
