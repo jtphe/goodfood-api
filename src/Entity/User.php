@@ -69,6 +69,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
      */
     private $restaurant;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $picture = null;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -275,6 +278,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
         return array(
             'id' => $this->id,
             'email'=> $this->email,
+            'picture' => $this->picture,
             'firstname'=> $this->firstName,
             'lastname'=> $this->lastName,
             'address'=> $this->address,
@@ -307,6 +311,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
     public function setRestaurant(?Restaurant $restaurant): self
     {
         $this->restaurant = $restaurant;
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): self
+    {
+        $this->picture = $picture;
 
         return $this;
     }

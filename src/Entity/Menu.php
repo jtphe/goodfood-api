@@ -6,23 +6,38 @@ use App\Repository\MenuRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
-class Menu
+#[ORM\Table(name: '`menu`')]
+class Menu implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column()]
+    /**
+     * @Groups("read")
+     */
     private ?int $id = null;
 
     #[ORM\Column]
+    /**
+     * @Groups("read")
+     */
     private ?float $price = null;
 
     #[ORM\ManyToMany(targetEntity: product::class, inversedBy: 'menus')]
+    /**
+     * @Groups("read")
+     */
     private Collection $products;
 
     #[ORM\ManyToOne(inversedBy: 'menus')]
     #[ORM\JoinColumn(nullable: false)]
+    /**
+     * @Groups("read")
+     */
     private ?Order $orderMenu = null;
 
 

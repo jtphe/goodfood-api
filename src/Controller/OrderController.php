@@ -13,6 +13,13 @@ use App\Entity\Order;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\AccessControl;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+
+
+
 
 class OrderController extends AbstractController {
 
@@ -111,7 +118,7 @@ class OrderController extends AbstractController {
                 $em->persist($order);
                 $em->flush();
 
-                return $this->json($order);
+                return $this->json($order, 200);
 
             }
             return new JsonResponse(['message' => "Restaurant not found"], Response::HTTP_NOT_FOUND);
@@ -152,6 +159,7 @@ class OrderController extends AbstractController {
 
                 $em->persist($order);
                 $em->flush();
+
 
                 return $this->json($order, 200);
             }

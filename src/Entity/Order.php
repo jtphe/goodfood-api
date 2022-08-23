@@ -2,47 +2,76 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
-#[ApiResource]
-class Order
+class Order implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    /**
+     * @Groups("read")
+     */
     private $id;
 
     #[ORM\Column(type: 'datetime')]
+    /**
+     * @Groups("read")
+     */
     private $date;
 
     #[ORM\Column(type: 'boolean')]
+    /**
+     * @Groups("read")
+     */
     private $archive;
 
     #[ORM\Column(type: 'float')]
+    /**
+     * @Groups("read")
+     */
     private $price;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    /**
+     * @Groups("read")
+     */
     private $address;
 
     #[ORM\Column(type: 'string', length: 15, nullable: true)]
+    /**
+     * @Groups("read")
+     */
     private $postalCode;
 
     #[ORM\Column(type: 'string', length: 55, nullable: true)]
+    /**
+     * @Groups("read")
+     */
     private $city;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    /**
+     * @Groups("read")
+     */
     private $payment;
 
     #[ORM\Column(type: 'integer')]
+    /**
+     * @Groups("read")
+     */
     private $type;
 
     #[ORM\Column(type: 'integer')]
+    /**
+     * @Groups("read")
+     */
     private $statut;
 
     #[ORM\ManyToOne(targetEntity: user::class, inversedBy: 'orders')]
@@ -204,6 +233,13 @@ class Order
         return $this;
     }
 
+    /**
+     * @ReturnTypeWillChange
+     * @return mixed
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @psalm-pure
+     */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return array(
@@ -216,6 +252,8 @@ class Order
             'statut'=> $this->statut,
             'type'=> $this->type,
             'user'=> $this->user,
+            'products'=>$this->products,
+            'menus'=>$this->getMenus(),
             'restaurant'=> $this->restaurant->getId()
         );
     }
@@ -257,15 +295,15 @@ class Order
         return $this->menus;
     }
 
-    // public function addMenu(Menu $menu): self
-    // {
-    //     if (!$this->menus->contains($menu)) {
-    //         $this->menus[] = $menu;
-    //         $menu->setOrderMenu($this);
-    //     }
+    public function addMenu(Menu $menu): self
+    {
+        if (!$this->menus->contains($menu)) {
+             $this->menus[] = $menu;
+             $menu->setOrderMenu($this);
+        }
 
-    //     return $this;
-    // }
+         return $this;
+     }
 
     // public function removeMenu(Menu $menu): self
     // {

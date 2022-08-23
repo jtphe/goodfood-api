@@ -51,6 +51,8 @@ class SignUpController extends AbstractController
                 $message = ["message" => "Account already exists"];
                 return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
             }
+
+
             if (!preg_match("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_.;])[A-Za-z\d@$!%*?&_.;]{8,}$^", $password)) {
                 $message = ["message" => "Password length"];
                 return new JsonResponse($message, Response::HTTP_BAD_REQUEST); 
@@ -64,6 +66,11 @@ class SignUpController extends AbstractController
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $message = ["message" => "Invalid email format"];
                 return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+            }
+
+
+            if ($userData['picture']) {
+                $user->setPicture($userData['picture']);
             }
 
                 $user->setRoles(["client"]);
@@ -156,6 +163,11 @@ class SignUpController extends AbstractController
             $newUser->setRestaurant($user->getRestaurant());
             $newUser->setFirstName($firstName);
             $newUser->setLastName($lastName);
+
+            if ($userData['picture']) {
+                $newUser->setPicture($userData['picture']);
+            }
+
             $em->persist($newUser);
             $em->flush();
 
@@ -209,8 +221,15 @@ class SignUpController extends AbstractController
             $newUser->setRoles(["manager"]);
             $newUser->setFirstName($firstName);
             $newUser->setLastName($lastName);
+
+            if ($userData['picture']) {
+                $newUser->setPicture($userData['picture']);
+            }
+
+
             $em->persist($newUser);
             $em->flush();
+
 
             $mail = (new Email())
                 ->from('goodfood.api.contact@gmail.com')

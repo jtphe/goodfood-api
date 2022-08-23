@@ -241,6 +241,9 @@ class UserController extends AbstractController
             if ($userData['city']) {
                 $user->setCity($userData['city']); 
             }
+            if ($userData['picture']) {
+                $user->setPicture($userData['picture']);
+            }
 
             $em->persist($user);
             $em->flush();

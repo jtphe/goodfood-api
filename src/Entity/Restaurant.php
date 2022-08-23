@@ -362,6 +362,25 @@ class Restaurant implements \JsonSerializable
     }
 
     /**
+     * @return Collection<int, Order>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders[] = $order;
+            $order->setRestaurant($this);
+        }
+
+        return $this;
+    }
+
+
+    /**
      * @ReturnTypeWillChange
      * @return mixed
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
