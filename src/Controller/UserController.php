@@ -221,35 +221,40 @@ class UserController extends AbstractController
         {
             $message = ["message" => "Empty or Invalid Token"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-        } 
+        }
+
         $em = $doctrine->getManager();
-        $user = $em->getRepository(User::class)->findOneBy(["id" => $id]); 
+        $user = $em->getRepository(User::class)->findOneBy(["id" => $id]);
+
         if ($user) {
             $userData = json_decode($request->getContent(), true); 
-            if ($userData['firstName']) {
+            if (isset($userData['firstName'])) {
                 $user->setFirstName($userData['firstName']); 
             }
-            if ($userData['lastName']) {
+            if (isset($userData['lastName'])) {
                 $user->setLastName($userData['lastName']); 
             }
-            if ($userData['address']) {
+            if (isset($userData['address'])) {
                 $user->setAddress($userData['address']); 
             }
-            if ($userData['postalCode']) {
+            if (isset($userData['postalCode'])) {
                 $user->setPostalCode($userData['postalCode']); 
             }
-            if ($userData['city']) {
+            if (isset($userData['city'])) {
                 $user->setCity($userData['city']); 
             }
-            if ($userData['picture']) {
+            if (isset($userData['picture'])) {
                 $user->setPicture($userData['picture']);
             }
 
             $em->persist($user);
             $em->flush();
-            $message = ["message" => "User updated", "status" => 200];
-            return new JsonResponse($message, Response::HTTP_CREATED);      
+
+            return $this->json($user,200);
         }
+
+        $message = ["message" => "User not found"];
+        return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
             
     }
 
