@@ -55,12 +55,14 @@ class Menu
         return $this->orderMenu;
     }
 
-    public function setRestaurant(?Order $order): self
+    public function setOrderMenu(?Order $orderMenu): self
     {
-        $this->orderMenu = $order;
+        $this->orderMenu = $orderMenu;
 
         return $this;
     }
+
+
 
     /**
      * @return Collection<int, product>
@@ -104,14 +106,6 @@ class Menu
             'order'=> $this->orderMenu->getId(),
         );
 
-    }
-
-
-    public function setOrderMenu(?Order $orderMenu): self
-    {
-        $this->orderMenu = $orderMenu;
-
-        return $this;
     }
 
 }
