@@ -99,6 +99,11 @@ class OrderController extends AbstractController {
                         $product = $em->getRepository(Product::class)->find($products["id"]);
                         for($i = 1; $i <= $products["quantity"]; $i++){
                             $order->addProduct($product);
+
+                            if($product->getStock<0){
+                                return new JsonResponse(['message' => "Not enought items for product id : ".$product->getId()], Response::HTTP_NOT_FOUND);
+                            }
+
                         }
                     }
                 }
@@ -116,6 +121,18 @@ class OrderController extends AbstractController {
                         $menu->addProduct($food);
                         $menu->addProduct($snack);
                         $menu->addProduct($drink);
+
+                        if($food->getStock<0){
+                            return new JsonResponse(['message' => "Not enought items for food id : ".$food->getId()], Response::HTTP_NOT_FOUND);
+                        }
+
+                        if($snack->getStock<0){
+                            return new JsonResponse(['message' => "Not enought items for snack id : ".$snack->getId()], Response::HTTP_NOT_FOUND);
+                        }
+
+                        if($drink->getStock<0){
+                            return new JsonResponse(['message' => "Not enought items for drink id : ".$drink->getId()], Response::HTTP_NOT_FOUND);
+                        }
 
                         $menu->setOrderMenu($order);
                         $em->persist($menu);
@@ -233,7 +250,6 @@ class OrderController extends AbstractController {
         {
 
             $orders = $user->getOrders();
-
             return $this->json($orders, 200);
 
         }

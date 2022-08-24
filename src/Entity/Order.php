@@ -246,6 +246,7 @@ class Order implements \JsonSerializable
             'id' => $this->id,
             'price'=> $this->price,
             'address'=> $this->address,
+            'createdAt'=>$this->date,
             'city'=> $this->city,
             'postalCode'=> $this->postalCode,
             'archive'=> $this->archive,
@@ -275,6 +276,8 @@ class Order implements \JsonSerializable
     {
         if (!$this->products->contains($product)) {
             $this->products[] = $product;
+            $stock=$product->getStock()-1;
+            $product->setStock($stock);
         }
 
         return $this;
