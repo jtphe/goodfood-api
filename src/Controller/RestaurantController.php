@@ -74,12 +74,25 @@ class RestaurantController extends AbstractController
      */
     public function updateRestaurant(Request $request, ManagerRegistry $doctrine,$id)
     {
+        $user=$this->accessControl->verifyToken($request);
+
+        if($user==null)
+        {
+            $message = ["message" => "Token vide"];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+        }
 
         $em = $doctrine->getManager();
         $restaurant = $em->getRepository(Restaurant::class)->findBy(["id" => $id]);
 
         if($restaurant)
         {
+            if($this->accessControl->staffDenyAccess($user,$restaurant))
+            {
+                $message = ["message" => "Acces Denied"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+            }
+
             $restaurantData = json_decode($request->getContent(), true);
 
             if(isset($restaurantData['name']))
@@ -225,6 +238,13 @@ class RestaurantController extends AbstractController
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
+        if(in_array('manager', $user->getRoles(), true) or in_array('worker', $user->getRoles(), true))
+            {
+                $message = ["message" => "client reserved feature"];
+
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+            }
+
         $em = $doctrine->getManager();
 
         $restaurant = $em->getRepository(Restaurant::class)->findOneBy(["id" => $id]);
@@ -275,6 +295,12 @@ class RestaurantController extends AbstractController
 
         if($restaurant)
         {
+            if($this->accessControl->staffDenyAccess($user,$restaurant))
+            {
+                $message = ["message" => "Acces Denied"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+            }
+
             return $this->json($restaurant->getOrders(), 200);
         }
         return new JsonResponse(['message' => "Restaurant not found"], Response::HTTP_NOT_FOUND);
@@ -409,6 +435,8 @@ class RestaurantController extends AbstractController
             $message = ["message" => "Empty or Invalid Token"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
+
+
 
         $em = $doctrine->getManager();
         $comment = $em->getRepository(Comment::class)->findOneBy(["id" => $id]);

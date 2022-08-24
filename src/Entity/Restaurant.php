@@ -334,7 +334,7 @@ class Restaurant implements \JsonSerializable
     /**
      * @return Collection<int, User>
      */
-    public function getuser(): Collection
+    public function getUsers(): Collection
     {
         return $this->user;
     }

@@ -227,10 +227,12 @@ class UserController extends AbstractController
         $user = $em->getRepository(User::class)->findOneBy(["id" => $id]);
 
         if ($user) {
-            $userData = json_decode($request->getContent(), true); 
+            $userData = json_decode($request->getContent(), true);
+
             if (isset($userData['firstName'])) {
                 $user->setFirstName($userData['firstName']); 
             }
+            
             if (isset($userData['lastName'])) {
                 $user->setLastName($userData['lastName']); 
             }

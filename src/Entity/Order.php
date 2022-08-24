@@ -251,7 +251,7 @@ class Order implements \JsonSerializable
             'archive'=> $this->archive,
             'statut'=> $this->statut,
             'type'=> $this->type,
-            'user'=> $this->user,
+            'user'=> $this->user->getId(),
             'products'=>$this->products,
             'menus'=>$this->getMenus(),
             'restaurant'=> $this->restaurant->getId()

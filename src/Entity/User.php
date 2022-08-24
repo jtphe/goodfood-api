@@ -48,13 +48,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
     private $city;
 
 
-    #[ORM\OneToMany(mappedBy: 'users', targetEntity: Comment::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Comment::class, orphanRemoval: true)]
     /**
      * @Ignore
      */
     private $comments;
 
-    #[ORM\OneToMany(mappedBy: 'users', targetEntity: Order::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Order::class)]
     /**
      * @Ignore
      */
@@ -218,7 +218,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
     {
         if (!$this->comments->contains($comment)) {
             $this->comments[] = $comment;
-            $comment->setUsers($this);
+            $comment->setUser($this);
         }
 
         return $this;
@@ -228,8 +228,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
     {
         if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)
-            if ($comment->getUsers() === $this) {
-                $comment->setUsers(null);
+            if ($comment->getUser() === $this) {
+                $comment->setUser(null);
             }
         }
 
@@ -248,7 +248,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
     {
         if (!$this->orders->contains($order)) {
             $this->orders[] = $order;
-            $order->setUsers($this);
+            $order->setUser($this);
         }
 
         return $this;
@@ -258,8 +258,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
     {
         if ($this->orders->removeElement($order)) {
             // set the owning side to null (unless already changed)
-            if ($order->getUsers() === $this) {
-                $order->setUsers(null);
+            if ($order->getUser() === $this) {
+                $order->setUser(null);
             }
         }
 
@@ -285,6 +285,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
             'postalcode'=> $this->postalCode,
             'city'=> $this->city,
             'roles' => $this->roles[0],
+            'orders' => $this->orders ? $this->orders->map(function($obj){return $obj->getId();})->getValues() : null,
             'restaurant' =>  $this->restaurant ? $this->restaurant : null
         );
 

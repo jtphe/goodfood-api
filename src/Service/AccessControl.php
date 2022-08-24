@@ -51,20 +51,19 @@ class AccessControl
         return $user;
     }
 
-    public function verifyStaff($user,$entity)
+    public function staffDenyAccess($user,$entity)
     {
-        if(in_array('manager', $user->getRoles(), false) or in_array('worker', $user->getRoles(), false))
+        if($user->getRestaurant()===$entity->getRestaurant() or $user->getRestaurant()===$entity)
         {
             return null;
         }
 
-        if($user->getRestaurant()===$entity->getRestaurant())
+        if(in_array('manager', $user->getRoles(), false) or in_array('worker', $user->getRoles(), false))
         {
             return true;
         }
 
-        return null;
-
+        return true;
 
     }
 
