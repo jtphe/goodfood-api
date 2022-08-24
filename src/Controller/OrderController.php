@@ -136,7 +136,8 @@ class OrderController extends AbstractController {
                     $message = ["message" => $e];
                     return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
                 }
-            }
+    }
+
     /**
      * @Route(name="changeOrderStatut", path="/orders/{id}/changestatut", methods={"PUT"})
      * @param Request $request
@@ -208,8 +209,8 @@ class OrderController extends AbstractController {
             $orders = $em->getRepository(Order::class)->findBy(["restaurant" => $id]);
             
             return $this->json($orders, 200);
+    }
 
-}
     /**
      * @Route(name="getAllOrdersByUser", path="/users/{id}/orders", methods={"GET"})
      * @param Request $request
@@ -228,7 +229,7 @@ class OrderController extends AbstractController {
         $em = $doctrine->getManager();
         $user=$em->getRepository(User::class)->findOneBy(["id" => $id]);
 
-        if(in_array('manager', $userToken->getRoles()) or in_array('worker', $userToken->getRoles()) or $userToken===$user)
+        if(in_array('manager', $userToken->getRoles()) || in_array('worker', $userToken->getRoles()) or $userToken===$user)
         {
 
             $orders = $user->getOrders();
@@ -238,9 +239,6 @@ class OrderController extends AbstractController {
         }
 
         return new JsonResponse(['message' => "Acces denied"], Response::HTTP_NOT_FOUND);
-
-
-
     }
 
     /**
