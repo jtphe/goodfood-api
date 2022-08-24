@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Menu;
 use App\Entity\Product;
 use App\Entity\Restaurant;
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -210,24 +211,35 @@ class OrderController extends AbstractController {
 
 }
     /**
-     * @Route(name="getAllOrdersByUser", path="/user/{id}/orders", methods={"GET"})
+     * @Route(name="getAllOrdersByUser", path="/users/{id}/orders", methods={"GET"})
      * @param Request $request
      * @throws Exception
      * @return JsonResponse
      */
     public function getAllOrdersByUserId(Request $request, ManagerRegistry $doctrine, $id) {
         
-        $user = $this->accessControl->verifyToken($request);
+        $userToken = $this->accessControl->verifyToken($request);
 
-        if ($user == null) {
+        if ($userToken == null) {
             $message = ["message" => "Empty Token"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
         $em = $doctrine->getManager();
-        $orders = $em->getRepository(Order::class)->findBy(["user" => $id]);
+        $user=$em->getRepository(User::class)->findOneBy(["id" => $id]);
 
-        return $this->json($orders, 200); 
+        if(in_array('manager', $userToken->getRoles()) or in_array('worker', $userToken->getRoles()) or $userToken===$user)
+        {
+
+            $orders = $user->getOrders();
+
+            return $this->json($orders, 200);
+
+        }
+
+        return new JsonResponse(['message' => "Acces denied"], Response::HTTP_NOT_FOUND);
+
+
 
     }
 

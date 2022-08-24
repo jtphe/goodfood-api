@@ -127,9 +127,7 @@ class ProductController extends AbstractController
         $em->getRepository(Product::class)->add($product);
         $em->flush();
 
-        
-
-        return new JsonResponse([$product], Response::HTTP_CREATED);
+        return $this->json($product,200);
     }
 
     /**
@@ -164,9 +162,11 @@ class ProductController extends AbstractController
             if(isset($productData['name'])){
                 $product->setName($productData['name']);
             }
+
             if(isset($productData['image'])){
                 $product->setImage($productData['image']);
             }
+
             if(isset($productData['description'])){
                 $product->setDescription($productData['description']);
             }

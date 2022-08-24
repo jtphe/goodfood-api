@@ -14,45 +14,24 @@ class Product implements \JsonSerializable
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    /**
-     * @Groups("read")
-     */
     private $id;
 
     #[ORM\Column(type: 'string', length: 55)]
-    /**
-     * @Groups("read")
-     */
     private $name;
 
     #[ORM\Column(type: 'string', length: 200, nullable: true)]
-    /**
-     * @Groups("read")
-     */
     private $description;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    /**
-     * @Groups("read")
-     */
     private $image;
 
     #[ORM\Column(type: 'integer')]
-    /**
-     * @Groups("read")
-     */
     private $stock;
 
     #[ORM\ManyToOne(targetEntity: Restaurant::class, inversedBy: 'products')]
-    /**
-     * @Groups("read")
-     */
     private $restaurant;
 
     #[ORM\Column(type: 'integer')]
-    /**
-     * @Groups("read")
-     */
     private $productType;
 
     #[ORM\Column(type: 'float')]
