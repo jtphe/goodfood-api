@@ -274,11 +274,9 @@ class Order implements \JsonSerializable
 
     public function addProduct(Product $product): self
     {
-        if (!$this->products->contains($product)) {
             $this->products[] = $product;
             $stock=$product->getStock()-1;
             $product->setStock($stock);
-        }
 
         return $this;
     }
