@@ -100,7 +100,7 @@ class OrderController extends AbstractController {
                         for($i = 1; $i <= $products["quantity"]; $i++){
                             $order->addProduct($product);
 
-                            if($product->getStock<0){
+                            if($product->getStock()<0){
                                 return new JsonResponse(['message' => "Not enought items for product id : ".$product->getId()], Response::HTTP_NOT_FOUND);
                             }
 
