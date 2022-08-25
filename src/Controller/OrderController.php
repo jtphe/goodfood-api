@@ -122,15 +122,15 @@ class OrderController extends AbstractController {
                         $menu->addProduct($snack);
                         $menu->addProduct($drink);
 
-                        if($food->getStock<0){
+                        if($food->getStock()<0){
                             return new JsonResponse(['message' => "Not enought items for food id : ".$food->getId()], Response::HTTP_NOT_FOUND);
                         }
 
-                        if($snack->getStock<0){
+                        if($snack->getStock()<0){
                             return new JsonResponse(['message' => "Not enought items for snack id : ".$snack->getId()], Response::HTTP_NOT_FOUND);
                         }
 
-                        if($drink->getStock<0){
+                        if($drink->getStock()<0){
                             return new JsonResponse(['message' => "Not enought items for drink id : ".$drink->getId()], Response::HTTP_NOT_FOUND);
                         }
 
