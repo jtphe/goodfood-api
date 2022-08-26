@@ -53,7 +53,7 @@ class AccessControl
 
     public function staffDenyAccess($user,$entity)
     {
-        if($user->getRestaurant()===$entity->getRestaurant() or $user->getRestaurant()===$entity)
+        if($user->getRestaurant()===$entity or $user->getRestaurant()===$entity->getRestaurant())
         {
             return false;
         }

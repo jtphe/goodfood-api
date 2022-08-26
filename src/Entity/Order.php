@@ -82,7 +82,18 @@ class Order implements \JsonSerializable
     #[ORM\JoinColumn(nullable: false)]
     private $restaurant;
 
-    #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'orders')]
+    #[ORM\ManyToMany(targetEntity: Product::class)]
+    /**
+     * @ORM\JoinTable(
+     *  name="product",
+     *  joinColumns={
+     *      @ORM\JoinColumn(name="order_id", referencedColumnName="id")
+     *  },
+     *  inverseJoinColumns={
+     *      @ORM\JoinColumn(name="product_id", referencedColumnName="id")
+     *  }
+     * )
+     */
     private Collection $products;
 
     #[ORM\OneToMany(mappedBy: 'orderMenu', targetEntity: Menu::class)]
@@ -308,10 +319,8 @@ class Order implements \JsonSerializable
 
     public function addMenu(Menu $menu): self
     {
-        if (!$this->menus->contains($menu)) {
              $this->menus[] = $menu;
              $menu->setOrderMenu($this);
-        }
 
          return $this;
      }

@@ -49,6 +49,17 @@ class Product implements \JsonSerializable
     private $discount;
 
     #[ORM\ManyToMany(targetEntity: Order::class, mappedBy: 'products')]
+    /**
+     * @ORM\JoinTable(
+     *  name="order",
+     *  joinColumns={
+     *      @ORM\JoinColumn(name="product_id", referencedColumnName="id")
+     *  },
+     *  inverseJoinColumns={
+     *      @ORM\JoinColumn(name="order_id", referencedColumnName="id")
+     *  }
+     * )
+     */
     private Collection $orders;
 
     #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'products')]
@@ -206,10 +217,7 @@ class Product implements \JsonSerializable
 
     public function addOrder(Order $order): self
     {
-        if (!$this->orders->contains($order)) {
-            $this->orders[] = $order;
-            $order->addProduct($this);
-        }
+        $this->orders[] = $order;
 
         return $this;
     }
@@ -233,10 +241,8 @@ class Product implements \JsonSerializable
 
     public function addMenu(Menu $menu): self
     {
-        if (!$this->menus->contains($menu)) {
             $this->menus[] = $menu;
             $menu->addProduct($this);
-        }
 
         return $this;
     }
