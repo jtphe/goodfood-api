@@ -40,6 +40,8 @@ class Product implements \JsonSerializable
      */
     private $price;
 
+    private $quantityOrder;
+
     #[ORM\Column(type: 'integer', nullable: true)]
     /**
      * @Groups("read")
@@ -71,6 +73,18 @@ class Product implements \JsonSerializable
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getQuantityOrder(): ?string
+    {
+        return $this->quantityOrder;
+    }
+
+    public function setQuantityOrder(int $quantity): self
+    {
+        $this->quantityOrder = $quantity;
 
         return $this;
     }
@@ -177,7 +191,8 @@ class Product implements \JsonSerializable
             'restaurant'=> $this->restaurant  ? $this->restaurant->getId() : null,
             'productType'=> $this->productType,
             'stock' => $this->stock,
-            'price' => $this->price
+            'price' => $this->price,
+            'quantityOrder' =>$this->quantityOrder  ? $this->quantityOrder: null,
         );
     }
 
