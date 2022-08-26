@@ -243,7 +243,7 @@ class Order implements \JsonSerializable
     public function jsonSerialize()
     {
         return array(
-            'quantity'=>$this->setQuantityProduct(),
+            //'quantity'=>$this->setQuantityProduct(),
             'id' => $this->id,
             'price'=> $this->price,
             'address'=> $this->address,
@@ -282,12 +282,14 @@ class Order implements \JsonSerializable
         return $this;
     }
 
+    /*
     public function setQuantityProduct()
     {
        $quantity=array_count_values($this->products->toArray());
 
        return $quantity;
     }
+    */
 
     public function removeProduct(Product $product): self
     {

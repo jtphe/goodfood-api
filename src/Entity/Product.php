@@ -192,7 +192,7 @@ class Product implements \JsonSerializable
             'productType'=> $this->productType,
             'stock' => $this->stock,
             'price' => $this->price,
-            'quantityOrder' =>$this->quantityOrder  ? $this->quantityOrder: null,
+            //'quantityOrder' =>$this->quantityOrder  ? $this->quantityOrder: null,
         );
     }
 
