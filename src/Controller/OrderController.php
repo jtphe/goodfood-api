@@ -218,7 +218,7 @@ class OrderController extends AbstractController {
         $restaurant = $em->getRepository(Restaurant::class)->findOneBy(["id" => $id]);
 
 
-            if (!$this->accessControl->staffDenyAccess($user, $restaurant)) {
+            if ($this->accessControl->staffDenyAccess($user, $restaurant)) {
                     $message = ["message" => "Access Denied"];
                     return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
                 }
