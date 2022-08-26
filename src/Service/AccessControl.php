@@ -55,12 +55,12 @@ class AccessControl
     {
         if($user->getRestaurant()===$entity->getRestaurant() or $user->getRestaurant()===$entity)
         {
-            return null;
+            return false;
         }
 
         if(in_array('manager', $user->getRoles(), false) or in_array('worker', $user->getRoles(), false))
         {
-            return true;
+            return false;
         }
 
         return true;
