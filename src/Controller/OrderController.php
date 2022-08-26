@@ -311,7 +311,7 @@ class OrderController extends AbstractController {
             return new JsonResponse(['message' => "Order not found"], Response::HTTP_NOT_FOUND);
         }
 
-        if($this->accessControl->staffDenyAccess($user,$order) or !$user->getOrders()->contains($order))
+        if($this->accessControl->staffDenyAccess($user,$order))
         {
             return new JsonResponse(['message' => "Acces denied"], Response::HTTP_NOT_FOUND);
 
