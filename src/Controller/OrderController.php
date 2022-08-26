@@ -215,7 +215,7 @@ class OrderController extends AbstractController {
               }
 
         $em = $doctrine->getManager();
-        $restaurant = $em->getRepository(Restaurant::class)->findBy(["id" => $id]);
+        $restaurant = $em->getRepository(Restaurant::class)->findOneBy(["id" => $id]);
 
 
             if (!$this->accessControl->staffDenyAccess($user, $restaurant)) {
