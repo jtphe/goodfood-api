@@ -63,9 +63,7 @@ class UserController extends AbstractController
                                    ManagerRegistry $doctrine, UserPasswordHasherInterface $passwordHasher,
                                     AccessControl $accessControl)
     {
-        $accessControl->verifyToken($request);
-
-        $user=$doctrine->getRepository(User::class)->findOneBy(["email" => $email]);
+        $user=$accessControl->verifyToken($request);
 
         $em = $doctrine->getManager();
 
@@ -83,15 +81,9 @@ class UserController extends AbstractController
             //  return $this->json(["message" => ""]);
         }
 
-        if ($oldPassword != $password) {
 
+        if (!$passwordHasher->isPasswordValid($user,$oldPassword)) {
             $message = ["message" => "Wrong Password"];
-            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
-        }
-
-        if ($newPassword == $oldPassword) {
-
-            $message = ["message" => "Not the same passwords"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
