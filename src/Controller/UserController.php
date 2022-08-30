@@ -67,11 +67,8 @@ class UserController extends AbstractController
 
         $em = $doctrine->getManager();
 
-        $password = $user->getPassword();
-
-
         $userData = json_decode($request->getContent(), true);
-        $newPassword = $userData['password'];
+        $newPassword = $userData['newPassword'];
         $oldPassword = $userData['oldPassword'];
 
 
