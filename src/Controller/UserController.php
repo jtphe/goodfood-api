@@ -120,9 +120,16 @@ class UserController extends AbstractController
 
     /**
      * @Route(name="forgottenpassword", path="/forgottenpassword", methods={"POST"})
+     * @param Request $request
+     * @param ManagerRegistry $doctrine
+     * @param UserPasswordHasherInterface $passwordHasher
+     * @param TokenGeneratorInterface $tokenGenerator
+     * @param MailerInterface $mailer
+     * @return JsonResponse
+     * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
      */
     public function forgottenPassword(Request $request,ManagerRegistry $doctrine, UserPasswordHasherInterface $passwordHasher,
-                                        TokenGeneratorInterface $tokenGenerator)
+                                        TokenGeneratorInterface $tokenGenerator, MailerInterface $mailer)
     {
         $userData = json_decode($request->getContent(), true);
         $email = $userData['email'];
@@ -134,10 +141,22 @@ class UserController extends AbstractController
             $passwordToken = $tokenGenerator->generateToken();
             $user->setPasswordToken($passwordToken);
             $em->persist($user);
+            $em->flush();
+
+
 
             $response = new JsonResponse(
                 ['passwordToken' => $passwordToken],
                 Response::HTTP_ACCEPTED);
+
+            $mail = (new Email())
+                ->from('goodfood.api.contact@gmail.com')
+                ->to($email)
+                ->subject('Réinitialisation de mot de passe')
+                ->text("Cliquer sur ce lien pour réinitialiser votre mot de passe localhost:3000/resetpassword?token=".$passwordToken);
+
+            $mailer->send($mail);
+
             return $response;
 
         }
@@ -160,7 +179,7 @@ class UserController extends AbstractController
 
         if($user)
         {
-            if (!preg_match("/^\S*(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=\S*[\W])[a-zA-Z\d]{8,}\S*$/", $password)) {
+            if (!preg_match("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_.;])[A-Za-z\d@$!%*?&_.;]{8,}$^", $password)) {
                 $message = ["message" => "Password should be longer than 8 chars, Should contain at least one uppercase letter, one lowercase letter, one special chars, and one digit"];
                 return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
                 //  return $this->json(["message" => ""]);
@@ -168,6 +187,10 @@ class UserController extends AbstractController
 
             $user->setPassword($password);
             $user->setPasswordToken(null);
+            $em = $doctrine->getManager();
+
+            $em->persist($user);
+            $em->flush();
 
             $message = ["message" => "Password reinitialised"];
             return new JsonResponse($message, Response::HTTP_OK);
