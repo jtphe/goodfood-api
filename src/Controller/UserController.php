@@ -75,7 +75,7 @@ class UserController extends AbstractController
         $oldPassword = $userData['oldPassword'];
 
 
-        if (!preg_match("/^\S*(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=\S*[\W])[a-zA-Z\d]{8,}\S*$/", $newPassword)) {
+        if (!preg_match("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_.;])[A-Za-z\d@$!%*?&_.;]{8,}$^", $newPassword)) {
             $message = ["message" => "Password should be longer than 8 chars, Should contain at least one uppercase letter, one lowercase letter, one special chars, and one digit"];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
             //  return $this->json(["message" => ""]);
