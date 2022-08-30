@@ -84,6 +84,11 @@ class UserController extends AbstractController
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
+        if($newPassword===$oldPassword){
+            $message = ["message" => "The passwords are the same"];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+        }
+
         $hashedPassword = $passwordHasher->hashPassword($user, $userData['newPassword']);
         $user->setPassword($hashedPassword);
 
