@@ -94,7 +94,7 @@ class UserController extends AbstractController
 
         $em->persist($user);
         $em->flush();
-        $message = ["message" => "Password Modified"];
+        $message = ["message" => "Password Modified", "status" => 200];
         return new JsonResponse($message, Response::HTTP_CREATED);
     }
 
