@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\RestaurantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Serializer\Annotation\Ignore;
@@ -359,6 +360,11 @@ class Restaurant implements \JsonSerializable
         }
 
         return $this;
+    }
+
+    public function getStaff() {
+        $criteria = Criteria::create()->where(Criteria::expr()->in("roles", ["worker","manager"]));
+        return $this->getUsers()->matching($criteria);
     }
 
     /**

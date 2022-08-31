@@ -62,6 +62,22 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
+    public function getStaff($restaurant)
+    {
+        $rsm = $this->createResultSetMappingBuilder('u');
+
+        $rawQuery = sprintf(
+            'SELECT *
+            FROM user  
+            WHERE restaurant = :restaurant AND roles::jsonb ?? "worker" OR u.roles::jsonb ?? "manager"',
+            $rsm->generateSelectClause()
+        );
+
+        $query = $this->getEntityManager()->createNativeQuery($rawQuery, $rsm);
+        $query->setParameter('restaurant', $restaurant);
+        return $query->getResult();
+    }
+
     // /**
     //  * @return User[] Returns an array of User objects
     //  */

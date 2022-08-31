@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\Country;
+use App\Entity\User;
 use App\Service\AccessControl;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -459,5 +460,36 @@ class RestaurantController extends AbstractController
         return new JsonResponse(['message' => "Comment not found"], Response::HTTP_NOT_FOUND);
     }
 
+
+
+    /**
+     * @Route (name="getRestaurantComments", path="/restaurants/{id}/users", methods={"GET"})
+     * @param Request $request
+     * @param ManagerRegistry $doctrine
+     * @param $id
+     * @return JsonResponse
+     */
+    public function getRestaurantUsers(Request $request,ManagerRegistry $doctrine, $id)
+    {
+        $user=$this->accessControl->verifyToken($request);
+
+        if($user==null)
+        {
+            $message = ["message" => "Token vide"];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+        }
+
+        $em = $doctrine->getManager();
+        $restaurant = $em->getRepository(Restaurant::class)->findOneBy(["id" => $id]);
+
+        if($restaurant)
+
+        {
+            $users = $restaurant->getUsers();
+            return $this->json($users, 200);
+        }
+
+        return new JsonResponse(['message' => "Comments not found"], Response::HTTP_NOT_FOUND);
+    }
 
 }
