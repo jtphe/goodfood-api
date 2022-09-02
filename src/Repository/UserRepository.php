@@ -69,7 +69,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $rawQuery = sprintf(
             'SELECT *
             FROM user  
-            WHERE restaurant = :restaurant AND roles::jsonb ?? "worker" OR u.roles::jsonb ?? "manager"',
+            WHERE restaurant = :restaurant AND roles "worker" OR u.roles::jsonb ?? "manager"',
             $rsm->generateSelectClause()
         );
 

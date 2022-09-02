@@ -103,7 +103,6 @@ class OrderController extends AbstractController {
                             if($product->getStock()<0){
                                 return new JsonResponse(['message' => "Not enought items for product id : ".$product->getId()], Response::HTTP_NOT_FOUND);
                             }
-
                         }
                     }
                 }
@@ -136,7 +135,6 @@ class OrderController extends AbstractController {
 
                         $menu->setOrderMenu($order);
                         $em->persist($menu);
-
                     }
                 }
 
@@ -144,8 +142,6 @@ class OrderController extends AbstractController {
                 $em->flush();
 
                 return $this->json($order, 200);
-
-
             }
             return new JsonResponse(['message' => "Restaurant not found"], Response::HTTP_NOT_FOUND);
 

@@ -58,8 +58,6 @@ class SignInController extends AbstractController
 
 
             }
-            var_dump('hello');
-
             return new JsonResponse(['message' => "Bad ID"], Response::HTTP_UNAUTHORIZED);
         }
 

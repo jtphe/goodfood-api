@@ -286,7 +286,7 @@ class Order implements \JsonSerializable
 
     public function addProduct(Product $product): self
     {
-            $this->products[] = $product;
+            $this->products->add($product);
             $stock=$product->getStock()-1;
             $product->setStock($stock);
 

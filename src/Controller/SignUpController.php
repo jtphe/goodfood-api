@@ -19,6 +19,12 @@ use App\Service\AccessControl;
 class SignUpController extends AbstractController
 {
 
+    private $accessControl;
+
+    public function __construct(accessControl $accessControl)
+    {
+        $this->accessControl = $accessControl;
+    }
 
     /**
      * @Route(name="signup", path="/signup", methods={"POST"})
@@ -100,11 +106,16 @@ class SignUpController extends AbstractController
     /**
      * @Route(name="createuser", path="/createuser", methods={"POST"})
      */
-    public function createUser(Request $request, UserPasswordHasherInterface $passwordHasher, ManagerRegistry $doctrine,
-                               JWTTokenManagerInterface $JWTManager, AccessControl $accessControl, MailerInterface $mailer)
+    public function createUser(Request $request, UserPasswordHasherInterface $passwordHasher, ManagerRegistry $doctrine, MailerInterface $mailer)
     {
         try {
-            $user = $accessControl->verifyToken($request);
+            $user=$this->accessControl->verifyToken($request);
+
+            if($user==null)
+            {
+                $message = ["message" => "Token vide"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+            }
 
             $userData = json_decode($request->getContent(), true);
 
@@ -115,7 +126,7 @@ class SignUpController extends AbstractController
 
             $findedUser = $doctrine->getRepository(User::class)->findOneBy(["email" => $email]);
 
-            if (isset($findedUser)) {
+            if ($findedUser) {
                 $message = ["message" => "An account with this email is already recorded"];
                 return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
             }
@@ -156,13 +167,14 @@ class SignUpController extends AbstractController
             $hashedPassword = $passwordHasher->hashPassword($newUser, $password);
 
             $em = $doctrine->getManager();
-
+            $restaurant = $user->getRestaurant();
             $newUser->setPassword($hashedPassword);
             $newUser->setEmail($email);
             $newUser->setRoles(["worker"]);
-            $newUser->setRestaurant($user->getRestaurant());
+            $newUser->setRestaurant($restaurant);
             $newUser->setFirstName($firstName);
             $newUser->setLastName($lastName);
+            $newUser->setPicture(null);
 
             if ($userData['picture']) {
                 $newUser->setPicture($userData['picture']);
