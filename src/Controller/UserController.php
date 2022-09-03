@@ -153,7 +153,7 @@ class UserController extends AbstractController
                 ->from('goodfood.api.contact@gmail.com')
                 ->to($email)
                 ->subject('Réinitialisation de mot de passe')
-                ->text("Cliquer sur ce lien pour réinitialiser votre mot de passe localhost:3000/resetpassword?token=".$passwordToken);
+                ->text("Cliquer sur ce lien pour réinitialiser votre mot de passe http://localhost:3000/resetpassword?token=".$passwordToken);
 
             $mailer->send($mail);
 
