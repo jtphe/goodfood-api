@@ -176,10 +176,6 @@ class SignUpController extends AbstractController
             $newUser->setLastName($lastName);
             $newUser->setPicture(null);
 
-            if ($userData['picture']) {
-                $newUser->setPicture($userData['picture']);
-            }
-
             $em->persist($newUser);
             $em->flush();
 
@@ -204,8 +200,7 @@ class SignUpController extends AbstractController
     /**
      * @Route(name="createmanager", path="/createmanager", methods={"POST"})
      */
-    public function createmanager(Request $request, UserPasswordHasherInterface $passwordHasher, ManagerRegistry $doctrine,
-                                  JWTTokenManagerInterface $JWTManager, AccessControl $accessControl, MailerInterface $mailer)
+    public function createmanager(Request $request, UserPasswordHasherInterface $passwordHasher, ManagerRegistry $doctrine, MailerInterface $mailer)
     {
         try {
 
@@ -233,10 +228,10 @@ class SignUpController extends AbstractController
             $newUser->setRoles(["manager"]);
             $newUser->setFirstName($firstName);
             $newUser->setLastName($lastName);
+            $newUser->setPicture(null);
 
-            if ($userData['picture']) {
-                $newUser->setPicture($userData['picture']);
-            }
+
+
 
 
             $em->persist($newUser);

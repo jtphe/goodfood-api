@@ -36,7 +36,8 @@ class SignInController extends AbstractController
   
         if($user===null){
             $data = json_decode($request->getContent(), true);
-            
+            $device=$request->headers->get("device");
+
             $em= $doctrine->getManager();
 
             $email = $data["email"];
@@ -46,7 +47,12 @@ class SignInController extends AbstractController
 
 
             if($findUser!=null){
-                
+
+
+                if(in_array('client', $findUser->getRoles(), false) and $device=="web")
+                {
+                    return new JsonResponse(['message' => "Reserved for worker"], Response::HTTP_UNAUTHORIZED);
+                }
 
                 $token = $JWTManager->create($findUser);
 
