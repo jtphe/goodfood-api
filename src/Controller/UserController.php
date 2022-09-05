@@ -185,7 +185,9 @@ class UserController extends AbstractController
                 //  return $this->json(["message" => ""]);
             }
 
-            $user->setPassword($password);
+            $hashedPassword = $passwordHasher->hashPassword($user, $password);
+
+            $user->setPassword($hashedPassword);
             $user->setPasswordToken(null);
             $em = $doctrine->getManager();
 
