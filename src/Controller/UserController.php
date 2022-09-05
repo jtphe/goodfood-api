@@ -153,7 +153,7 @@ class UserController extends AbstractController
                 ->from('goodfood.api.contact@gmail.com')
                 ->to($email)
                 ->subject('Réinitialisation de mot de passe')
-                ->text("Cliquer sur ce lien pour réinitialiser votre mot de passe http://localhost:3000/resetpassword?token=".$passwordToken);
+                ->text("Cliquez sur ce lien pour réinitialiser votre mot de passe http://localhost:3000/resetpassword?token=".$passwordToken);
 
             $mailer->send($mail);
 
@@ -190,11 +190,10 @@ class UserController extends AbstractController
             $user->setPassword($hashedPassword);
             $user->setPasswordToken(null);
             $em = $doctrine->getManager();
-
             $em->persist($user);
             $em->flush();
 
-            $message = ["message" => "Password reinitialised"];
+            $message = ["message" => "Password reset"];
 
             return $this->json([$message,200]);
 
