@@ -195,7 +195,8 @@ class UserController extends AbstractController
             $em->flush();
 
             $message = ["message" => "Password reinitialised"];
-            return new JsonResponse($message, Response::HTTP_OK);
+
+            return $this->json([$message,200]);
 
         }
 
