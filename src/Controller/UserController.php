@@ -248,12 +248,14 @@ class UserController extends AbstractController
         if ($user) {
             $userData = json_decode($request->getContent(), true);
 
-            if (isset($userData['firstName'])) {
-                $user->setFirstName($userData['firstName']); 
+            if (isset($userData['firstname'])) {
+                $user->setFirstName($userData['firstname']); 
+            }            
+            if (isset($userData['lastname'])) {
+                $user->setLastName($userData['lastname']); 
             }
-            
-            if (isset($userData['lastName'])) {
-                $user->setLastName($userData['lastName']); 
+            if (isset($userData['email'])) {
+                $user->setEmail($userData['email']); 
             }
             if (isset($userData['address'])) {
                 $user->setAddress($userData['address']); 
