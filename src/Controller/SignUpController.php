@@ -111,9 +111,16 @@ class SignUpController extends AbstractController
         try {
             $user=$this->accessControl->verifyToken($request);
 
+
             if($user==null)
             {
                 $message = ["message" => "Token vide"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+            }
+
+            if(!in_array('manager', $user->getRoles(), false))
+            {
+                $message = ["message" => "Wrong Access Right"];
                 return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
             }
 
@@ -123,6 +130,7 @@ class SignUpController extends AbstractController
             $email = $userData['email'];
             $firstName = $userData['firstname'];
             $lastName = $userData['lastname'];
+            $role=$userData['role'];
 
             $findedUser = $doctrine->getRepository(User::class)->findOneBy(["email" => $email]);
 
@@ -170,7 +178,7 @@ class SignUpController extends AbstractController
             $restaurant = $user->getRestaurant();
             $newUser->setPassword($hashedPassword);
             $newUser->setEmail($email);
-            $newUser->setRoles(["worker"]);
+            $newUser->setRoles([$role]);
             $newUser->setRestaurant($restaurant);
             $newUser->setFirstName($firstName);
             $newUser->setLastName($lastName);
@@ -229,9 +237,6 @@ class SignUpController extends AbstractController
             $newUser->setFirstName($firstName);
             $newUser->setLastName($lastName);
             $newUser->setPicture(null);
-
-
-
 
 
             $em->persist($newUser);
