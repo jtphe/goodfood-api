@@ -214,7 +214,7 @@ class SignUpController extends AbstractController
 
             $findedUser = $doctrine->getRepository(User::class)->findOneBy(["email" => $email]);
 
-            if (isset($findedUser)) {
+            if ($findedUser) {
                 $message = ["message" => "An account with this email is already recorded"];
                 return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
             }
@@ -248,7 +248,7 @@ class SignUpController extends AbstractController
 
             $message = ["message" => "Created"];
 
-            return new JsonResponse($message, Response::HTTP_CREATED);
+            return $this->json($message, 200);
 
         } catch (PDOException $e) {
             $message = ["message" => $e];
