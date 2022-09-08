@@ -187,7 +187,7 @@ class SignUpController extends AbstractController
 
             $mailer->send($mail);
 
-            $message = ["message" => "created"];
+            $message = ["message" => "created","statusCode"=> 200];
 
             return new JsonResponse($message, Response::HTTP_CREATED);
 
@@ -246,7 +246,7 @@ class SignUpController extends AbstractController
 
             $mailer->send($mail);
 
-            $message = ["message" => "Created"];
+            $message = ["message" => "Created","statusCode"=> 200];
 
             return $this->json($message, 200);
 
