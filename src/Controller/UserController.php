@@ -80,7 +80,7 @@ class UserController extends AbstractController
 
 
         if (!$passwordHasher->isPasswordValid($user,$oldPassword)) {
-            $message = ["message" => "Wrong Password"];
+            $message = ["message" => "Wrong old password", "status" => 400];
             return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
         }
 
