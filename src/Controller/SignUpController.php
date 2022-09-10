@@ -75,7 +75,7 @@ class SignUpController extends AbstractController
             }
 
 
-            if ($userData['picture']) {
+            if (isset($userData['picture'])) {
                 $user->setPicture($userData['picture']);
             }
 
