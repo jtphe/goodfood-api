@@ -282,5 +282,42 @@ class UserController extends AbstractController
     }
 
 
+    /**
+     * @Route(name="deleteUser", path="/users/{id}", methods={"DELETE"})
+     *
+     */
+    public function deleteUser(Request $request, ManagerRegistry $doctrine, $id) {
+
+        $userSession=$this->accessControl->verifyToken($request);
+
+        if($userSession==null)
+        {
+            $message = ["message" => "Empty or Invalid Token"];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+        }
+
+        $em = $doctrine->getManager();
+        $user = $em->getRepository(User::class)->findOneBy(["id" => $id]);
+
+        if ($user) {
+
+            if($this->accessControl->staffDenyAccess($user,$userSession))
+            {
+                $message = ["message" => "Acces Denied"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+            }
+
+            $em->remove($user);
+            $em->flush();
+
+            return $this->json(["message" => "User deleted"],200);
+        }
+
+        $message = ["message" => "User not found"];
+        return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+
+    }
+
+
 
 }
