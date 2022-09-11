@@ -310,7 +310,7 @@ class UserController extends AbstractController
             $em->remove($user);
             $em->flush();
 
-            return $this->json(["message" => "User deleted"],200);
+            return $this->json(["message" => "User deleted","statusCode"=>200],200);
         }
 
         $message = ["message" => "User not found"];
