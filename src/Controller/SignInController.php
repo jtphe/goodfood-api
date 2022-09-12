@@ -49,7 +49,7 @@ class SignInController extends AbstractController
             if($findUser!=null){
 
 
-                if(in_array('client', $findUser->getRoles(), false) and $device=="web" or $device==null)
+                if(in_array('client', $findUser->getRoles(), false) and $device=="web")
                 {
                     return new JsonResponse(['message' => "Reserved for worker"], Response::HTTP_UNAUTHORIZED);
                 }
