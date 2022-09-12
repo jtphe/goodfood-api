@@ -49,10 +49,11 @@ class SignInController extends AbstractController
             if($findUser!=null){
 
 
-                if(in_array('client', $findUser->getRoles(), false) and $device=="web")
+                if(in_array('client', $findUser->getRoles(), false) and $device=="web" or $device==null)
                 {
                     return new JsonResponse(['message' => "Reserved for worker"], Response::HTTP_UNAUTHORIZED);
                 }
+
 
                 $token = $JWTManager->create($findUser);
 
