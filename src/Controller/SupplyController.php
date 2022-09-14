@@ -55,6 +55,56 @@ class SupplyController extends AbstractController
     }
 
     /**
+     * @Route (name="updateSupplier, path="/suppliers/{id}", methods={"PUT"}
+     * @param Request $request
+     */
+    public function updateSupplier(Request $request, ManagerRegistry $doctrine)
+    {
+        $user=$this->accessControl->verifyToken($request);
+        if($user==null)
+        {
+            $message = ["message" => "Token vide"];
+            return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+        }
+
+        $em = $doctrine->getManager();
+        $supplier = $em->getRepository(Supplier::class)->findOneBy(["id" => $id]);
+
+        if($supplier) {
+
+            if ($this->accessControl->verifyStaff($user, $supplier)) {
+                $message = ["message" => "Access Denied"];
+                return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
+            }
+
+            $supplierData = json_decode($request->getContent(), true);
+
+            if(isset($supplierData['name'])){
+                $supplier->setName($supplierData['name']);
+            }
+
+            if(isset($supplierData['type'])) {
+                $supplier->setType($supplierData['type']);
+            }
+            if(isset($supplierData['address'])) {
+                $supplier->setAddress($supplierData['address']);
+            }
+            if(isset($supplierData['contact'])) {
+                $supplier->setContact($supplierData['contact']);
+            }
+            if(isset($supplierData['phone'])) {
+                $supplier->setPhone($supplierData['phone']);
+            }
+
+            $em->persist($supplier);
+            $em->flush();
+
+            return new JsonResponse(['message' => "Supplier Updated"], Response::HTTP_CREATED);
+        }
+        return new JsonResponse(['message' => "Supplier not found"], Response::HTTP_NOT_FOUND);
+    }
+
+    /**
      * @Route (name="selectAllSuppliers", path="/suppliers", methods={"GET"})
      * @param Request $request
      * @throws Exception
