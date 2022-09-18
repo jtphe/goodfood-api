@@ -99,7 +99,7 @@ class SupplyController extends AbstractController
             $em->persist($supplier);
             $em->flush();
 
-            return new JsonResponse(['message' => "Supplier Updated"], Response::HTTP_CREATED);
+            return $this->json($supplier,200);
         }
         return new JsonResponse(['message' => "Supplier not found"], Response::HTTP_NOT_FOUND);
     }

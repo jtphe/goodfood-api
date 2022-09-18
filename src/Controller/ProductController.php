@@ -184,7 +184,7 @@ class ProductController extends AbstractController
             $em->persist($product);
             $em->flush();
 
-            return new JsonResponse(['message' => "Product Updated"], Response::HTTP_CREATED);
+            return $this->json($product,200);
         }
         return new JsonResponse(['message' => "Product not found"], Response::HTTP_NOT_FOUND);
     }
