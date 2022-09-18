@@ -171,8 +171,9 @@ class ProductController extends AbstractController
                 $product->setDescription($productData['description']);
             }
             if(isset($productData['price'])){
-                $product->setDescription($productData['price']);
+                $product->setPrice($productData['price']);
             }
+
             if(isset($productData['stock'])){
                 $product->setStock($productData['stock']);
             }
