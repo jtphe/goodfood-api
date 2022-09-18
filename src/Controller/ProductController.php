@@ -151,7 +151,7 @@ class ProductController extends AbstractController
 
         if($product)
         {
-            if($this->accessControl->verifyStaff($user,$product))
+            if($this->accessControl->staffDenyAccess($user,$product))
             {
                 $message = ["message" => "Access Denied"];
                 return new JsonResponse($message, Response::HTTP_BAD_REQUEST);

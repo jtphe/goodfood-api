@@ -58,7 +58,7 @@ class SupplyController extends AbstractController
      * @Route (name="updateSupplier, path="/suppliers/{id}", methods={"PUT"}
      * @param Request $request
      */
-    public function updateSupplier(Request $request, ManagerRegistry $doctrine)
+    public function updateSupplier(Request $request, ManagerRegistry $doctrine, $id)
     {
         $user=$this->accessControl->verifyToken($request);
         if($user==null)
@@ -72,7 +72,7 @@ class SupplyController extends AbstractController
 
         if($supplier) {
 
-            if ($this->accessControl->verifyStaff($user, $supplier)) {
+            if ($this->accessControl->staffDenyAccess($user, $supplier)) {
                 $message = ["message" => "Access Denied"];
                 return new JsonResponse($message, Response::HTTP_BAD_REQUEST);
             }
