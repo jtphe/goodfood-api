@@ -54,7 +54,7 @@ class SignInController extends AbstractController
                     return new JsonResponse(['message' => "Reserved for worker"], Response::HTTP_UNAUTHORIZED);
                 }
 
-                if(in_array('worker', $findUser->getRoles(), false) or in_array('manager', $findUser->getRoles(), false) and $device=="mobile")
+                if(!in_array('client', $findUser->getRoles(), false) and $device=="mobile")
                 {
                     return new JsonResponse(['message' => "Reserved for client"], Response::HTTP_UNAUTHORIZED);
                 }
