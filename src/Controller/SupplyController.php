@@ -55,7 +55,7 @@ class SupplyController extends AbstractController
     }
 
     /**
-     * @Route (name="updateSupplier, path="/suppliers/{id}", methods={"PUT"}
+     * @Route (name="updateSupplier, path="/suppliers/{id}", methods={"PUT"})
      * @param Request $request
      */
     public function updateSupplier(Request $request, ManagerRegistry $doctrine, $id)
