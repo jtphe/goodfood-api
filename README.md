@@ -1,6 +1,6 @@
 # Good Food API 🍔
 
-📁 Dépôt git de l'API de Good Food en Node.JS avec le framework Express JS.
+📁 Dépôt git de l'API de Good Food en PHP avec le framework Symfony.
 
 Projet développé dans le cadre de la formation MSI - Expert développement au CESI.
 
